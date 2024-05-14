@@ -70,6 +70,14 @@
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
 
+  xdg.portal = {
+    wlr.enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-kde
+    ];
+  };
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 3;
@@ -109,6 +117,7 @@
       PasswordAuthentication = false;
     };
   };
+
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "21.05";
