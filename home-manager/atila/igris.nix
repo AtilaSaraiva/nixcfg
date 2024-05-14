@@ -30,6 +30,7 @@
     ./features/qutebrowser/qutebrowser.nix
     ./features/tmux/tmux.nix
     ./features/lf/lf.nix
+    ./features/feh.nix
   ];
 
   nixpkgs = {

@@ -6,4 +6,16 @@
   home.packages = [
     pkgs.kitty
   ];
+
+  xdg.mimeApps = {
+    enable = true;
+    associations.added = {
+      "x-scheme-handler/terminal" = "kitty.desktop";
+    };
+    defaultApplications = {
+      "x-scheme-handler/terminal" = "kitty.desktop";
+      "inode/mount-point" = "kitty-open.desktop";
+      "inode/directory" = "kitty-open.desktop";
+    };
+  };
 }
