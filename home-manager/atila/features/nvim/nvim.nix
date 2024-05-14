@@ -13,8 +13,14 @@ in
 
   programs.neovim.enable = true;
 
-  home.file = {
-    ".local/share/nvim/site/autoload/plug.vim".source = "${vim-plug}/plug.vim";
+  home = {
+    file = {
+      ".local/share/nvim/site/autoload/plug.vim".source = "${vim-plug}/plug.vim";
+    };
+
+    packages = [
+      pkgs.python3Packages.pynvim
+    ];
   };
 
   xdg.configFile = {

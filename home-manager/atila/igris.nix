@@ -22,6 +22,14 @@
     ./features/jupyter/jupyter.nix
     ./features/ssh/ssh.nix
     ./features/git/git.nix
+    ./features/zsh.nix
+    ./features/waybar/waybar.nix
+    ./features/kitty/kitty.nix
+    ./features/mpv/mpv.nix
+    ./features/zathura/zathura.nix
+    ./features/qutebrowser/qutebrowser.nix
+    ./features/tmux/tmux.nix
+    ./features/lf/lf.nix
   ];
 
   nixpkgs = {
