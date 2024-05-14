@@ -1,0 +1,116 @@
+Ciphers aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+
+IdentityFile ~/.ssh/id_private
+
+Host *
+    Compression yes
+
+Host ogbon
+    HostName ogbon-login8.fieb.org.br
+    User atila.saraiva
+    ForwardX11 yes
+    ForwardX11Trusted yes
+    Port 5001
+    IdentityFile ~/.ssh/id_hpc
+
+Host jc
+    HostName juroscomposto
+    User atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host igris
+    HostName igris
+    User atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host betinha
+    HostName betinha
+    User atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host deck
+    HostName steamdeck
+    User deck
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host hijitus
+    HostName 142.244.190.76
+    User atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host cedar
+    HostName cedar.computecanada.ca
+    User saraivaq
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host niagara
+    HostName niagara.computecanada.ca
+    User saraivaq
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host mist
+    HostName mist.scinet.utoronto.ca
+    User saraivaq
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host beluga
+    HostName beluga.computecanada.ca
+    User saraivaq
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host graham
+    HostName graham.computecanada.ca
+    User saraivaq
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host narval
+    HostName narval.computecanada.ca
+    User saraivaq
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host saigml
+    HostName saig-ml.physics.ualberta.ca
+    user atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host neurus
+    HostName neurus.physics.ualberta.ca
+    user saraivaq
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host gitlab_ogbon
+    HostName 172.25.0.77
+    Port 443
+    User atila.saraiva
+    Identityfile ~/.ssh/id_hpc
+    ProxyCommand ssh ogbon nc %h %p
+
+Host private.github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_private
+
+Host work.github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_trackfy
