@@ -71,4 +71,9 @@
     enable = true;
     enableZshIntegration = true;
   };
+
+  home.packages = [
+    pkgs.eza
+  ];
+
 }
