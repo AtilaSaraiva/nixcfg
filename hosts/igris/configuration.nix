@@ -36,6 +36,12 @@
     ../common/global/sound.nix
     ../common/global/sway.nix
     ../common/global/virtualization.nix
+    ../common/global/locate.nix
+    ../common/global/quietboot.nix
+    ../common/global/zram.nix
+    ../common/global/verifyStore.nix
+    ../common/global/tailscale.nix
+
     ../common/users/atila.nix
   ];
 

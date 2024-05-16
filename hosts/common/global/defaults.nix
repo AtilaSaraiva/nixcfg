@@ -57,8 +57,6 @@
 
   programs.zsh.enable = true;
 
-  services.tailscale.enable = true;
-
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
@@ -85,4 +83,16 @@
     Defaults passwd_timeout=0
   '';
 
+  security.pam.loginLimits = [
+    { domain = "*"; item = "memlock"; type = "hard"; value = "unlimited"; }
+    { domain = "*"; item = "memlock"; type = "soft"; value = "unlimited"; }
+  ];
+
+  boot.kernel.sysctl = {
+    "abi.vsyscall32" = 0;
+    "vm.swappiness"  = 7;
+    "kernel.sysrq"   = 1;
+  };
+
+  services.upower.enable = true;
 }
