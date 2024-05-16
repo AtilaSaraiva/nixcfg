@@ -31,6 +31,7 @@
     ./features/tmux/tmux.nix
     ./features/lf/lf.nix
     ./features/feh.nix
+    ./features/sway/sway.nix
   ];
 
   nixpkgs = {
