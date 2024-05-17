@@ -40,6 +40,7 @@
     ../common/global/zram.nix
     ../common/global/verifyStore.nix
     ../common/global/tailscale.nix
+    ../common/global/focusmode
 
     ../common/users/atila.nix
   ];
