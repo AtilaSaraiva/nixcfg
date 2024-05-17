@@ -23,7 +23,13 @@
       trusted-users = [ "@wheel" ];
       auto-optimise-store = true;
       trusted-public-keys = [
-        "key-name:36fe2VUzGDWhD3851hppXbCgQqlMtKSL7XPGNYnzAZk="
+        "binarycache.com:F14RK+znP8o15IWh7ObV/gGDqif1cfddFbLHWh6BgCI="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+      substituters = [
+        "http://juroscomposto:5000/"
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org/"
       ];
     };
 
