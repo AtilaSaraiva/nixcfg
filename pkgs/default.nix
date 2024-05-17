@@ -2,5 +2,5 @@
 # You can build them using 'nix build .#example'
 pkgs: {
   # example = pkgs.callPackage ./example { };
-  amdgpu = pkgs.callPackage ./amdgpu-fan { };
+  amdgpu-fan = pkgs.callPackage ./amdgpu-fan { };
 }
