@@ -10,7 +10,7 @@ lib.mkIf (config.focusMode) {
     0.0.0.0 youtube.com www.youtube.com
     0.0.0.0 instagram.com www.instagram.com
     0.0.0.0 twitter.com x.com
-    0.0.0.0 amazon.ca
-    0.0.0.0 amazon.com
+    0.0.0.0 amazon.ca www.amazon.ca
+    0.0.0.0 amazon.com www.amazon.com
   '';
 }
