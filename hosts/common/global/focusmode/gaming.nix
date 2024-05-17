@@ -1,11 +1,7 @@
 { lib, pkgs, config, ... }:
 
-lib.mkIf (!config.focusMode) {
+lib.mkIf (!config.focusMode && config.gaming) {
   environment.systemPackages = with pkgs; [
-    # Social
-    tdesktop
-    jellyfin-media-player
-
     # Gaming
     vulkan-tools
     winetricks
