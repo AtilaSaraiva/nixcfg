@@ -40,22 +40,23 @@ lib.mkIf (!config.focusMode && config.gaming) {
         inputs.jovian-nixos.nixosModules.default
         ../defaults.nix
         ../flatpak.nix
-        ../zram.nix
         ../nix.nix
         ../../users/atila.nix
         ../../../igris/hardware-configuration.nix
       ];
 
-      #services.xserver.enable = true;
-      #services.xserver.desktopManager.gnome.enable = true;
+      services.xserver.enable = true;
+      services.xserver.desktopManager.gnome.enable = true;
 
-      system.nixos.tag = [ "jovian" ];
+      system.nixos.tags = [ "jovian" ];
 
       jovian = {
         steam = {
           enable = true;
-          #desktopSession = "gnome";
+          desktopSession = "gnome";
+          user = "atila";
           autoStart = true;
+
         };
         hardware.has.amd.gpu = true;
         steamos = {
