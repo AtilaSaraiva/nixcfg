@@ -32,6 +32,10 @@
     ./features/lf
     ./features/feh.nix
     ./features/zsh.nix
+    ./features/devtools.nix
+    ./features/clitools.nix
+    ./features/nixtools.nix
+    ./features/apps.nix
     ./features/defaults.nix
   ];
 

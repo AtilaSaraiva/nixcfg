@@ -61,6 +61,10 @@
       }
     ];
 
+    initExtraFirst = ''
+      ${pkgs.any-nix-shell}/bin/any-nix-shell zsh --info-right | source /dev/stdin
+    '';
+
     initExtra = ''
       bindkey '^ ' autosuggest-accept
     '';
@@ -72,8 +76,8 @@
     enableZshIntegration = true;
   };
 
-  home.packages = [
-    pkgs.eza
+  home.packages = with pkgs; [
+    eza
   ];
 
 }
