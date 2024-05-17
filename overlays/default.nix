@@ -10,6 +10,15 @@
     # example = prev.example.overrideAttrs (oldAttrs: rec {
     # ...
     # });
+    obs-studio-wrapped = prev.wrapOBS.override { inherit (prev) obs-studio; } {
+      plugins = with prev.obs-studio-plugins; [
+        obs-gstreamer
+        obs-pipewire-audio-capture
+        obs-vaapi
+        obs-vkcapture
+        wlrobs
+      ];
+    };
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
