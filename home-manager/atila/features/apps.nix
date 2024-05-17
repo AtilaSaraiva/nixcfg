@@ -23,5 +23,7 @@
     transmission-qt
     kopia
     openconnect
+    firefox
+    jellyfin-media-player
   ];
 }
