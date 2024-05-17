@@ -14,6 +14,10 @@
     pkgs.driversi686Linux.mesa
   ];
 
+  environment.systemPackages = with pkgs; [
+    radeontop
+  ];
+
   # Force radv
   environment.variables.AMD_VULKAN_ICD = "RADV";
 }
