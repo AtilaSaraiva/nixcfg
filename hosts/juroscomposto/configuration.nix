@@ -50,10 +50,6 @@
     ../common/users/atila.nix
   ];
 
-  # FIXME: Add the rest of your current configuration
-  #services.xserver.enable = true;
-  #services.xserver.displayManager.lightdm.enable = true;
-
   # TODO: Set your hostname
   networking.hostName = "juroscomposto";
 
@@ -61,8 +57,6 @@
   i18n.defaultLocale = "pt_BR.UTF-8";
 
   time.timeZone = "America/Edmonton";
-
-  gaming = true;
 
   services.amdgpu-fan = {
     enable = true;
@@ -78,6 +72,10 @@
     };
   };
 
+  gaming = {
+    enable = true;
+    hardwareConfiguration = ./hardware-configuration.nix;
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "21.05";
