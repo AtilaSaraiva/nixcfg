@@ -1,6 +1,6 @@
 { lib, pkgs, config, inputs, ... }:
 
-lib.mkIf (!config.focusMode && config.gaming) {
+lib.mkIf (!config.focusMode && config.gaming.enable) {
   environment.systemPackages = with pkgs; [
     # Gaming
     vulkan-tools
@@ -42,7 +42,7 @@ lib.mkIf (!config.focusMode && config.gaming) {
         ../flatpak.nix
         ../nix.nix
         ../../users/atila.nix
-        ../../../igris/hardware-configuration.nix
+        config.gaming.hardwareConfiguration
       ];
 
       services.xserver.enable = true;
@@ -78,6 +78,16 @@ lib.mkIf (!config.focusMode && config.gaming) {
         protontricks
         openmw
       ];
+
+      system.stateVersion = config.system.stateVersion;
+
+      # TODO: Set your hostname
+      networking.hostName = config.networking.hostName;
+
+      # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
+      i18n.defaultLocale = config.i18n.defaultLocale;
+
+      time.timeZone = config.time.timeZone;
     };
   };
 }
