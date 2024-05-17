@@ -24,6 +24,5 @@
     kopia
     openconnect
     firefox
-    jellyfin-media-player
   ];
 }
