@@ -28,7 +28,6 @@
     ../common/global/defaults.nix
     ../common/global/flatpak.nix
     ../common/global/laptop.nix
-    ../common/global/nix-serve.nix
     ../common/global/nix.nix
     ../common/global/noisetorch.nix
     ../common/global/printing.nix
