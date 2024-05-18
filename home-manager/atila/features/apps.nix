@@ -4,7 +4,6 @@
   home.packages = with pkgs; [
     spotify
     zotero_7
-    tdesktop
     dropbox
     bitwarden
     mpv
