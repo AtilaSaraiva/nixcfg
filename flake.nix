@@ -9,11 +9,15 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
     # Also see the 'unstable-packages' overlay at 'overlays/default.nix'.
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
     # Home manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     jovian-nixos.url = "github:Jovian-Experiments/Jovian-NixOS/development";
+
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
   };
 
   outputs = {
