@@ -19,12 +19,22 @@
         wlrobs
       ];
     };
+    #gamescope = prev.gamescope.overrideAttrs (oldAttrs: rec {
+      #version = "3.13.16";
+      #src = prev.fetchFromGitHub {
+        #owner = "ValveSoftware";
+        #repo = "gamescope";
+        #rev = "refs/tags/3.13.16";
+        #fetchSubmodules = true;
+        #hash = "sha256-VxZSRTqsEyEc8C2gNdRxik3Jx1NxB9ktQ3ALUFkDjo0=";
+      #};
+    #});
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'
-  unstable-packages = final: _prev: {
-    unstable = import inputs.nixpkgs-unstable {
+  stable-packages = final: _prev: {
+    stable = import inputs.nixpkgs-stable {
       system = final.system;
       config.allowUnfree = true;
     };
