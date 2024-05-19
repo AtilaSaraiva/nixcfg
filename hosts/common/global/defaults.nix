@@ -1,10 +1,6 @@
-{ inputs, outputs, pkgs, ... }:
+{ inputs, outputs, pkgs, lib, ... }:
 
 {
-  imports = [
-    inputs.chaotic.nixosModules.default
-  ];
-
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -76,6 +72,7 @@
       # Opinionated: use keys only.
       # Remove if you want to SSH using passwords
       PasswordAuthentication = false;
+      X11Forwarding = true;
     };
   };
 
@@ -99,4 +96,6 @@
   };
 
   services.upower.enable = true;
+
+  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 }
