@@ -14,4 +14,6 @@
   services.auto-cpufreq.enable = true;
 
   services.logind.lidSwitch = "suspend";
+
+  powerManagement.cpuFreqGovernor = "ondemand";
 }
