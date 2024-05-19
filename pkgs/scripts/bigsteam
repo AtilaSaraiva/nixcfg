@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <output_name>"
+    exit 1
+fi
+
+TV_OUTPUT="$1"
+
+# Get all connected outputs
+OUTPUTS=$(swaymsg -t get_outputs | jq -r '.[] | select(.active == true) | .name')
+
+# Disable all outputs
+for OUTPUT in $OUTPUTS; do
+    swaymsg output "$OUTPUT" disable
+done
+
+# Enable the TV output
+swaymsg output "$TV_OUTPUT" enable
+
+## Optional: You may want to set the resolution and position for the TV output
+swaymsg output "$TV_OUTPUT" mode 3840x2160@60Hz pos 0 0
+
+swaymsg exec kill4game
+
+# Start Steam in Big Picture mode
+swaymsg exec "steam -steamos3 -tenfoot"

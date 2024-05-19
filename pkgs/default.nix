@@ -16,4 +16,5 @@ pkgs: {
   remote = pkgs.callPackage ./scripts { scriptName = "remote"; };
   sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
   toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
+  bigsteam = pkgs.callPackage ./scripts { scriptName = "bigsteam"; };
 }

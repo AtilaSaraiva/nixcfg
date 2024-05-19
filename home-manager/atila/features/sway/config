@@ -33,7 +33,7 @@ set $site5 "https://vicenteguimaraes.penserico.com/dashboard.pr"
 set $site6 "https://docs.google.com/spreadsheets/d/15XVyZg2Ex_1nTYfA9W8qUAl1NRAxo9g9HCSlAeqwVhw/edit?folder=0AMLx_qjqAT5PUk9PVA#gid=0"
 
 set $mon0 DP-2
-set $mon1 HDMI-A-2
+set $mon1 HDMI-A-1
 
 
 bindsym $mod+ccedilla exec toggleFreesync
@@ -290,7 +290,7 @@ workspace 2 output secondary
 
 
 output $mon0 adaptive_sync on mode 2560x1440@164.999Hz pos 0 0
-output $mon1 pos 2560 0 mode 3840x2160@60.000Hz
+output $mon1 pos 2560 0 mode 3840x2160@60.000Hz disable
 
 focus output $mon0
 
@@ -585,9 +585,10 @@ mode "apps" {
         bindsym k exec zathura "~/Documentos/Remembering Kanji/Remembering the Kanji 1 (Kindle Fire HDX edition)_d Writing of Japanese Characters - James W. Heisig.pdf" &;mode "default"
 
         # steam
-        #bindsym s exec steam-native -nojoy -novid -d3d9ex -high;mode "default"
-        #bindsym s exec steam;mode "default"
-        bindsym s exec flatpak run com.valvesoftware.Steam;mode "default"
+        bindsym s exec steam -steamos3;mode "default"
+
+        # big picture on TV
+        bindsym period exec bigsteam $mon1
 
         # lutris
         bindsym d exec env -u WAYLAND_DISPLAY lutris;mode "default"

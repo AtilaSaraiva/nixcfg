@@ -10,7 +10,6 @@
 
   xdg.configFile."sway/config".source = ./config;
 
-
   home.packages = with pkgs; [
     aftergameopen
     animatedWallpaper
@@ -24,6 +23,7 @@
     remote
     sway-display-swap
     toggleFreesync
+    bigsteam
   ];
 
   #home.packages = with pkgs; [
