@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+kotatogram-desktop &
+qutebrowser &
+qbittorrent &
+dropbox &
+megasync &
+sudo energyPlan ondemand

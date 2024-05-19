@@ -36,7 +36,7 @@ set $mon0 DP-2
 set $mon1 HDMI-A-2
 
 
-bindsym $mod+ccedilla exec ~/.bin/toggleFreesync
+bindsym $mod+ccedilla exec toggleFreesync
 
 #================================================
 #====================Fonts=======================
@@ -68,13 +68,13 @@ font pango:RobotoMono 8
 bindsym $mod+o exec buku_run
 
 # add url on the clipboard to buku db
-bindsym $mod+Shift+o exec ~/.bin/bookmarkadd
+bindsym $mod+Shift+o exec bookmarkadd
 
 # Kill all process that might use cpu clocks in order to play games
-bindsym $mod+Delete exec ~/.bin/kill4game
+bindsym $mod+Delete exec kill4game
 
 # Reopen then after finished gaming
-bindsym $mod+Insert exec ~/.bin/aftergameopen
+bindsym $mod+Insert exec aftergameopen
 
 # start a terminal
 bindsym $mod+Return exec $term
@@ -252,8 +252,8 @@ bindsym $mod+Shift+0 move container to workspace 10
 #bindsym $mod+Ctrl+Shift+4 move container to workspace 14
 
 # Move to a new empty workspace
-bindsym $mod+Ctrl+h exec --no-startup-id ~/.bin/i3empty.py prev
-bindsym $mod+Ctrl+l exec --no-startup-id ~/.bin/i3empty.py next
+bindsym $mod+Ctrl+h exec --no-startup-id i3empty.py prev
+bindsym $mod+Ctrl+l exec --no-startup-id i3empty.py next
 
 # Move a window to a new empty workspace
 bindsym $mod+Shift+Ctrl+h exec --no-startup-id i3empty.py --move prev
@@ -295,7 +295,7 @@ output $mon1 pos 2560 0 mode 3840x2160@60.000Hz
 focus output $mon0
 
 # Swap workspaces between displays
-bindsym $mod+c exec ~/.bin/sway-display-swap.sh
+bindsym $mod+c exec sway-display-swap.sh
 
 # Assing certain workspaces to certain outputs
 #workspace 10 output HDMI-0
@@ -324,7 +324,7 @@ bindsym $mod+Shift+i exec kitty --class bookmarkViewer -e "oil"
 bindsym $mod+Shift+y exec ejectUSB
 
 # Energy plan menu
-bindsym $mod+z exec ~/.bin/energyPlanMenu
+bindsym $mod+z exec energyPlanMenu
 
 # Suspend computer
 bindsym $mod+Pause exec systemctl suspend
@@ -354,11 +354,11 @@ bindsym --locked XF86MonBrightnessUp exec brightnessctl s +5%
 bindsym --locked XF86MonBrightnessDown exec brightnessctl s 5%-
 
 # switch sound in active window between sinks
-#bindsym $mod+p exec ~/.bin/sinkSwitcher
-bindsym $mod+p exec ~/.bin/portSwitch
+#bindsym $mod+p exec sinkSwitcher
+bindsym $mod+p exec portSwitch
 
 # switch default sink
-#bindsym $mod+Shift+p exec ~/.bin/sinkDefaultSwitcher
+#bindsym $mod+Shift+p exec sinkDefaultSwitcher
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -368,7 +368,7 @@ bindsym $mod+Shift+r restart
 
 # rofi powermenu
 # bindsym $mod+Shift+e exec ~/.Tools/bin/rofi-close-i3.sh
-bindsym $mod+Shift+e exec ~/.config/polybar/scripts/pmenu_g
+bindsym $mod+Shift+e exec pmenu_g
 
 # printscreen
 #bindsym --release Print       exec  scrot '%Y%m%d%H%M%S_screenshot_$wx$h.png' -e 'mv $f ~/Imagens/Screenshots && xclip -selection clipboard -t image/png -i ~/Imagens/Screenshots/$f'
@@ -453,8 +453,8 @@ for_window [app_id=".*"] inhibit_idle fullscreen
 #exec  betterlockscreen -w dim
 
 # change wallpaper
-set $oguriWallpaper $HOME/.bin/oguriWallpaper
-set $animatedWallpaper $HOME/.bin/animatedWallpaper
+set $oguriWallpaper oguriWallpaper
+set $animatedWallpaper animatedWallpaper
 bindsym --release $mod+i  exec $oguriWallpaper static
 #bindsym --release $mod+dead_acute exec $animatedWallpaper
 set $wallpapers_path $HOME/Files/Imagens/Favoritos
@@ -462,7 +462,7 @@ set $wallpapers_path $HOME/Files/Imagens/Favoritos
 #output $mon1 bg `find $wallpapers_path -type f | shuf -n 1` fill
 exec --no-startup-id $oguriWallpaper static
 #exec --no-startup-id $animatedWallpaper static
-#exec ~/.bin/changeWallpaper
+#exec changeWallpaper
 
 #bindsym $mod+i exec output $mon0 bg `find $wallpapers_path -type f | shuf -n 1` fill; exec output $mon1 bg `find $wallpapers_path -type f | shuf -n 1` fill
 
@@ -524,10 +524,10 @@ exec --no-startup-id sleep 10; exec --no-startup-id qbittorrent
 exec --no-startup-id kotatogram-desktop
 exec --no-startup-id udiskie
 #exec --no-startup-id flatpak run com.valvesoftware.Steam -silent -pipewire-dmabuf
-#exec  sleep 5 ; exec ~/.bin/remote
+#exec  sleep 5 ; exec remote
 #exec  sleep 30 ; exec  safeeyes
 #exec  sleep 40 ; exec ytmdesktop
-exec --no-startup-id ~/.bin/remote
+exec --no-startup-id remote
 #exec easyeffects
 #exec  telegram-desktop
 exec  --no-startup-id blueman-tray

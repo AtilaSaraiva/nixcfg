@@ -10,6 +10,22 @@
 
   xdg.configFile."sway/config".source = ./config;
 
+
+  home.packages = with pkgs; [
+    aftergameopen
+    animatedWallpaper
+    bookmarkadd
+    energyPlan
+    i3empty
+    kill4game
+    oguriWallpaper
+    pmenu_g
+    portSwitch
+    remote
+    sway-display-swap
+    toggleFreesync
+  ];
+
   #home.packages = with pkgs; [
     #swaylock-effects
     #xwayland

@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+kill $(pgrep kotatogram) &
+kill $(pgrep qutebrowser) &
+kill $(pgrep firefox) &
+kill $(pgrep qbittorrent) &
+kill $(pgrep electron | head -n 1) &
+kill $(pgrep chrome) &
+kill $(pgrep dropbox) &
+kill $(pgrep megasync) &
+sudo energyPlan performance
