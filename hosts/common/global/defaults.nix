@@ -87,6 +87,8 @@
   security.pam.loginLimits = [
     { domain = "*"; item = "memlock"; type = "hard"; value = "unlimited"; }
     { domain = "*"; item = "memlock"; type = "soft"; value = "unlimited"; }
+    # giving realtime priority for any program ran by users
+    { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
   ];
 
   boot.kernel.sysctl = {
