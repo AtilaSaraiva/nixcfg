@@ -27,6 +27,7 @@
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true; # so that gtk works properly
+    extraOptions = [ "-Dnoscanout" ];
     extraPackages = with pkgs; [
       swaylock-effects
       xwayland
