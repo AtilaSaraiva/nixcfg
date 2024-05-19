@@ -17,6 +17,10 @@
     # Or modules from other flakes (such as nixos-hardware):
     # inputs.hardware.nixosModules.common-cpu-amd
     # inputs.hardware.nixosModules.common-ssd
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-intel
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
+    inputs.nixos-hardware.nixosModules.common-pc-hdd
 
     # You can also split up your configuration and import pieces of it here:
     # ./users.nix
@@ -32,6 +36,7 @@
     ../common/global/noisetorch.nix
     ../common/global/printing.nix
     ../common/global/scanner.nix
+    ../common/global/network.nix
     ../common/global/sound.nix
     ../common/global/sway.nix
     ../common/global/virtualization.nix
