@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, inputs, ... }:
 
 {
   options = {
@@ -12,7 +12,11 @@
       };
     };
   };
-  imports = [ ./chill.nix ./gaming.nix ./focus-working.nix ];
+  imports = [
+    ./chill.nix
+    ./gaming.nix
+    ./focus-working.nix
+  ];
   config = {
     specialisation.focus-mode.configuration = { ... }: {
       system.nixos.tags = [ "focus-mode" ];

@@ -13,6 +13,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     steam-run
     protontricks
     openmw
+    gamemode
   ];
 
   # Special apps (requires more than their package to work).
@@ -24,7 +25,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
   };
   programs.gamescope = {
     enable = true;
-    capSysNice = false; # capSysNice freezes gamescopeSession for me.
+    capSysNice = true; # capSysNice freezes gamescopeSession for me.
     args = [ ];
     env = lib.mkForce {
       # I set DXVK_HDR in the alternative-sessions script.
@@ -32,6 +33,10 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     };
     package = pkgs.gamescope;
   };
+
+  environment.variables.WINE_FULLSCREEN_FSR = "1";
+
+  hardware.steam-hardware.enable = true;
 
   specialisation.jovian = {
     inheritParentConfig = false;
