@@ -8,6 +8,12 @@
     package = pkgs.jellyfin;
   };
 
+  environment.systemPackages = [
+    pkgs.jellyfin
+    pkgs.jellyfin-web
+    pkgs.jellyfin-ffmpeg
+  ];
+
   services.bazarr = {
     enable = true;
     user = "atila";
