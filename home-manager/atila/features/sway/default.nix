@@ -12,6 +12,60 @@ let
   term = "${pkgs.kitty}/bin/kitty";
   lock = "${pkgs.swaylock-effects}/bin/swaylock --clock --indicator --fade-in 0.2 --screenshots --effect-vignette 0.5:0.5 --effect-blur 7x5";
 
+  cornerWindowPinP = pkgs.writeShellScriptBin "cornerWindowPinP" ''
+    JQ=${pkgs.jq}/bin/jq
+
+    if [ -z "$1" ]; then
+        echo "Usage: $0 <corner>"
+        echo "Corners: br (bottom right), bl (bottom left), tr (top right), tl (top left)"
+        exit 1
+    fi
+
+    CORNER="$1"
+
+    # Get screen width and height
+    SCREEN_WIDTH=$(swaymsg -t get_outputs | $JQ '.[] | select(.focused) | .current_mode.width')
+    SCREEN_HEIGHT=$(swaymsg -t get_outputs | $JQ '.[] | select(.focused) | .current_mode.height')
+
+    # Get window dimensions for the specified window
+    WINDOW_INFO=$(swaymsg -t get_tree | $JQ '.. | select(.app_id? == "firefox" and .name? == "Picture-in-Picture") | .rect')
+    WINDOW_WIDTH=$(echo "$WINDOW_INFO" | $JQ '.width')
+    WINDOW_HEIGHT=$(echo "$WINDOW_INFO" | $JQ '.height')
+
+    # Check if window dimensions were found
+    if [ -z "$WINDOW_WIDTH" ] || [ -z "$WINDOW_HEIGHT" ]; then
+        echo "Window with app_id 'firefox' and title 'Picture-in-Picture' not found."
+        exit 1
+    fi
+
+    # Calculate positions
+    case $CORNER in
+        br)
+            POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+            POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+            ;;
+        bl)
+            POS_X=0
+            POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+            ;;
+        tr)
+            POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+            POS_Y=0
+            ;;
+        tl)
+            POS_X=0
+            POS_Y=0
+            ;;
+        *)
+            echo "Invalid corner specified. Use: br, bl, tr, tl."
+            exit 1
+            ;;
+    esac
+
+    # Move the specified window
+    swaymsg "[app_id=\"firefox\" title=\"Picture-in-Picture\"] move absolute position $POS_X $POS_Y"
+  '';
+
   kill4game = pkgs.writeShellScriptBin "kill4game" ''
     kill $(${pkgs.procps}/bin/pgrep telegram) &
     kill $(${pkgs.procps}/bin/pgrep qutebrowser) &
@@ -220,13 +274,12 @@ in
         window = {
           border = 3;
           titlebar = false;
-          #hideEdgeBorders = "both";
 
           commands = [
-            { criteria = { app_id = "firefox"; title = "Picture-in-Picture"; }; command = "floating enable; sticky enable"; }
+            { criteria = { app_id = "firefox"; title = "Picture-in-Picture"; }; command = "floating enable; sticky enable; exec \"${cornerWindowPinP}/bin/cornerWindowPinP br\""; }
             { criteria = { app_id = "firefox"; title = "Firefox — Sharing Indicator"; }; command = "floating enable; sticky enable"; }
             { criteria = { app_id = ""; title = ".+\\(\\/run\\/current-system\\/sw\\/bin\\/gpg .+"; }; command = "floating enable; sticky enable"; }
-            { criteria = { app_id = "org.telegram.desktop"; title = "TelegramDesktop"; }; command = "move scratchpad"; }
+            { criteria = { app_id = "org.telegram.desktop"; }; command = "floating enable, resize set 1600 900, move scratchpad"; }
             { criteria = { title = "Slack \\| mini panel"; }; command = "floating enable; stick enable"; }
             { criteria = { title = "discord.com is sharing your screen."; }; command = "move scratchpad"; }
             # Don't lock my screen if there is anything fullscreen, I may be gaiming
@@ -236,11 +289,9 @@ in
             { criteria = { class = "Element"; }; command = "move scratchpad"; }
             { criteria = { class = "steam"; }; command = "floating enable"; }
             { criteria = { class = "Slack"; }; command = "move scratchpad"; }
-            { criteria = { instance = "origin.exe"; }; command = "floating enable"; }
-            { criteria = { class = "origin.exe"; }; command = "floating enable"; }
             { criteria = { app_id = "com.rafaelmardojai.Blanket"; }; command = "move scratchpad"; }
             { criteria = { app_id = "dropdown_terminal"; }; command = "floating enable, sticky enable, resize set 1800 400, move position center, move down 300 px"; }
-            { criteria = { class = "transmission-qt"; }; command = "move scratchpad"; }
+            { criteria = { app_id = "transmission-qt"; title="Transmission"; }; command = "move scratchpad"; }
             { criteria = { class = "Bitwarden"; }; command = "move scratchpad"; }
           ];
         };
