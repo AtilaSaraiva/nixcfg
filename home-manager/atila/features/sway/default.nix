@@ -12,6 +12,45 @@ let
   term = "${pkgs.kitty}/bin/kitty";
   lock = "${pkgs.swaylock-effects}/bin/swaylock --clock --indicator --fade-in 0.2 --screenshots --effect-vignette 0.5:0.5 --effect-blur 7x5";
 
+  kill4game = pkgs.writeShellScriptBin "kill4game" ''
+    kill $(${pkgs.procps}/bin/pgrep telegram) &
+    kill $(${pkgs.procps}/bin/pgrep qutebrowser) &
+    kill $(${pkgs.procps}/bin/pgrep firefox) &
+    kill $(${pkgs.procps}/bin/pgrep qbittorrent) &
+    kill $(${pkgs.procps}/bin/pgrep electron | head -n 1) &
+    kill $(${pkgs.procps}/bin/pgrep chrome) &
+    kill $(${pkgs.procps}/bin/pgrep dropbox) &
+    kill $(${pkgs.procps}/bin/pgrep megasync) &
+  '';
+
+  bigsteam = pkgs.writeShellScriptBin "bigsteam" ''
+    if [ -z "$1" ]; then
+      echo "Usage: $0 <output_name>"
+      exit 1
+    fi
+
+    TV_OUTPUT="$1"
+
+    # Get all connected outputs
+    OUTPUTS=$(swaymsg -t get_outputs | ${pkgs.jq}/bin/jq -r '.[] | select(.active == true) | .name')
+
+    # Disable all outputs
+    for OUTPUT in $OUTPUTS; do
+        swaymsg output "$OUTPUT" disable
+    done
+
+    # Enable the TV output
+    swaymsg output "$TV_OUTPUT" enable
+
+    ## Optional: You may want to set the resolution and position for the TV output
+    swaymsg output "$TV_OUTPUT" mode 3840x2160@60Hz pos 0 0
+
+    swaymsg exec ${kill4game}/bin/kill4game
+
+    # Start Steam in Big Picture mode
+    swaymsg exec "steam -steamos3 -tenfoot"
+  '';
+
   oguriWallpaper = pkgs.writeShellScriptBin "oguriWallpaper" ''
     ${pkgs.killall}/bin/killall oguri
     kill $(pgrep mpvpaper)
@@ -64,7 +103,6 @@ let
           $clipboard"
       fi
   '';
-
 
   toggleFreesync = pkgs.writeShellScriptBin "toggleFreesync" ''
     # Check if the file /tmp/freesync exists
@@ -286,13 +324,9 @@ in
           "${mod}+x" = "move workspace to output right";
           "${mod}+Shift+x" = "move container to output right";
           "${mod}+c" = "exec ${pkgs.sway-display-swap}/bin/sway-display-swap";
-          #"${mod}+m" = "exec i3-input -F 'mark %s' -l 1 -P 'Mark: '";
-          #"${mod}+g" = "exec i3-input -F '[con_mark=\"%s\"] focus' -l 1 -P 'Goto: '";
           "${mod}+Shift+semicolon" = "exec qutebrowser http://127.0.0.1:3875";
           "${mod}+semicolon" = "exec makoctl dismiss --all";
           "${mod}+Shift+i" = "exec ${term} --class bookmarkViewer -e oil";
-          #"${mod}+Shift+y" = "exec ejectUSB";
-          #"${mod}+z" = "exec energyPlanMenu";
           "${mod}+Pause" = "exec systemctl suspend";
           "${mod}+Ctrl+o" = "exec \"rofi -show run -font 'DejaVu 9' -run-shell-command '{terminal} -e \" {cmd}; read -n 1 -s\"'\"";
           "${mod}+comma" = "exec amixer set Master -q 5%-";
@@ -315,7 +349,7 @@ in
           "${mod}+Shift+e" = "exec ${pmenu_g}/bin/pmenu_g";
           "--release Print" = "exec ${pkgs.sway-contrib.grimshot}/bin/grimshot copy output";
           "--release Shift+Print" = "exec ${pkgs.sway-contrib.grimshot}/bin/grimshot copy window";
-          #"--release Ctrl+Shift+Print" = "exec ${pkgs.sway-contrib.grimshot}/bin/grimshot copy area";
+          "--release Ctrl+Shift+Print" = "exec ${pkgs.sway-contrib.grimshot}/bin/grimshot copy area";
           "${mod}+Shift+f" = "gaps inner current toggle ${innerGap}; gaps outer current toggle ${outerGap}";
           "${mod}+Shift+z" = "exec ${lock}";
           "--release ${mod}+i" = "exec ${oguriWallpaper}/bin/oguriWallpaper static";
