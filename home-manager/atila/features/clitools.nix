@@ -16,5 +16,6 @@
     duf
     feh
     zathura
+    nixosbuild
   ];
 }
