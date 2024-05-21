@@ -30,7 +30,6 @@
       enable = true;
       plugins = [
         "git"
-        "vi-mode"
         "colored-man-pages"
         "compleat"
         "tmux"
@@ -59,6 +58,11 @@
         };
         file = "zsh-autopair.plugin.zsh";
       }
+      {
+        name = "vi-mode";
+        src = pkgs.zsh-vi-mode;
+        file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+      }
     ];
 
     initExtraFirst = ''
@@ -79,5 +83,4 @@
   home.packages = with pkgs; [
     eza
   ];
-
 }
