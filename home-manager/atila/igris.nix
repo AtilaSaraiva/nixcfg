@@ -41,4 +41,22 @@
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.11";
+
+  displays = [
+    {
+      name = "eDP-1";
+      position = "0,0";
+      mode = "1920x1080@60.010Hz";
+    }
+    {
+      name = "HDMI-A-1";
+      position = "1080,0";
+      res = "1920x1080";
+    }
+  ];
+
+  keyboard = {
+    xkb_layout = "us,us";
+    xkb_variant = "altgr-intl,dvp";
+  };
 }

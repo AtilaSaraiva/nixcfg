@@ -39,6 +39,20 @@
     ./features/defaults.nix
   ];
 
+  displays = [
+    {
+      name = "DP-2";
+      position = "0,0";
+      mode = "2560x1440@164.999Hz";
+    }
+    {
+      name = "HDMI-A-1";
+      disable = true;
+      position = "2560,0";
+      mode = "3840x2160@60.000Hz";
+    }
+  ];
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.05";
 }
