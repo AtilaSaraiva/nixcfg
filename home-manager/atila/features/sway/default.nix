@@ -15,7 +15,7 @@ let
   mon0 = (builtins.elemAt config.displays 0).name;
   mon1 = (builtins.elemAt config.displays 1).name;
   # The last display in the list will be considered the TV, since this only affect the bigsteam script it should not be a big deal
-  TV = (builtins.tail config.displays 1).name;
+  TV = (lib.last config.displays).name;
   innerGap = "20";
   outerGap = "6";
   browser = "${pkgs.qutebrowser}/bin/qutebrowser";
