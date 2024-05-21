@@ -23,7 +23,13 @@
     };
   };
 
-  home.packages = with pkgs; [
-    gh
-  ];
+  programs.gh = {
+    enable = true;
+    extensions = with pkgs; [
+      gh-poi
+    ];
+  };
+  programs.gh-dash = {
+    enable = true;
+  };
 }
