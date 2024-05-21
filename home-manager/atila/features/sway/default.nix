@@ -372,7 +372,8 @@ in
           {
             command = ''${pkgs.swayidle}/bin/swayidle -w \
               timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-              before-sleep 'swaylock --clock --indicator --fade-in 0.2 --screenshots --effect-vignette 0.5:0.5 --effect-blur 7x5'';
+              before-sleep '${lock}'
+            '';
           }
           { command = "${oguriWallpaper}/bin/oguriWallpaper static"; }
         ];
@@ -561,9 +562,6 @@ in
             inactiveWorkspace = { background = "#333333"; border = "#333333"; text = "#888888"; };
             urgentWorkspace = { background = "#2f343a"; border = "#900000"; text = "#ffffff"; };
           };
-          #extraConfig = ''
-            #output "${seat.displayId}"
-          #'';
         }];
 
         colors = {
