@@ -14,6 +14,8 @@ let
   map-to-active = "swaymsg input type:tablet_tool map_to_output `swaymsg -t get_outputs | jq -r '.[] | select(.focused == true) | .name'`";
   mon0 = (builtins.elemAt config.displays 0).name;
   mon1 = (builtins.elemAt config.displays 1).name;
+  # The last display in the list will be considered the TV, since this only affect the bigsteam script it should not be a big deal
+  TV = (builtins.tail config.displays 1).name;
   innerGap = "20";
   outerGap = "6";
   browser = "${pkgs.qutebrowser}/bin/qutebrowser";
@@ -338,7 +340,6 @@ in
       default = {
         xkb_layout = "br,us";
         xkb_variant = ",dvp";
-        xkb_options = "caps:swapescape,grp:rwin_toggle";
       };
     };
   };
@@ -617,7 +618,7 @@ in
             "c" = "exec ${pkgs.bitwarden}/bin/bitwarden; mode default";
             "z" = "exec ${pkgs.firefox}/bin/firefox \"https://web.whatsapp.com/\"; mode default";
             "s" = "exec steam -steamos3; mode default";
-            "period" = "exec ${bigsteam}/bin/bigsteam ${mon1}";
+            "period" = "exec ${bigsteam}/bin/bigsteam ${TV}";
             "d" = "exec env -u WAYLAND_DISPLAY lutris; mode default";
             "y" = "exec \"QT_QPA_PLATFORM=xcb yuzu\"; mode default";
             "e" = "exec element-desktop; mode default";

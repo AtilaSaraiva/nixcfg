@@ -47,11 +47,16 @@
     }
     {
       name = "HDMI-A-1";
-      disable = true;
+      disable = "";
       position = "2560,0";
       mode = "3840x2160@60.000Hz";
     }
   ];
+
+  keyboard = {
+    xkb_layout = "br,us";
+    xkb_variant = ",dvp";
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.05";
