@@ -412,8 +412,8 @@ in
           titlebar = false;
 
           commands = [
-            { criteria = { app_id = "firefox"; title = "Picture-in-Picture"; }; command = "floating enable; sticky enable; exec \"${cornerWindowPinP}/bin/cornerWindowPinP br\""; }
-            { criteria = { app_id = "firefox"; title = "Firefox — Sharing Indicator"; }; command = "floating enable; sticky enable"; }
+            { criteria = { title = "Picture-in-Picture"; }; command = "floating enable; sticky enable; exec \"${cornerWindowPinP}/bin/cornerWindowPinP br\""; }
+            { criteria = { title = "Firefox — Sharing Indicator"; }; command = "floating enable; sticky enable"; }
             { criteria = { app_id = ""; title = ".+\\(\\/run\\/current-system\\/sw\\/bin\\/gpg .+"; }; command = "floating enable; sticky enable"; }
             { criteria = { app_id = "org.telegram.desktop"; }; command = "floating enable, resize set 1600 900, move scratchpad"; }
             { criteria = { title = "Slack \\| mini panel"; }; command = "floating enable; stick enable"; }
