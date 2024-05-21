@@ -12,6 +12,133 @@ let
   term = "${pkgs.kitty}/bin/kitty";
   lock = "${pkgs.swaylock-effects}/bin/swaylock --clock --indicator --fade-in 0.2 --screenshots --effect-vignette 0.5:0.5 --effect-blur 7x5";
 
+  snapWindowPinP = pkgs.writeShellScriptBin "snapWindowPinP" ''
+    JQ=${pkgs.jq}/bin/jq
+
+    if [ -z "$1" ]; then
+        echo "Usage: $0 <direction>"
+        echo "Directions: up, down, left, right"
+        exit 1
+    fi
+
+    DIRECTION="$1"
+
+    # Get screen width and height
+    SCREEN_WIDTH=$(swaymsg -t get_outputs | $JQ '.[] | select(.focused) | .current_mode.width')
+    SCREEN_HEIGHT=$(swaymsg -t get_outputs | $JQ '.[] | select(.focused) | .current_mode.height')
+
+    # Get window info for the specified window
+    WINDOW_INFO=$(swaymsg -t get_tree | $JQ '.. | select(.app_id? == "firefox" and .name? == "Picture-in-Picture") | .rect')
+    WINDOW_X=$(echo "$WINDOW_INFO" | $JQ '.x')
+    WINDOW_Y=$(echo "$WINDOW_INFO" | $JQ '.y')
+    WINDOW_WIDTH=$(echo "$WINDOW_INFO" | $JQ '.width')
+    WINDOW_HEIGHT=$(echo "$WINDOW_INFO" | $JQ '.height')
+
+    # Check if window info was found
+    if [ -z "$WINDOW_X" ] || [ -z "$WINDOW_Y" ] || [ -z "$WINDOW_WIDTH" ] || [ -z "$WINDOW_HEIGHT" ]; then
+        echo "Window with app_id 'firefox' and title 'Picture-in-Picture' not found."
+        exit 1
+    fi
+
+    # Calculate the center of the window
+    WINDOW_CENTER_X=$((WINDOW_X + WINDOW_WIDTH / 2))
+    WINDOW_CENTER_Y=$((WINDOW_Y + WINDOW_HEIGHT / 2))
+
+    # Calculate distances to corners
+    DIST_TL=$((WINDOW_CENTER_X * WINDOW_CENTER_X + WINDOW_CENTER_Y * WINDOW_CENTER_Y))
+    DIST_TR=$(((SCREEN_WIDTH - WINDOW_CENTER_X) * (SCREEN_WIDTH - WINDOW_CENTER_X) + WINDOW_CENTER_Y * WINDOW_CENTER_Y))
+    DIST_BL=$((WINDOW_CENTER_X * WINDOW_CENTER_X + (SCREEN_HEIGHT - WINDOW_CENTER_Y) * (SCREEN_HEIGHT - WINDOW_CENTER_Y)))
+    DIST_BR=$(((SCREEN_WIDTH - WINDOW_CENTER_X) * (SCREEN_WIDTH - WINDOW_CENTER_X) + (SCREEN_HEIGHT - WINDOW_CENTER_Y) * (SCREEN_HEIGHT - WINDOW_CENTER_Y)))
+
+    # Determine the closest corner
+    CLOSEST_CORNER="tl"
+    MIN_DIST=$DIST_TL
+
+    if [ $DIST_TR -lt $MIN_DIST ]; then
+        CLOSEST_CORNER="tr"
+        MIN_DIST=$DIST_TR
+    fi
+    if [ $DIST_BL -lt $MIN_DIST ]; then
+        CLOSEST_CORNER="bl"
+        MIN_DIST=$DIST_BL
+    fi
+    if [ $DIST_BR -lt $MIN_DIST ]; then
+        CLOSEST_CORNER="br"
+        MIN_DIST=$DIST_BR
+    fi
+
+    # Calculate new position based on the given direction and closest corner
+    case $CLOSEST_CORNER in
+        tl)
+            case $DIRECTION in
+                up|left)
+                    NEW_POS_X=0
+                    NEW_POS_Y=0
+                    ;;
+                right)
+                    NEW_POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+                    NEW_POS_Y=0
+                    ;;
+                down)
+                    NEW_POS_X=0
+                    NEW_POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+                    ;;
+            esac
+            ;;
+        tr)
+            case $DIRECTION in
+                up|right)
+                    NEW_POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+                    NEW_POS_Y=0
+                    ;;
+                left)
+                    NEW_POS_X=0
+                    NEW_POS_Y=0
+                    ;;
+                down)
+                    NEW_POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+                    NEW_POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+                    ;;
+            esac
+            ;;
+        bl)
+            case $DIRECTION in
+                down|left)
+                    NEW_POS_X=0
+                    NEW_POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+                    ;;
+                up)
+                    NEW_POS_X=0
+                    NEW_POS_Y=0
+                    ;;
+                right)
+                    NEW_POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+                    NEW_POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+                    ;;
+            esac
+            ;;
+        br)
+            case $DIRECTION in
+                down|right)
+                    NEW_POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+                    NEW_POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+                    ;;
+                up)
+                    NEW_POS_X=$((SCREEN_WIDTH - WINDOW_WIDTH))
+                    NEW_POS_Y=0
+                    ;;
+                left)
+                    NEW_POS_X=0
+                    NEW_POS_Y=$((SCREEN_HEIGHT - WINDOW_HEIGHT))
+                    ;;
+            esac
+            ;;
+    esac
+
+    # Move the specified window
+    swaymsg "[app_id=\"firefox\" title=\"Picture-in-Picture\"] move absolute position $NEW_POS_X $NEW_POS_Y"
+  '';
+
   cornerWindowPinP = pkgs.writeShellScriptBin "cornerWindowPinP" ''
     JQ=${pkgs.jq}/bin/jq
 
@@ -379,7 +506,7 @@ in
           "${mod}+semicolon" = "exec makoctl dismiss --all";
           "${mod}+Shift+i" = "exec ${term} --class bookmarkViewer -e oil";
           "${mod}+Pause" = "exec systemctl suspend";
-          "${mod}+Ctrl+o" = "exec \"rofi -show run -font 'DejaVu 9' -run-shell-command '{terminal} -e \" {cmd}; read -n 1 -s\"'\"";
+          "${mod}+Ctrl+o" = "exec \"${pkgs.rofi}/bin/rofi -show run -font 'DejaVu 9' -run-shell-command '{terminal} -e \" {cmd}; read -n 1 -s\"'\"";
           "${mod}+comma" = "exec amixer set Master -q 5%-";
           "${mod}+period" = "exec amixer set Master -q 5%+";
           "XF86AudioRaiseVolume" = "exec --no-startup-id amixer set Master -q 5%+";
@@ -404,9 +531,10 @@ in
           "${mod}+Shift+f" = "gaps inner current toggle ${innerGap}; gaps outer current toggle ${outerGap}";
           "${mod}+Shift+z" = "exec ${lock}";
           "--release ${mod}+i" = "exec ${oguriWallpaper}/bin/oguriWallpaper static";
+          "${mod}+Shift+d" = "exec ${term} -t 'launcher' -e ${pkgs.sway-launcher-desktop}/bin/sway-launcher-desktop";
           "${mod}+q" = "mode \"apps\"";
+          "${mod}+Shift+p" = "mode \"PinPmove\"";
           "${mod}+r" = "mode \"resize\"";
-          "${mod}+Shift+d" = "exec ${term} -t 'launcher' -e /usr/bin/sway-launcher-desktop";
         };
 
         bars = [{
@@ -467,6 +595,38 @@ in
         };
 
         workspaceAutoBackAndForth = true;
+
+        modes =
+        let
+          withLeaveOptions = attrs: attrs // {
+            "Return" = "mode default";
+            "Escape" = "mode default";
+          };
+        in
+        lib.mkOptionDefault {
+          "apps" = withLeaveOptions {
+            "m" = "exec ${pkgs.spotify}/bin/spotify; [instance=\"spotify\"] scratchpad show; mode default";
+            "c" = "exec ${pkgs.bitwarden}/bin/bitwarden; mode default";
+            "z" = "exec ${pkgs.firefox}/bin/firefox \"https://web.whatsapp.com/\"; mode default";
+            "s" = "exec steam -steamos3; mode default";
+            "period" = "exec ${bigsteam}/bin/bigsteam ${mon1}";
+            "d" = "exec env -u WAYLAND_DISPLAY lutris; mode default";
+            "y" = "exec \"QT_QPA_PLATFORM=xcb yuzu\"; mode default";
+            "e" = "exec element-desktop; mode default";
+            "b" = "exec ${pkgs.blanket}/bin/blanket; mode default";
+            "f" = "exec ${pkgs.firefox}/bin/firefox; mode default";
+            "g" = "exec ${pkgs.firefox}/bin/firefox -private-window; mode default";
+            "j" = "exec ${pkgs.inkscape}/bin/inkscape; mode default";
+            "p" = "exec ${pkgs.pavucontrol}/bin/pavucontrol; mode default";
+            "h" = "exec ${term} -e htop; mode default";
+          };
+          "PinPmove" = withLeaveOptions {
+            "j" = "exec ${snapWindowPinP}/bin/snapWindowPinP down";
+            "k" = "exec ${snapWindowPinP}/bin/snapWindowPinP up";
+            "l" = "exec ${snapWindowPinP}/bin/snapWindowPinP right";
+            "h" = "exec ${snapWindowPinP}/bin/snapWindowPinP left";
+          };
+        };
       };
       extraOptions = [ "-Dnoscanout" ];
       extraSessionCommands = ''
