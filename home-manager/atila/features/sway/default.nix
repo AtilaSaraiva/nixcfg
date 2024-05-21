@@ -1,6 +1,15 @@
 { pkgs, lib, config, ... }:
 
 let
+  coreutilsBin = exe: "${pkgs.uutils-coreutils}/bin/uutils-${exe}";
+  date = coreutilsBin "date";
+  tr = coreutilsBin "tr";
+  wc = coreutilsBin "wc";
+  who = coreutilsBin "who";
+  env = coreutilsBin "env";
+  tty = coreutilsBin "tty";
+  tmux = "${pkgs.tmux}/bin/tmux";
+
   mod = "Mod1";
   map-to-active = "swaymsg input type:tablet_tool map_to_output `swaymsg -t get_outputs | jq -r '.[] | select(.focused == true) | .name'`";
   mon0 = (builtins.elemAt config.displays 0).name;
@@ -350,7 +359,6 @@ in
           size  = 8.0;
         };
         startup = [
-          { command = "${lock}"; }
           { command = "${pkgs.mako}/bin/mako"; }
           { command = "${pkgs.autotiling}/bin/autotiling"; }
           { command = "${pkgs.qbittorrent}/bin/qbittorrent"; }
@@ -648,5 +656,16 @@ in
       gnome.adwaita-icon-theme
       wdisplays
     ];
+
+    programs.zsh.profileExtra = ''
+      if [ -z "$tmux" ] &&  [ "$ssh_client" != "" ]; then
+        exec ${tmux}
+    '' + ''
+      elif [ "$(${tty})" = '/dev/tty1' ]; then
+        # It has to be sway from home manager.
+        ${config.wayland.windowManager.sway.package}/bin/sway
+    '' + ''
+      fi
+    '';
   };
 }
