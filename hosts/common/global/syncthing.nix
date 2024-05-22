@@ -58,10 +58,12 @@ in
           };
         };
         "Photos" = {
+          id = "z4oq6-8bcvu";
           path = "/home/atila/Files/Imagens/Photos";
           devices = builtins.attrNames (removeHost fullDeviceList);
         };
         "Camera" = {
+          id = "sm-g781b_uygd-photos";
           path = "/home/atila/Files/Imagens/Camera";
           devices = builtins.attrNames (removeHost fullDeviceList);
         };
