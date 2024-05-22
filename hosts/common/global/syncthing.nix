@@ -23,6 +23,13 @@ let
       ];
       id = "LJCEZK7-VRY4N2Q-JV2RZJS-VQAMSVR-P6WYCLU-JIALCIQ-T7FD2KV-HYDO2QB";
     };
+    "s20" = {
+      addresses = [
+        "tcp://100.84.238.106:22000"
+        "tcp://s20:22000"
+      ];
+      id = "7C4YYLU-Y66UB7N-FBHLYIH-WQOGZFW-OER2CRH-5G64AC4-JUE7C7K-GILI6AR";
+    };
   };
 
   removeHost = attrset: builtins.removeAttrs attrset [ config.networking.hostName ];
@@ -49,6 +56,14 @@ in
               maxAge = "15768000";
             };
           };
+        };
+        "Photos" = {
+          path = "/home/atila/Files/Imagens/Photos";
+          devices = builtins.attrNames (removeHost fullDeviceList);
+        };
+        "Camera" = {
+          path = "/home/atila/Files/Imagens/Camera";
+          devices = builtins.attrNames (removeHost fullDeviceList);
         };
       };
     };
