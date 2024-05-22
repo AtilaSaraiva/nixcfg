@@ -21,6 +21,8 @@
       julia = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia";
       jl = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia --project -t auto";
       v = "fzf --bind 'enter:become(nvim {})'";
+      cf = "cd $(find . -type d | fzf)";
+      top = "cd $(git rev-parse --show-toplevel)";
     };
 
     history = {
@@ -89,5 +91,7 @@
   home.packages = with pkgs; [
     eza
     vl
+    cl
+    vg
   ];
 }

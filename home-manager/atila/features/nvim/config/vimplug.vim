@@ -1,6 +1,12 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'nvim-lua/plenary.nvim' " don't forget to add this one if you don't have it yet!
+Plug 'ThePrimeagen/harpoon'
+
+" fzf native plugin
 Plug 'junegunn/fzf'
+" fzf.vim
+Plug 'junegunn/fzf.vim'
 
 Plug 'BeneCollyridam/futhark-vim'
 

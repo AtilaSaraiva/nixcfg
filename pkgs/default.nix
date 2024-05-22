@@ -6,7 +6,8 @@ pkgs: {
   i3empty = pkgs.callPackage ./i3empty { };
   nixosbuild = pkgs.callPackage ./nixosbuild { };
   vl = pkgs.callPackage ./scripts { scriptName = "vl"; };
-  cl = pkgs.callPackage ./scripts { scriptName = "cl"; };
+  vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
+  fl = pkgs.callPackage ./scripts { scriptName = "fl"; };
   sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
   toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
 

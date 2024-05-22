@@ -89,13 +89,11 @@ hi Normal guibg=NONE ctermbg=NONE
 hi LineNr guibg=NONE ctermbg=NONE
 hi Search ctermbg=yellow ctermfg=black
 hi PmenuSel ctermbg=yellow ctermfg=black
-nnoremap <leader>n :NERDTreeToggle<CR>
+nnoremap <leader>n :GFile<CR>
 nnoremap <C-h> <C-w><C-h>
 nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
-let g:NERDTreeShowLineNumbers=1
-let g:NERDTreeIgnore = ['\.pyc$','\.o$']
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'base16_default'
 let g:airline_mode_map = {
