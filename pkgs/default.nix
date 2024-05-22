@@ -1,6 +1,6 @@
 # Custom packages, that can be defined similarly to ones from nixpkgs
 # You can build them using 'nix build .#example'
-pkgs: {
+pkgs: rec {
   # example = pkgs.callPackage ./example { };
   amdgpu-fan = pkgs.callPackage ./amdgpu-fan { };
   i3empty = pkgs.callPackage ./i3empty { };
@@ -8,6 +8,13 @@ pkgs: {
   vl = pkgs.callPackage ./scripts { scriptName = "vl"; };
   vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
   fl = pkgs.callPackage ./scripts { scriptName = "fl"; };
+  rgf = pkgs.callPackage ./scripts { scriptName = "rgf"; };
+  rgff = pkgs.callPackage ./scripts {
+    scriptName = "rgff";
+    substitutions = {
+      "rgf" = "${rgf}/bin/rgf";
+    };
+  };
   sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
   toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
 

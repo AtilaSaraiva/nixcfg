@@ -93,5 +93,7 @@
     vl
     cl
     vg
+    rgf
+    rgff
   ];
 }
