@@ -7,6 +7,19 @@
       main = {
         blocks = [
           {
+            block = "time";
+            format = " $timestamp.datetime(f:'%a %d/%m %R') ";
+            interval = 60;
+          }
+          {
+            block = "battery";
+            device = "BAT1";
+            format = " $icon $percentage $time $power ";
+          }
+          {
+            block = "sound";
+          }
+          {
             alert = 10.0;
             block = "disk_space";
             info_type = "available";
@@ -18,19 +31,6 @@
             block = "memory";
             format = " $icon mem_used_percents ";
             format_alt = " $icon $swap_used_percents ";
-          }
-          {
-            block = "sound";
-          }
-          {
-            block = "time";
-            format = " $timestamp.datetime(f:'%a %d/%m %R') ";
-            interval = 60;
-          }
-          {
-            block = "battery";
-            device = "BAT1";
-            format = " $icon $percentage $time $power ";
           }
           {
             block = "net";
