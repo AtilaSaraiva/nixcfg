@@ -2,8 +2,20 @@
 
 let
   fullDeviceList = {
-    "juroscomposto" = { id = "FDQLIPX-66WWRBQ-JDVUEA3-BDPNIRD-LSEAZYM-ED6COS6-SOJ3WVC-AR724AM"; };
-    "igris" = { id = "MXHKQWK-EP2WM3O-SDFREV5-EJGTLS4-B32GTUH-S44E5QW-C4MGSEE-G5HCJQU"; };
+    "juroscomposto" = {
+      addresses = [
+        "100.105.182.82:22000"
+        "juroscomposto:22000"
+      ];
+      id = "FDQLIPX-66WWRBQ-JDVUEA3-BDPNIRD-LSEAZYM-ED6COS6-SOJ3WVC-AR724AM";
+    };
+    "igris" = {
+      addresses = [
+        "100.122.44.105:22000"
+        "igris:22000"
+      ];
+      id = "MXHKQWK-EP2WM3O-SDFREV5-EJGTLS4-B32GTUH-S44E5QW-C4MGSEE-G5HCJQU";
+    };
   };
 
   removeHost = attrset: builtins.removeAttrs attrset [ config.networking.hostName ];
