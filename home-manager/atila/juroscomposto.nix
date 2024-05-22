@@ -61,7 +61,7 @@
   zshmarks = ''
     $HOME/Files/Codigos/repos|repos
     $HOME/Files/Codigos/repos/new-nixos-config|ni
-    $HOME/Files/Mega/phd/projects/julia|jl
+    $HOME/Files/synced/phd/projects/julia|jl
   '';
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
