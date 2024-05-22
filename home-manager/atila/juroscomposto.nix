@@ -58,6 +58,12 @@
     xkb_variant = ",dvp";
   };
 
+  zshmarks = ''
+    $HOME/Files/Codigos/repos|repos
+    $HOME/Files/Codigos/repos/new-nixos-config|ni
+    $HOME/Files/Mega/phd/projects/julia|jl
+  '';
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.05";
 }
