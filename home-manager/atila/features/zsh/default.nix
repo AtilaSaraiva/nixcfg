@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./zshmarks.nix
+  ];
+
   programs.zsh = {
     enable = true;
     autocd = true;

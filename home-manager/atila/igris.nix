@@ -30,8 +30,8 @@
     ./features/tmux
     ./features/sway
     ./features/lf
+    ./features/zsh
     ./features/feh.nix
-    ./features/zsh.nix
     ./features/devtools.nix
     ./features/clitools.nix
     ./features/nixtools.nix
