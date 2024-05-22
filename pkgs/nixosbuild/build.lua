@@ -15,7 +15,7 @@ local flake_path = get_arg(1) or lfs.currentdir()
 -- Define the paths
 local hostname = io.popen("hostname"):read("*l")
 local julia_env_path = os.getenv("HOME") .. "/.julia/environments"
-local projects_path = os.getenv("HOME") .. "/Files/Mega/phd/projects/julia"
+local projects_path = os.getenv("HOME") .. "/Files/synced/phd/projects/julia"
 
 -- Function to run a shell command and print output
 local function run_command(command)
