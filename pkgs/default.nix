@@ -5,6 +5,10 @@ pkgs: {
   amdgpu-fan = pkgs.callPackage ./amdgpu-fan { };
   i3empty = pkgs.callPackage ./i3empty { };
   nixosbuild = pkgs.callPackage ./nixosbuild { };
+  vl = pkgs.callPackage ./scripts { scriptName = "vl"; };
+  cl = pkgs.callPackage ./scripts { scriptName = "cl"; };
+  sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
+  toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
 
   #aftergameopen = pkgs.callPackage ./scripts { scriptName = "aftergameopen"; };
   #animatedWallpaper = pkgs.callPackage ./scripts { scriptName = "animatedWallpaper"; };
@@ -16,7 +20,5 @@ pkgs: {
   #pmenu_g = pkgs.callPackage ./scripts { scriptName = "pmenu_g"; };
   #portSwitch = pkgs.callPackage ./scripts { scriptName = "portSwitch"; };
   #remote = pkgs.callPackage ./scripts { scriptName = "remote"; };
-  sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
-  toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
   #bigsteam = pkgs.callPackage ./scripts { scriptName = "bigsteam"; };
 }

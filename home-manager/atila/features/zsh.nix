@@ -16,6 +16,7 @@
       cleanBranches = "git branch --merged | grep -v \* | xargs git branch -D";
       julia = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia";
       jl = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia --project -t auto";
+      v = "fzf --bind 'enter:become(nvim {})'";
     };
 
     history = {
@@ -78,9 +79,11 @@
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+    tmux.enableShellIntegration = true;
   };
 
   home.packages = with pkgs; [
     eza
+    vl
   ];
 }
