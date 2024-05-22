@@ -40,7 +40,6 @@
     ../common/global/zram.nix
     ../common/global/verifyStore.nix
     ../common/global/tailscale.nix
-    ../common/global/nix-serve.nix
     ../common/global/focusmode
     ../common/global/tmpfs.nix
 
