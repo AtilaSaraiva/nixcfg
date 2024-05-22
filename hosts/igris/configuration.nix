@@ -31,6 +31,7 @@
     ../common/global/scanner.nix
     ../common/global/sound.nix
     ../common/global/sway.nix
+    ../common/global/syncthing.nix
     ../common/global/virtualization.nix
     ../common/global/locate.nix
     ../common/global/quietboot.nix

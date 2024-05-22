@@ -34,6 +34,7 @@
     ../common/global/flatpak.nix
     ../common/global/nix.nix
     ../common/global/noisetorch.nix
+    ../common/global/syncthing.nix
     ../common/global/printing.nix
     ../common/global/scanner.nix
     ../common/global/network.nix
