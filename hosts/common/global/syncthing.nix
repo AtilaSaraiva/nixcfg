@@ -16,6 +16,13 @@ let
       ];
       id = "MXHKQWK-EP2WM3O-SDFREV5-EJGTLS4-B32GTUH-S44E5QW-C4MGSEE-G5HCJQU";
     };
+    "betinha" = {
+      addresses = [
+        "tcp://100.110.100.103:22000"
+        "tcp://betinha:22000"
+      ];
+      id = "MXHKQWK-EP2WM3O-SDFREV5-EJGTLS4-B32GTUH-S44E5QW-C4MGSEE-G5HCJQU";
+    };
   };
 
   removeHost = attrset: builtins.removeAttrs attrset [ config.networking.hostName ];
