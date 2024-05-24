@@ -9,7 +9,7 @@
   config = {
     home.file.".bookmarks".text = ''
       /tmp|tmp
-      $HOME/Files/Mega/phd|phd
+      $HOME/Files/synced/phd|phd
     '' + config.zshmarks;
   };
 }
