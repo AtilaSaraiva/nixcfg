@@ -14,6 +14,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     protontricks
     openmw
     gamemode
+    vesktop # alternate client for discord
   ];
 
   # Special apps (requires more than their package to work).
