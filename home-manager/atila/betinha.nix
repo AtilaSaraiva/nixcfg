@@ -36,6 +36,7 @@
     ./features/clitools.nix
     ./features/nixtools.nix
     ./features/apps.nix
+    ./features/flatpak.nix
     ./features/defaults.nix
   ];
 
