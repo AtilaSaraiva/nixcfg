@@ -380,7 +380,7 @@ in
 
         output = {
           "*" = {
-            max_render_time = "1";
+            max_render_time = "2";
             # In 60Hz display, "adaptive_sync" makes electron apps laggy
             adaptive_sync = "off";
           };
