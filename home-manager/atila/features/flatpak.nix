@@ -16,6 +16,7 @@
     packages = [
       "com.github.tchx84.Flatseal"
       "md.obsidian.Obsidian"
+      "us.zoom.Zoom"
     ];
 
     uninstallUnmanaged = true;
