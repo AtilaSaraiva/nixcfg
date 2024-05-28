@@ -55,8 +55,8 @@
   ];
 
   keyboard = {
-    xkb_layout = "us,us";
-    xkb_variant = "altgr-intl,dvp";
+    xkb_layout = "br,us";
+    xkb_variant = ",dvp";
   };
 
   zshmarks = ''
