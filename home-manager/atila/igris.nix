@@ -40,9 +40,6 @@
     ./features/defaults.nix
   ];
 
-  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  home.stateVersion = "21.11";
-
   displays = [
     {
       name = "eDP-1";
@@ -61,8 +58,7 @@
     xkb_variant = "altgr-intl,dvp";
   };
 
-  zshmarks = ''
-    $HOME/Files/Codigos/repos|repos
-    $HOME/Files/Codigos/repos/new-nixos-config|ni
-  '';
+  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+  home.stateVersion = "21.11";
+
 }
