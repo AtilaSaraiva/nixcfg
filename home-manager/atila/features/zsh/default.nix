@@ -74,8 +74,10 @@
 
     initExtraFirst = ''
       ${pkgs.any-nix-shell}/bin/any-nix-shell zsh --info-right | source /dev/stdin
+      zvm_after_init_commands+=('eval "$(${pkgs.fzf}/bin/fzf --zsh)"')
     '';
 
+      #zvm_after_init_commands+=('[ -f ~/ ] && source ~/.fzf.zsh')
     initExtra = ''
       bindkey '^ ' autosuggest-accept
     '';
