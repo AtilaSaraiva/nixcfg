@@ -5,5 +5,6 @@
     conda
     podman-compose
     texliveMedium
+    mani
   ];
 }
