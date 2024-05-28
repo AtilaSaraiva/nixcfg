@@ -64,6 +64,5 @@
   zshmarks = ''
     $HOME/Files/Codigos/repos|repos
     $HOME/Files/Codigos/repos/new-nixos-config|ni
-    $HOME/Files/synced/phd/projects/julia|jl
   '';
 }
