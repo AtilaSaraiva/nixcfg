@@ -42,7 +42,7 @@
         "compleat"
         "tmux"
       ];
-      theme = "kolo";
+      theme = "gnzh";
     };
 
     plugins = with pkgs; [
