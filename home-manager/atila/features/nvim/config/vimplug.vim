@@ -1,5 +1,7 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'rakr/vim-one'
+
 Plug 'nvim-lua/plenary.nvim' " don't forget to add this one if you don't have it yet!
 Plug 'ThePrimeagen/harpoon'
 
@@ -12,7 +14,7 @@ Plug 'BeneCollyridam/futhark-vim'
 
 Plug 'JuliaEditorSupport/julia-vim'
 
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+"Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 "" Use release branch (recommend)
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -49,10 +51,13 @@ Plug 'triglav/vim-visual-increment'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'github/copilot.vim'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 "Plug 'tpope/vim-commentary'
-if !exists('g:started_by_firenvim')
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
+"if !exists('g:started_by_firenvim')
+    "Plug 'vim-airline/vim-airline'
+    "Plug 'vim-airline/vim-airline-themes'
     "" Deoplete
     "Plug 'zchee/deoplete-jedi'     " deoplete python source
     " TabNine deoplete: general completions every filetype
@@ -63,7 +68,7 @@ if !exists('g:started_by_firenvim')
         "Plug 'tbodt/deoplete-tabnine',
             "\ { 'do': './install.sh' }
     "endif
-endif
+"endif
 Plug 'itchyny/vim-gitbranch'
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'digitaltoad/vim-pug', { 'for': 'pug' }
