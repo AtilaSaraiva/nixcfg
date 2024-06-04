@@ -23,6 +23,32 @@ let
   term = "${pkgs.kitty}/bin/kitty";
   lock = "${pkgs.swaylock-effects}/bin/swaylock --clock --indicator --fade-in 0.2 --screenshots --effect-vignette 0.5:0.5 --effect-blur 7x5";
 
+  todoRepo = "git@github.com:AtilaSaraiva/todo.git";
+  todo = pkgs.writeShellScriptBin "todo" ''
+    #!/usr/bin/env bash
+
+    TODOPATH="/home/atila/Files/synced/phd/projects/todo"
+    REPO="git@github.com:AtilaSaraiva/todo.git"
+    GIT=$(which git)
+
+    if [[ -d $TODOPATH ]]; then
+        cd $TODOPATH
+        $GIT pull || $GIT rebase --interactive
+    else
+        $GIT clone $REPO $TODOPATH || exit 1
+    fi
+
+    cd $TODOPATH
+
+    # Open the file and commit changes
+    ${pkgs.neovim}/bin/nvim todo.md
+    $GIT add todo.md
+    $GIT commit -m "WIP"
+
+    # Push changes if online
+    $GIT push origin main || exit 1
+  '';
+
   snapWindowPinP = pkgs.writeShellScriptBin "snapWindowPinP" ''
     JQ=${pkgs.jq}/bin/jq
 
@@ -431,10 +457,12 @@ in
             { criteria = { app_id = "dropdown_terminal"; }; command = "floating enable, sticky enable, resize set 1800 400, move position center, move down 300 px"; }
             { criteria = { app_id = "transmission-qt"; title="Transmission"; }; command = "move scratchpad"; }
             { criteria = { class = "Bitwarden"; }; command = "move scratchpad"; }
+            { criteria = { app_id = "todolist"; }; command = "floating enable, sticky enable"; }
           ];
         };
 
         keybindings = lib.mkOptionDefault {
+          "${mod}+Ctrl+c" = "exec ${term} --class todolist ${todo}/bin/todo";
           "${mod}+ccedilla" = "exec ${toggleFreesync}/bin/toggleFreesync";
           "${mod}+Shift+o" = "exec ${bookmarkadd}/bin/bookmarkadd";
           "${mod}+Delete" = "exec kill4game";
@@ -478,8 +506,6 @@ in
           "${mod}+w" = "layout tabbed";
           "${mod}+e" = "layout toggle split";
           "${mod}+Shift+space" = "floating toggle, sticky disable";
-          "${mod}+Ctrl+f" = "focus floating, fullscreen enable";
-          "${mod}+Ctrl+c" = "fullscreen disable, focus tiling";
           "${mod}+space" = "focus mode_toggle";
           "${mod}+Shift+s" = "sticky toggle";
           "${mod}+1" = "workspace 1, focus tiling; exec ${map-to-active}";
