@@ -37,7 +37,7 @@
   folders = {
     repos = "codes";
     projects = "projects";
-    nixcfg = "codes/new-nixos-config";
+    nixcfg = "codes/nixcfg";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

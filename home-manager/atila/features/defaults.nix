@@ -12,7 +12,7 @@
     };
     nixcfg = lib.mkOption {
       type = lib.types.str;
-      default = "Files/Codigos/repos/new-nixos-config";
+      default = "Files/Codigos/repos/nixcfg";
     };
   };
 
