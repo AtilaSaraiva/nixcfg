@@ -376,6 +376,7 @@ in
             '';
           }
           { command = "${oguriWallpaper}/bin/oguriWallpaper static"; }
+          { command = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.clipman}/bin/clipman store --no-persist"; }
         ];
 
         output = {
