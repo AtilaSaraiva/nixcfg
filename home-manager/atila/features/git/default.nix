@@ -20,6 +20,7 @@
       core = {
         askpass = "";
       };
+      protocol.version = 2;
     };
   };
 
