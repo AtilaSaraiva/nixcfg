@@ -29,7 +29,7 @@ let
 
     TODOPATH="/home/atila/Files/synced/phd/projects/todo"
     REPO="git@github.com:AtilaSaraiva/todo.git"
-    GIT=$(which git)
+    GIT=${pkgs.git}/bin/git
 
     if [[ -d $TODOPATH ]]; then
         cd $TODOPATH
