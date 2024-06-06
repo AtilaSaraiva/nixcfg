@@ -33,9 +33,9 @@ function template()
         using PkgTemplates
         tpl = Template(;
            user = "AtilaSaraiva",
-           dir="/home/atila/Files/Codigos/repos/",
+           dir="/home/atila/Files/synced/phd/projects/julia/",
            authors="Átila Saraiva Quintela Soares",
-           julia=v"1.9",
+           julia=v"1.10",
            plugins=[License(name="MIT"),
                Git(; manifest=true, ssh=true),
                Codecov(),
