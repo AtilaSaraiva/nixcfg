@@ -21,6 +21,12 @@
         url: git@github.com:AtilaSaraiva/SequentialCompression.jl.git
         tags: [ julia, compression ]
 
+      pinnlab:
+        path: julia/PinnLab.jl
+        url: git@github.com:AtilaSaraiva/PinnLab.jl.git
+        desc: PINN modeling/inversion framework
+        tags: [ julia, pinn ]
+
       seismakie:
         path: julia/SeisMakie.jl
         url: git@github.com:AtilaSaraiva/SeisMakie.jl.git
