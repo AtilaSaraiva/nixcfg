@@ -465,6 +465,7 @@ in
             { criteria = { app_id = "transmission-qt"; title="Transmission"; }; command = "move scratchpad"; }
             { criteria = { class = "Bitwarden"; }; command = "move scratchpad"; }
             { criteria = { app_id = "todolist"; }; command = "floating enable, sticky enable"; }
+            { criteria = { app_id = "klavaro"; }; command = "floating enable"; }
           ];
         };
 
