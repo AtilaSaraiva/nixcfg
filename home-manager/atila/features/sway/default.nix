@@ -361,11 +361,18 @@ in
       default = { };
     };
 
-    keyboard = lib.mkOption {
-      type = lib.types.attrs;
-      default = {
-        xkb_layout = "br,us";
-        xkb_variant = ",dvp";
+    keyboard = {
+      xkb_layout = lib.mkOption {
+        type = lib.types.str;
+        default = "br,us";
+      };
+      xkb_variant = lib.mkOption {
+        type = lib.types.str;
+        default = ",dvp";
+      };
+      xkb_options = lib.mkOption {
+        type = lib.types.str;
+        default = "caps:swapescape,grp:rwin_toggle";
       };
     };
   };
@@ -609,7 +616,11 @@ in
         };
 
         input = {
-          "type:keyboard" = config.keyboard // { xkb_options = "caps:swapescape"; };
+          "type:keyboard" = {
+            xkb_layout  = config.keyboard.xkb_layout;
+            xkb_variant = config.keyboard.xkb_variant;
+            xkb_options = config.keyboard.xkb_options;
+          };
           "type:mouse" = {
             accel_profile = "flat"; # disable mouse acceleration
             pointer_accel = "-0.1"; # set mouse sensitivity
