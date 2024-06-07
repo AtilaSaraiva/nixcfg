@@ -23,5 +23,6 @@
     kopia
     openconnect
     firefox
+    klavaro
   ];
 }
