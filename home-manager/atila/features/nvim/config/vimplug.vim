@@ -6,9 +6,9 @@ Plug 'nvim-lua/plenary.nvim' " don't forget to add this one if you don't have it
 Plug 'ThePrimeagen/harpoon'
 
 " fzf native plugin
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'commit': 'daa602422dc272cbec6b99bc7520262672ad7230' }
 " fzf.vim
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim', { 'commit': '71b0e0fb94f4cd5102fb0ece4fdccf2a97649367' }
 
 Plug 'BeneCollyridam/futhark-vim'
 
