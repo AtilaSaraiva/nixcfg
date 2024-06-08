@@ -57,6 +57,7 @@
   keyboard = {
     xkb_layout = "br,us";
     xkb_variant = ",dvp";
+    xkb_options = "caps:swapescape,grp:menu_toggle";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
