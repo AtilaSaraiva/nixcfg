@@ -24,6 +24,7 @@
       v = "fzf --bind 'enter:become(nvim {})'";
       cf = "cd $(find . -type d | fzf)";
       top = "cd $(git rev-parse --show-toplevel)";
+      j = "jump";
     };
 
     history = {
