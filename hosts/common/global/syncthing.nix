@@ -18,10 +18,10 @@ let
     };
     "betinha" = {
       addresses = [
-        "tcp://100.110.100.103:22000"
+        "tcp://100.87.253.63:22000"
         "tcp://betinha:22000"
       ];
-      id = "LJCEZK7-VRY4N2Q-JV2RZJS-VQAMSVR-P6WYCLU-JIALCIQ-T7FD2KV-HYDO2QB";
+      id = "FV4WQTI-UEJRULE-YCGUBOC-7RZ6GCH-F2PGCNS-GLNQ3H6-JOPU6WL-VKS5LQQ";
     };
     "s20" = {
       addresses = [
