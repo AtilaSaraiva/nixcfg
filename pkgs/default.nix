@@ -8,7 +8,13 @@ pkgs: rec {
   vl = pkgs.callPackage ./scripts { scriptName = "vl"; };
   vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
   fl = pkgs.callPackage ./scripts { scriptName = "fl"; };
-  rgf = pkgs.callPackage ./scripts { scriptName = "rgf"; };
+  rgf = pkgs.callPackage ./scripts {
+    scriptName = "rgf";
+    substitutions = {
+      "$(which rg)" = "${pkgs.ripgrep}/bin/rg";
+      "$(which bat)" = "${pkgs.bat}/bin/bat";
+    };
+  };
   rgff = pkgs.callPackage ./scripts {
     scriptName = "rgff";
     substitutions = {
