@@ -31,6 +31,7 @@
     ./features/sway
     ./features/lf
     ./features/zsh
+    ./features/sirula
     ./features/feh.nix
     ./features/devtools.nix
     ./features/clitools.nix

@@ -27,6 +27,7 @@
     ./features/mpv
     ./features/zathura
     ./features/qutebrowser
+    ./features/sirula
     ./features/tmux
     ./features/sway
     ./features/lf
