@@ -32,6 +32,21 @@
         url: git@github.com:AtilaSaraiva/SeisMakie.jl.git
         tags: [ julia, plotting ]
 
+      seisprocessing:
+        path: julia/SeisProcessing.jl
+        url: git@github.com:AtilaSaraiva/SeisProcessing.jl.git
+        tags: [ julia, seismic ]
+
+      seismain:
+        path: julia/SeisMain.jl
+        url: git@github.com:AtilaSaraiva/SeisMain.jl.git
+        tags: [ julia, seismic ]
+
+      seisreconstruction:
+        path: julia/SeisReconstruction.jl
+        url: git@github.com:AtilaSaraiva/SeisReconstruction.jl.git
+        tags: [ julia, seismic ]
+
     specs:
       custom:
         output: table
