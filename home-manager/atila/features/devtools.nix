@@ -4,8 +4,9 @@
   home.packages = with pkgs; [
     conda
     podman-compose
-    texliveMedium
+    texliveFull
     mani
+    latexit
   ];
 
   home.file."${config.folders.projects}/mani.yaml".text = ''
