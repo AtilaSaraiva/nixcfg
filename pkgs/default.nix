@@ -13,7 +13,6 @@ pkgs: rec {
     substitutions = {
       "$(which pdflatex)" = "${pkgs.texliveFull}/bin/pdflatex";
       "$(which pdfcrop)" = "${pkgs.texliveFull}/bin/pdfcrop";
-      "$(which gs)" = "${pkgs.ghostscript}/bin/gs";
     };
   };
   rgf = pkgs.callPackage ./scripts {

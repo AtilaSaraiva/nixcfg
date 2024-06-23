@@ -41,6 +41,8 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Vimtex
 Plug 'https://github.com/lervag/vimtex'
+Plug 'sirver/ultisnips'
+Plug 'KeitaNakamura/tex-conceal.vim'
 
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'AndrewRadev/splitjoin.vim'

@@ -1,14 +1,11 @@
 #/usr/bin/env shell
 PDFLATEX=$(which pdflatex)
 PDFCROP=$(which pdfcrop)
-GS=$(which gs)
 
 echo "\documentclass{article} \begin{document} \pagestyle{empty} \[" $1 "\]\end{document}" > temp.tex
 $PDFLATEX temp.tex
-$PDFCROP temp.pdf temp.pdf.out
-$GS -sDEVICE=ps2write -dNOCACHE -sOutputFile=output.ps -q -dbatch -dNOPAUSE temp.pdf.out -c quit
+$PDFCROP temp.pdf output.pdf
 rm temp.pdf
 rm temp.tex
 rm temp.aux
 rm temp.log
-rm temp.pdf.out

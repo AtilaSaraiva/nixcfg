@@ -29,6 +29,10 @@ in
       source = ./config;
       recursive = true;
     };
+    "nvim/UltiSnips" = {
+      source = ./UltiSnips;
+      recursive = true;
+    };
   };
 
   xdg.desktopEntries = {

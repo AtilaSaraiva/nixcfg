@@ -56,10 +56,18 @@ let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
 
 
 " Vimtex options
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
 
-    let g:tex_flavor = "latex"
-    let g:vimtex_complete_close_braces = 1
-    let g:vimtex_view_method = 'zathura'
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+set conceallevel=1
+let g:tex_conceal='abdmg'
+hi Conceal ctermbg=none
+
 
   " A expressão abaixo tem como função habilitar autocompletação utilizando deoplete
 "  if !exists('g:deoplete#omni#input_patterns')
