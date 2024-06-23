@@ -548,7 +548,7 @@ in
           "${mod}+Shift+x" = "move container to output right";
           "${mod}+c" = "exec ${pkgs.sway-display-swap}/bin/sway-display-swap";
           "${mod}+Shift+semicolon" = "exec qutebrowser http://127.0.0.1:3875";
-          "${mod}+semicolon" = "exec makoctl dismiss --all";
+          "${mod}+semicolon" = "exec ${pkgs.mako}/bin/makoctl dismiss --all";
           "${mod}+Shift+i" = "exec ${term} --class bookmarkViewer -e oil";
           "${mod}+Pause" = "exec systemctl suspend";
           "${mod}+Ctrl+o" = "exec \"${pkgs.rofi}/bin/rofi -show run -font 'DejaVu 9' -run-shell-command '{terminal} -e \" {cmd}; read -n 1 -s\"'\"";
