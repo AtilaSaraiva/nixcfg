@@ -31,6 +31,8 @@ if has('persistent_undo')      "check if your vim version supports it
   set undodir=$HOME/.config/nvim/undo  "directory where the undo files will be stored
   endif
 
+  " Helps correcting orthography in a file
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 " Trigger autoread when changing buffers or coming back to vim in terminal.
 au FocusGained,BufEnter * :silent! !
