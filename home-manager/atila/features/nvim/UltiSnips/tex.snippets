@@ -34,6 +34,8 @@ snippet template "Basic template" b
 	\import{./figures/}{#1.pdf_tex}
 }
 
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+
 \pdfsuppresswarningpagegroup=1
 
 \begin{document}
@@ -202,7 +204,7 @@ snip.rv = subprocess.check_output(['wolframscript', '-code', code])
 endsnippet
 
 snippet == "equals" iA
-&= $1 \\\\
+&= $1
 endsnippet
 
 snippet != "equals" iA
@@ -230,6 +232,11 @@ endsnippet
 context "math()"
 snippet () "left( right)" iA
 \left( ${1:${VISUAL}} \right) $0
+endsnippet
+
+context "math()"
+snippet rr| "argument" iA
+\left. ${1:${VISUAL}} \right|_{$2} $0
 endsnippet
 
 snippet lr "left( right)" i
@@ -416,6 +423,11 @@ snippet mcal "mathcal" iA
 \mathcal{$1}$0
 endsnippet
 
+context "math()"
+snippet bf "bold" iA
+\mathbf{$1}$0
+endsnippet
+
 snippet lll "l" iA
 \ell
 endsnippet
@@ -519,6 +531,11 @@ snippet cc "subset" Ai
 \subset
 endsnippet
 
+context "math()"
+snippet ec "subseteq" Ai
+\subseteq
+endsnippet
+
 snippet notin "not in " iA
 \not\in
 endsnippet
@@ -592,6 +609,11 @@ endsnippet
 
 snippet SI "SI" iA
 \SI{$1}{$2}
+endsnippet
+
+context "math()"
+snippet fun "function" iA
+${1:f} : $2 ${3:\R} \to ${4:\R} $0
 endsnippet
 
 snippet bigfun "Big function" iA
