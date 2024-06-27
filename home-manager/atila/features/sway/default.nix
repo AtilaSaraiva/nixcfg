@@ -629,6 +629,9 @@ in
           "1386:890:Wacom_One_by_Wacom_S_Pen" = {
             # left_handed = "enabled";
           };
+          "2:10:TPPS/2_IBM_TrackPoint" = {
+            pointer_accel = "-0.3"; # set mouse sensitivity
+          };
           "type:touchpad" = {
             tap = "enabled";
           };
