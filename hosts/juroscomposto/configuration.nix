@@ -20,7 +20,6 @@
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-intel
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-    inputs.nixos-hardware.nixosModules.common-pc-hdd
 
     # You can also split up your configuration and import pieces of it here:
     # ./users.nix

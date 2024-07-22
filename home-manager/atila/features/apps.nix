@@ -16,7 +16,7 @@
     inkscape
     blanket
     libreoffice-fresh
-    youtube-dl
+    yt-dlp
     gimp
     scrcpy
     transmission-qt

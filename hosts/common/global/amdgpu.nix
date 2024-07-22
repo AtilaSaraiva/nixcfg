@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 
 {
-  hardware.opengl.extraPackages = with pkgs; [ # TODO: create an option for amdgpus
+  hardware.graphics.extraPackages = with pkgs; [ # TODO: create an option for amdgpus
     #rocm-opencl-icd
     #amdvlk
     vaapiVdpau
@@ -9,13 +9,13 @@
     libva
   ];
 
-  hardware.opengl.extraPackages32 = [
+  hardware.graphics.extraPackages32 = [
     #pkgs.driversi686Linux.amdvlk
     pkgs.driversi686Linux.mesa
   ];
 
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport32Bit = true;
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
 
   environment.systemPackages = with pkgs; [
     radeontop
