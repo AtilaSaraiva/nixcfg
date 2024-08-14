@@ -1,17 +1,9 @@
 { config, pkgs, ... }:
 
-let
-  dotfiles = config.lib.file.mkOutOfStoreSymlink ./.;
-in
 {
-  #options = {
-    #dotfilesPath = lib.mkOption {
-      #type = lib.types.pat
-    #};
-  #};
-  xdg.configFile."qutebrowser/autoconfig.yml".source = "${dotfiles}/autoconfig.yml";
-  xdg.configFile."qutebrowser/quickmarks".source = "${dotfiles}/quickmarks";
-  xdg.configFile."qutebrowser/bookmarks/urls".source = "${dotfiles}/bookmarks/urls";
+  xdg.configFile."qutebrowser/autoconfig.yml".source = ./autoconfig.yml;
+  xdg.configFile."qutebrowser/quickmarks".source = ./quickmarks;
+  xdg.configFile."qutebrowser/bookmarks/urls".source = ./bookmarks/urls;
 
   home.packages = [
     pkgs.qutebrowser
@@ -29,6 +21,4 @@ in
       "application/x-extension-xht"="org.qutebrowser.qutebrowser.desktop";
     };
   };
-
-
 }
