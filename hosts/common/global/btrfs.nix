@@ -2,7 +2,7 @@
 
 {
   services.btrfs.autoScrub = {
-    enable = true;
+    enable = false;
     interval = "monthly";
   };
 
