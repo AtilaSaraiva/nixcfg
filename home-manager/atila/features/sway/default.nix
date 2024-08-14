@@ -417,6 +417,7 @@ in
             max_render_time = "2";
             # In 60Hz display, "adaptive_sync" makes electron apps laggy
             adaptive_sync = "off";
+
           };
           "PanaScope Pixio PX277P Unknown" = {
             adaptive_sync = "on";
@@ -482,6 +483,7 @@ in
           "${mod}+Shift+q" = "kill";
           "${mod}+b" = "exec ${browser}";
           "${mod}+d" = "exec ${menu}";
+          "${mod}+Shift+backslash" = "output ${mon0} toggle";
           "${mod}+backslash" = "output ${mon1} toggle";
           "${mod}+u" = "focus output left";
           "${mod}+Shift+minus" = "move scratchpad";
