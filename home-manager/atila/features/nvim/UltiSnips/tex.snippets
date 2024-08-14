@@ -19,7 +19,7 @@ snippet template "Basic template" b
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
-\usepackage[dutch]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath, amssymb}
 
 
@@ -116,6 +116,12 @@ if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
 else:
 	snip.rv = ''
 `$2
+endsnippet
+
+snippet nk "Math" wA
+\begin{equation}
+${1:${VISUAL}},
+\end{equation} $0
 endsnippet
 
 snippet dm "Math" wA
