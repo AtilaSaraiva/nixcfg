@@ -25,6 +25,7 @@
       cf = "cd $(find . -type d | fzf)";
       top = "cd $(git rev-parse --show-toplevel)";
       j = "jump";
+      nixGL = "nix run --impure github:nix-community/nixGL -- ";
     };
 
     history = {
