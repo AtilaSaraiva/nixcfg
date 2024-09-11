@@ -1,8 +1,13 @@
 if isinteractive()
     @eval using OhMyREPL
     @eval using Revise
+    @eval using Infiltrator
     @eval using Debugger, JuliaInterpreter, MethodAnalysis;
     union!(JuliaInterpreter.compiled_modules, child_modules(Base));
+    visit(Base) do item
+        isa(item, Module) && push!(JuliaInterpreter.compiled_modules, item)
+        true
+    end
 end
 
 function inc(file::String)
