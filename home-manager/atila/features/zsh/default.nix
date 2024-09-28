@@ -21,11 +21,12 @@
       cleanBranches = "git branch --merged | grep -v \* | xargs git branch -D";
       julia = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia";
       jl = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia --project -t auto";
-      v = "fzf --bind 'enter:become(nvim {})'";
+      v = "${pkgs.fzf}/bin/fzf --bind 'enter:become(nvim {})'";
       cf = "cd $(find . -type d | fzf)";
       top = "cd $(git rev-parse --show-toplevel)";
       j = "jump";
       nixGL = "nix run --impure github:nix-community/nixGL -- ";
+      pj = "cd $(${pkgs.fzf}/bin/fzf --walker=dir,hidden --walker-root=$HOME/${config.folders.projects})";
     };
 
     history = {
