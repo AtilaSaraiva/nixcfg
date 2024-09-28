@@ -118,4 +118,6 @@
   services.upower.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+
+  services.fwupd.enable = true;
 }
