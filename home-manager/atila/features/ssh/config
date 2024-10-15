@@ -20,6 +20,13 @@ Host jc
     ForwardX11 yes
     ForwardX11Trusted yes
 
+Host cosmos
+    HostName cosmos
+    User atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
 Host igris
     HostName igris
     User atila
