@@ -42,7 +42,7 @@ Host deck
     ForwardX11Trusted yes
 
 Host hijitus
-    HostName 142.244.190.76
+    HostName hijitus.physics.ualberta.ca
     User atila
     PreferredAuthentications publickey
     ForwardX11 yes
