@@ -40,6 +40,7 @@
     ../common/global/tailscale.nix
     ../common/global/focusmode
     ../common/global/tmpfs.nix
+    ../common/global/slurm.nix
 
     ../common/users/atila.nix
   ];
