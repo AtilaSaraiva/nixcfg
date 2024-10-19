@@ -111,7 +111,7 @@
 
   boot.kernel.sysctl = {
     "abi.vsyscall32" = 0;
-    "vm.swappiness"  = 7;
+    "vm.swappiness"  = 3;
     "kernel.sysrq"   = 1;
   };
 
