@@ -395,7 +395,6 @@ in
         startup = [
           { command = "${pkgs.mako}/bin/mako"; }
           { command = "${pkgs.autotiling}/bin/autotiling"; }
-          { command = "${pkgs.qbittorrent}/bin/qbittorrent"; }
           { command = "${pkgs.udiskie}/bin/udiskie --tray"; }
           { command = "${pkgs.blueman}/bin/blueman-tray"; }
           { command = "${pkgs.wlsunset}/bin/wlsunset -l 53.631611 -L -113.323975"; }

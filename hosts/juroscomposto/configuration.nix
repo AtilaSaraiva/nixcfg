@@ -13,6 +13,7 @@
     # If you want to use modules your own flake exports (from modules/nixos):
     # outputs.nixosModules.example
     outputs.nixosModules.amdgpu
+    outputs.nixosModules.qbittorrent-cli
 
     # Or modules from other flakes (such as nixos-hardware):
     # inputs.hardware.nixosModules.common-cpu-amd
@@ -75,6 +76,13 @@
       ];
       temp_drop = 8;
     };
+  };
+
+  services.qbittorrent = {
+    enable = true;
+    user = "atila";
+    port = 35910;
+    openFirewall = true;
   };
 
   gaming = {
