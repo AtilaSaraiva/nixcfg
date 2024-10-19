@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -45,7 +45,7 @@
         "compleat"
         "tmux"
       ];
-      theme = "gnzh";
+      theme = lib.mkDefault "gnzh";
     };
 
     plugins = with pkgs; [
