@@ -54,6 +54,12 @@
 
   time.timeZone = "America/Edmonton";
 
+  hardware.enableAllFirmware = lib.mkDefault true;
+
+  hardware.firmware = [
+    pkgs.linux-firmware
+  ];
+
   # to prevent random freezes
   boot.kernelParams = [ "idle=nomwait" ];
 
