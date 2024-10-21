@@ -21,6 +21,11 @@
     radeontop
   ];
 
+  hardware.amdgpu = {
+    initrd.enable = true;
+    opencl.enable = true;
+  };
+
   # Force radv
   environment.variables.AMD_VULKAN_ICD = "RADV";
 }
