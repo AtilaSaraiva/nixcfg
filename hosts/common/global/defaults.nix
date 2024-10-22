@@ -115,6 +115,14 @@
     "kernel.sysrq"   = 1;
   };
 
+  system.autoUpgrade = {
+    enable = lib.mkDefault true;
+    flake = "github:AtilaSaraiva/nixcfg";
+    persistent = true;
+    operation = lib.mkDefault "boot";
+    dates = lib.mkDefault "daily";
+  };
+
   services.upower.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
