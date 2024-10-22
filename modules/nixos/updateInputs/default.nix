@@ -63,6 +63,7 @@ in
         # Create a new branch with a random 6-char key
         BRANCH_NAME="update-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 6)"
         git checkout main
+        git pull --rebase
         git checkout -b "$BRANCH_NAME"
 
         # Run nix flake update
