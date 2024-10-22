@@ -16,13 +16,13 @@
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/f3818b1f-ad35-4331-8379-7e5987f5e4f5";
       fsType = "btrfs";
-      options = [ "subvol=@nix" "discard=async" "space_cache=v2" "compress-force=zstd:4" ];
+      options = [ "subvol=@nix" "discard=async" "space_cache=v2" "compress=lzo" ];
     };
 
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/f3818b1f-ad35-4331-8379-7e5987f5e4f5";
       fsType = "btrfs";
-      options = [ "subvol=@home" "discard=async" "space_cache=v2" "compress-force=zstd:4" ];
+      options = [ "subvol=@home" "discard=async" "space_cache=v2" "compress-force=lzo" ];
     };
 
   fileSystems."/boot" =
@@ -39,7 +39,7 @@
   fileSystems."/home/atila/Games/nvme" =
     { device = "/dev/disk/by-uuid/f3818b1f-ad35-4331-8379-7e5987f5e4f5";
       fsType = "btrfs";
-      options = [ "subvol=@games" "nofail" "discard=async" "space_cache=v2" "compress-force=zstd:4" ];
+      options = [ "subvol=@games" "nofail" "discard=async" "space_cache=v2" "compress=lzo" ];
     };
 
   fileSystems."/home/atila/Files" =
