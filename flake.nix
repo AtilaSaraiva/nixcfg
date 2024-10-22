@@ -90,7 +90,7 @@
       # FIXME replace with your username@hostname
       "atila@igris" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@igris";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/igris.nix
@@ -98,7 +98,7 @@
       };
       "atila@juroscomposto" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@juroscomposto";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/juroscomposto.nix
@@ -106,7 +106,7 @@
       };
       "atila@betinha" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@betinha";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/betinha.nix
@@ -114,7 +114,7 @@
       };
       "atila@hijitus" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@hijitus";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/hijitus.nix
@@ -122,7 +122,7 @@
       };
       "atila@cosmos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@cosmos";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/hijitus.nix
@@ -130,7 +130,7 @@
       };
       "atila@saigml" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@saigml";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/saigml.nix
@@ -138,7 +138,7 @@
       };
       "saraivaq@neurus" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "saraivaq@neurus";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/neurus.nix
@@ -146,7 +146,7 @@
       };
       "deck@steamdeck" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "deck@steamdeck";};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/deck.nix
