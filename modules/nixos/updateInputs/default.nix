@@ -44,6 +44,9 @@ in
       path = with pkgs; [
         git
         libnotify
+        nix
+        nixos-rebuild
+        home-manager
       ];
 
       script = ''
@@ -51,13 +54,14 @@ in
 
         # Define the NIXCFG folder and list of hostnames
         NIXCFG=${cfg.flake_path}
-        HOSTNAMES=${builtins.toString (builtins.attrNames outputs.homeConfigurations)}
+        HOSTNAMES="${builtins.toString (builtins.attrNames outputs.nixosConfigurations)}"
 
         # cd into the NIXCFG folder
         cd "$NIXCFG" || { echo "Failed to cd into $NIXCFG"; exit 1; }
 
         # Create a new branch with a random 6-char key
         BRANCH_NAME="update-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 6)"
+        git checkout main
         git checkout -b "$BRANCH_NAME"
 
         # Run nix flake update
@@ -93,6 +97,8 @@ in
 
         # Send notification for success
         notify-send "Update and rebuild completed successfully."
+        git checkout main
+        git branch -d $BRANCH_NAME
       '';
 
       serviceConfig = {
