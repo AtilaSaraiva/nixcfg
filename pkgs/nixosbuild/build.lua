@@ -13,23 +13,14 @@ end
 local flake_path = get_arg(1) or lfs.currentdir()
 
 -- Define the paths
-local hostname = io.popen("hostname"):read("*l")
-local julia_env_path = os.getenv("HOME") .. "/.julia/environments"
-local projects_path = os.getenv("HOME") .. "/Files/synced/phd/projects/julia"
+local flake_output = get_arg(2) or "atila@" .. io.popen("hostname"):read("*l")
+local julia_env_path = get_arg(3) or os.getenv("HOME") .. "/.julia/environments"
 
--- Function to run a shell command and print output
+-- Function to run a shell command and return the exit status
 local function run_command(command)
-    local handle = io.popen(command)
-    local result = handle:read("*a")
-    handle:close()
-    print(result)
-end
-
--- Function to check if a file exists
-local function file_exists(file)
-    local f = io.open(file, "r")
-    if f then f:close() end
-    return f ~= nil
+    print("Running command: " .. command)
+    local result = os.execute(command)
+    return result == 0  -- Check if the command was successful
 end
 
 -- Function to recursively find and precompile Julia environments
@@ -53,13 +44,14 @@ end
 
 -- Run home-manager switch
 print("Running home-manager switch...")
-run_command('home-manager switch --flake ' .. flake_path .. '#atila@' .. hostname)
+local switch_success = run_command('home-manager switch --flake ' .. flake_path .. '#' .. flake_output)
 
--- Precompile Julia environments
-print("Precompiling Julia environments in " .. julia_env_path)
-precompile_julia_environments(julia_env_path)
-
-print("Precompiling Julia environments in " .. projects_path)
-precompile_julia_environments(projects_path)
+-- If home-manager switch is successful, proceed to precompile Julia environments
+if switch_success then
+    print("Precompiling Julia environments in " .. julia_env_path)
+    precompile_julia_environments(julia_env_path)
+else
+    print("Home-manager switch failed. Skipping Julia precompilation.")
+end
 
 print("Done.")
