@@ -1,4 +1,4 @@
-{ outputs, lib, ... }:
+{ outputs, lib, machine, ... }:
 
 {
   options.folders = {
@@ -15,6 +15,10 @@
       default = "Files/Codigos/repos/nixcfg";
     };
   };
+
+  imports = [
+    outputs.homeManagerModules.autoUpgrade
+  ];
 
   config = {
     nixpkgs = {
@@ -46,6 +50,11 @@
     home = {
       username = lib.mkDefault "atila";
       homeDirectory = lib.mkDefault "/home/atila";
+    };
+
+    services.autoUpgrade = {
+      enable = lib.mkDefault true;
+      flake_output = lib.mkDefault machine;
     };
 
     # Enable home-manager and git
