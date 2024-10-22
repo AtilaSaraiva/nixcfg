@@ -14,6 +14,7 @@
     # outputs.nixosModules.example
     outputs.nixosModules.amdgpu
     outputs.nixosModules.qbittorrent-cli
+    outputs.nixosModules.updateInputs
 
     # Or modules from other flakes (such as nixos-hardware):
     # inputs.hardware.nixosModules.common-cpu-amd
@@ -83,6 +84,11 @@
     user = "atila";
     port = 35910;
     openFirewall = true;
+  };
+
+  services.updateInputs = {
+    enable = true;
+    flake_path = "/home/atila/Files/Codigos/repos/nixcfg";
   };
 
   gaming = {
