@@ -47,6 +47,7 @@ in
         nix
         nixos-rebuild
         home-manager
+        openssh
       ];
 
       script = ''
@@ -88,7 +89,7 @@ in
 
         # If all builds pass, commit the updated flake and merge to main
         git add flake.lock
-        git commit -m "Update flake and rebuild for hosts: $(HOSTNAMES)"
+        git commit -m "updated flake inputs"
         git checkout main
         git merge "$BRANCH_NAME"
 
