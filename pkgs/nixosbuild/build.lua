@@ -44,6 +44,7 @@ end
 
 -- Run home-manager switch
 print("Running home-manager switch...")
+local switch_success = run_command('git -C' .. flake_path .. 'pull --rebase')
 local switch_success = run_command('home-manager switch --flake ' .. flake_path .. '#' .. flake_output)
 
 -- If home-manager switch is successful, proceed to precompile Julia environments
