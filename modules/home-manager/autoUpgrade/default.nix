@@ -38,7 +38,6 @@ in
       Unit.Description = "Home-manager auto upgrade";
       Service = {
         ExecStart = "${pkgs.nixosbuild}/bin/nixosbuild ${cfg.flake_path} ${cfg.flake_output} ${cfg.julia_env_path}";
-        Restart = "on-failure";
       };
     };
 
