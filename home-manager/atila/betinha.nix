@@ -53,6 +53,11 @@
       mode = "1920x1080@60.000Hz";
       transform = "270";
     }
+    {
+      name = "HEADLESS-1";
+      position = "0,1080";
+      mode = "1920x1080@60.000Hz";
+    }
   ];
 
   boot.kernel.sysctl = {
