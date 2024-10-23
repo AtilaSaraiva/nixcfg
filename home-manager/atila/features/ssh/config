@@ -27,6 +27,14 @@ Host cosmos
     ForwardX11 yes
     ForwardX11Trusted yes
 
+Host cos
+    HostName cosmos
+    User atila
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+    ProxyCommand ssh betinha -W %h:%p
+
 Host igris
     HostName igris
     User atila
