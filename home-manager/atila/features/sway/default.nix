@@ -11,7 +11,7 @@ let
   tmux = "${pkgs.tmux}/bin/tmux";
 
   mod = "Mod1";
-  map-to-active = "swaymsg input type:tablet_tool map_to_output `swaymsg -t get_outputs | jq -r '.[] | select(.focused == true) | .name'`";
+  map-to-active = "swaymsg input type:tablet_tool map_to_output `swaymsg -t get_outputs | ${pkgs.jq}/bin/jq -r '.[] | select(.focused == true) | .name'`";
   mon0 = (builtins.elemAt config.displays 0).name;
   mon1 = (builtins.elemAt config.displays 1).name;
   # The last display in the list will be considered the TV, since this only affect the bigsteam script it should not be a big deal
