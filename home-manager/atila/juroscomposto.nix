@@ -53,6 +53,12 @@
       position = "2560,0";
       mode = "3840x2160@60.000Hz";
     }
+    {
+      name = "HEADLESS-1";
+      position = "6400,0";
+      mode = "3840x2160@60.000Hz";
+      subpixel = "rgb";
+    }
   ];
 
   keyboard = {
