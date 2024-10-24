@@ -35,6 +35,20 @@ Host cos
     ForwardX11Trusted yes
     ProxyCommand ssh betinha -W %h:%p
 
+Host sml
+    HostName saigml
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+    ProxyCommand ssh betinha -W %h:%p
+
+Host nrus
+    HostName neurus
+    PreferredAuthentications publickey
+    ForwardX11 yes
+    ForwardX11Trusted yes
+    ProxyCommand ssh betinha -W %h:%p
+
 Host igris
     HostName igris
     User atila
