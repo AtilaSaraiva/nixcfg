@@ -24,5 +24,6 @@
     openconnect
     firefox
     klavaro
+    hakuneko
   ];
 }
