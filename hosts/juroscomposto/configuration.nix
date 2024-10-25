@@ -105,12 +105,10 @@
     hardwareConfiguration = ./hardware-configuration.nix;
   };
 
-  boot.kernelParams = [
-    "vm.dirty_ratio=1"
-    "vm.dirty_background_ratio=3"
-    "kernel.core_pattern=|/bin/false"
-    "vm.vfs_cache_pressure=50"
-  ];
+  boot.kernel.sysctl = {
+    "vm.dirty_ratio" = 1;
+    "vm.dirty_background_ratio" = 1;
+  };
 
   services.preload.enable = true;
 

@@ -113,7 +113,10 @@
     "abi.vsyscall32" = 0;
     "vm.swappiness"  = 3;
     "kernel.sysrq"   = 1;
+    "vm.vfs_cache_pressure" = 50;
   };
+
+  systemd.coredump.enable = false;
 
   system.autoUpgrade = {
     enable = lib.mkDefault true;

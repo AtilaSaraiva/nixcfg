@@ -60,6 +60,11 @@
     pkgs.linux-firmware
   ];
 
+  boot.kernel.sysctl = {
+    "vm.dirty_ratio" = 3;
+    "vm.dirty_background_ratio" = 1;
+  };
+
   # to prevent random freezes
   boot.kernelParams = [ "idle=nomwait" ];
 

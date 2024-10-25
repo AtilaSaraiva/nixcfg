@@ -55,6 +55,11 @@
     }
   ];
 
+  boot.kernel.sysctl = {
+    "vm.dirty_ratio" = 2;
+    "vm.dirty_background_ratio" = 1;
+  };
+
   keyboard = {
     xkb_layout = "br,us";
     xkb_variant = ",dvp";
