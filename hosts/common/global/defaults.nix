@@ -57,7 +57,7 @@
       font-awesome_4
       font-awesome_5
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       open-fonts
       roboto
       ubuntu_font_family
