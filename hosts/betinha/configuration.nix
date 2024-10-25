@@ -54,6 +54,11 @@
 
   time.timeZone = "America/Edmonton";
 
+  boot.kernel.sysctl = {
+    "vm.dirty_ratio" = 2;
+    "vm.dirty_background_ratio" = 1;
+  };
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
 }
