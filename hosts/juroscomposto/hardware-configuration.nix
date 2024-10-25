@@ -22,7 +22,7 @@
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/f3818b1f-ad35-4331-8379-7e5987f5e4f5";
       fsType = "btrfs";
-      options = [ "subvol=@home" "discard=async" "space_cache=v2" "compress-force=lzo" ];
+      options = [ "subvol=@home" "discard=async" "space_cache=v2" "compress=lzo" ];
     };
 
   fileSystems."/boot" =
