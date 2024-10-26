@@ -4,7 +4,7 @@ let
   fullDeviceList = {
     "juroscomposto" = {
       addresses = [
-        "tcp://100.105.182.82:22000"
+        "tcp://100.109.26.105:22000"
         "tcp://juroscomposto:22000"
       ];
       id = "FDQLIPX-66WWRBQ-JDVUEA3-BDPNIRD-LSEAZYM-ED6COS6-SOJ3WVC-AR724AM";
@@ -18,7 +18,7 @@ let
     };
     "betinha" = {
       addresses = [
-        "tcp://100.87.253.63:22000"
+        "tcp://100.85.111.84:22000"
         "tcp://betinha:22000"
       ];
       id = "FV4WQTI-UEJRULE-YCGUBOC-7RZ6GCH-F2PGCNS-GLNQ3H6-JOPU6WL-VKS5LQQ";
