@@ -4,7 +4,6 @@
   home.packages = with pkgs; [
     spotify
     zotero_7
-    dropbox
     bitwarden
     mpv
     buku
@@ -25,5 +24,6 @@
     firefox
     klavaro
     hakuneko
+    git-annex
   ];
 }
