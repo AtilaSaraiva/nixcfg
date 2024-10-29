@@ -24,6 +24,7 @@
     firefox
     klavaro
     hakuneko
+    git-remote-gcrypt
     git-annex
   ];
 }
