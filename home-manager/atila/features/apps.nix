@@ -26,5 +26,7 @@
     hakuneko
     git-remote-gcrypt
     git-annex
+    wayvnc
+    wlvncc
   ];
 }
