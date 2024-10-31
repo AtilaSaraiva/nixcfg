@@ -22,6 +22,12 @@ pkgs: rec {
       "$(which bat)" = "${pkgs.bat}/bin/bat";
     };
   };
+  multissh = pkgs.callPackage ./scripts {
+    scriptName = "multissh";
+    substitutions = {
+      "tmux" = "${pkgs.tmux}/bin/tmux";
+    };
+  };
   rgff = pkgs.callPackage ./scripts {
     scriptName = "rgff";
     substitutions = {
