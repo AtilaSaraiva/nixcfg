@@ -27,9 +27,9 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
       substituters = [
-        "https://cache.nixos.org/"
+        "https://cache.nixos.org?priority=10"
         "https://nix-community.cachix.org"
-        "http://juroscomposto:5000/"
+        "http://juroscomposto:5000?priority=1"
       ];
     };
 
