@@ -7,6 +7,7 @@
     texliveFull
     mani
     latexit
+    multissh
   ];
 
   home.file."${config.folders.projects}/mani.yaml".text = ''
