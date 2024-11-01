@@ -23,6 +23,11 @@ for i in "${!SERVERS[@]}"; do
         tmux split-window -t "$SESSION_NAME:SSH_Servers" "ssh -L ${CURRENT_PORT}:localhost:8001 $SERVER"
         tmux select-layout -t "$SESSION_NAME:SSH_Servers" tiled
     fi
+
+
+    # Wait for 2 seconds, then send "1" to all panes
+    sleep 1
+    tmux send-keys -t "$SESSION_NAME:SSH_Servers" "1" C-m
 done
 
 # Attach to the tmux session
