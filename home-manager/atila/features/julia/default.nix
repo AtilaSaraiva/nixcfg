@@ -11,7 +11,7 @@
     };
 
     packages = [
-      pkgs.julia-bin
+      pkgs.julia
     ];
   };
 }
