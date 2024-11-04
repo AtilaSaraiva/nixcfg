@@ -4,8 +4,6 @@ IdentityFile ~/.ssh/id_private
 
 Host *
     Compression yes
-    ClientAliveInterval 300
-    ClientAliveCountMax 2
 
 Host ogbon
     HostName ogbon-login8.fieb.org.br
