@@ -17,5 +17,7 @@
     feh
     zathura
     nixosbuild
+    git-remote-gcrypt
+    git-annex
   ];
 }
