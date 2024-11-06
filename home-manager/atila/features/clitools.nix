@@ -19,5 +19,7 @@
     nixosbuild
     git-remote-gcrypt
     git-annex
+    mount-zip
+    fuse-archive
   ];
 }
