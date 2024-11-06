@@ -17,15 +17,13 @@
     libreoffice-fresh
     yt-dlp
     gimp
-    scrcpy
     transmission-qt
     kopia
     openconnect
     firefox
     klavaro
     hakuneko
-    git-remote-gcrypt
-    git-annex
+    scrcpy
     wayvnc
     wlvncc
   ];
