@@ -26,5 +26,6 @@
     scrcpy
     wayvnc
     wlvncc
+    chromium
   ];
 }
