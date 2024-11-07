@@ -15,6 +15,7 @@
         # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEDBtZRp53vGMrfJpuy9DZDgN1B77zB141EQG++PHD6 atilasaraiva@gmail.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjk1uFc3D20HmWW3Yn0bupdugufeNi0xDfS0zHjqeQ2 atilasaraiva@gmail.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM2UVYlqXlbOYVEI4iYBuXbACB5nctyNdC/MS9Zt5zNt atilasaraiva@gmail.com"
       ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       extraGroups = ["wheel" "docker" "audio" "networkmanager"];
