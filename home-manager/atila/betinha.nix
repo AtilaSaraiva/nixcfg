@@ -32,6 +32,7 @@
     ./features/lf
     ./features/zsh
     ./features/sirula
+    ./features/xournalpp
     ./features/feh.nix
     ./features/devtools.nix
     ./features/clitools.nix

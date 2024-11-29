@@ -29,6 +29,7 @@
     ./features/qutebrowser
     ./features/tmux
     ./features/sirula
+    ./features/xournalpp
     ./features/sway
     ./features/lf
     ./features/zsh

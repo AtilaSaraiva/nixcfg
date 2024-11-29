@@ -24,6 +24,7 @@
     ./features/git
     ./features/zathura
     ./features/qutebrowser
+    ./features/xournalpp
     ./features/tmux
     ./features/lf
     ./features/zsh
