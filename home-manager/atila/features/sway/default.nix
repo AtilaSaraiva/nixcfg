@@ -384,6 +384,9 @@ in
   config = {
     wayland.windowManager.sway = {
       enable = true;
+
+      xwayland = true;
+
       wrapperFeatures.gtk = true;
       config = {
         defaultWorkspace = "workspace number 1";
