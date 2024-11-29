@@ -694,11 +694,11 @@ in
       swaytools
       wf-recorder
       wl-clipboard
-      cinnamon.nemo
+      nemo
       wev
       lxappearance
       adapta-gtk-theme
-      gnome.adwaita-icon-theme
+      adwaita-icon-theme
       wdisplays
     ];
 
