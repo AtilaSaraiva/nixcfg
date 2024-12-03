@@ -14,12 +14,12 @@
   <property name="zoomStep" value="10"/>
   <property name="zoomStepScroll" value="2"/>
   <property name="displayDpi" value="109"/>
-  <property name="mainWndWidth" value="1274"/>
-  <property name="mainWndHeight" value="704"/>
+  <property name="mainWndWidth" value="954"/>
+  <property name="mainWndHeight" value="524"/>
   <property name="maximized" value="false"/>
   <property name="showToolbar" value="true"/>
   <property name="showSidebar" value="false"/>
-  <property name="sidebarWidth" value="50"/>
+  <property name="sidebarWidth" value="141"/>
   <property name="sidebarNumberingStyle" value="1"/>
   <property name="sidebarOnRight" value="false"/>
   <property name="scrollbarOnLeft" value="false"/>
@@ -143,7 +143,9 @@
       <attribute name="tool" type="string" value="pen"/>
     </data>
     <data name="eraser">
-      <attribute name="tool" type="string" value="none"/>
+      <attribute name="eraserMode" type="string" value="none"/>
+      <attribute name="size" type="string" value="none"/>
+      <attribute name="tool" type="string" value="eraser"/>
     </data>
     <data name="middle">
       <attribute name="eraserMode" type="string" value="none"/>
@@ -157,12 +159,12 @@
       <attribute name="tool" type="string" value="highlighter"/>
     </data>
     <data name="stylus">
+      <attribute name="tool" type="string" value="hand"/>
+    </data>
+    <data name="stylus2">
       <attribute name="eraserMode" type="string" value="none"/>
       <attribute name="size" type="string" value="none"/>
       <attribute name="tool" type="string" value="eraser"/>
-    </data>
-    <data name="stylus2">
-      <attribute name="tool" type="string" value="hand"/>
     </data>
     <data name="touch">
       <attribute name="device" type="string" value=""/>
@@ -182,6 +184,14 @@
     <data name="Logitech Gaming Mouse G302 Consumer Control">
       <attribute name="deviceClass" type="int" value="1"/>
       <attribute name="deviceSource" type="int" value="0"/>
+    </data>
+    <data name="M708">
+      <attribute name="deviceClass" type="int" value="2"/>
+      <attribute name="deviceSource" type="int" value="1"/>
+    </data>
+    <data name="M708 (Eraser)">
+      <attribute name="deviceClass" type="int" value="3"/>
+      <attribute name="deviceSource" type="int" value="2"/>
     </data>
     <data name="UGTABLET 10 inch PenTablet Pen">
       <attribute name="deviceClass" type="int" value="2"/>
