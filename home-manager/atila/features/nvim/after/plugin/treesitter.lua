@@ -4,9 +4,9 @@ require'nvim-treesitter.configs'.setup {
         "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline"
     },
 
-    sync_install = false,
+    sync_install = true,
     
-    auto_install = true,
+    auto_install = false,
     
     ignore_install = { "javascript" },
     
