@@ -25,6 +25,8 @@ require("luasnip").config.set_config({ -- Setting LuaSnip config
 
   -- Use Tab (or some other key if you prefer) to trigger visual selection
   cut_selection_keys = "<Tab>",
+
+  update_events = 'TextChanged,TextChangedI'
 })
 
 -- autocomplete config
