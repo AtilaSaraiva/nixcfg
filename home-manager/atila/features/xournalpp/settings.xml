@@ -6,7 +6,7 @@
   <property name="pressureMultiplier" value="1.05"/>
   <property name="zoomGesturesEnabled" value="true"/>
   <property name="selectedToolbar" value="Right hand Note Taking"/>
-  <property name="lastSavePath" value="/home/atila/Files/synced/phd/TA/Phys130 Lab/lab4"/>
+  <property name="lastSavePath" value=""/>
   <property name="lastOpenPath" value="/home/atila/Files/Mega/phd/generalNotes"/>
   <property name="lastImagePath" value=""/>
   <property name="edgePanSpeed" value="20"/>
@@ -110,7 +110,7 @@
   <property name="trySelectOnStrokeFiltered" value="false"/>
   <property name="snapRecognizedShapesEnabled" value="false"/>
   <property name="restoreLineWidthEnabled" value="false"/>
-  <property name="numIgnoredStylusEvents" value="0"/>
+  <property name="numIgnoredStylusEvents" value="1"/>
   <property name="inputSystemTPCButton" value="false"/>
   <property name="inputSystemDrawOutsideWindow" value="true"/>
   <property name="preferredLocale" value=""/>
@@ -143,7 +143,9 @@
       <attribute name="tool" type="string" value="pen"/>
     </data>
     <data name="eraser">
-      <attribute name="tool" type="string" value="none"/>
+      <attribute name="eraserMode" type="string" value="none"/>
+      <attribute name="size" type="string" value="none"/>
+      <attribute name="tool" type="string" value="eraser"/>
     </data>
     <data name="middle">
       <attribute name="eraserMode" type="string" value="none"/>
@@ -157,12 +159,12 @@
       <attribute name="tool" type="string" value="highlighter"/>
     </data>
     <data name="stylus">
+      <attribute name="tool" type="string" value="hand"/>
+    </data>
+    <data name="stylus2">
       <attribute name="eraserMode" type="string" value="none"/>
       <attribute name="size" type="string" value="none"/>
       <attribute name="tool" type="string" value="eraser"/>
-    </data>
-    <data name="stylus2">
-      <attribute name="tool" type="string" value="hand"/>
     </data>
     <data name="touch">
       <attribute name="device" type="string" value=""/>
