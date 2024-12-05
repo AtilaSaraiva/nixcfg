@@ -1,7 +1,15 @@
 require'nvim-treesitter.configs'.setup {
     ensure_installed = { 
         "julia",
-        "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline"
+        "fortran",
+        "bash",
+        "c",
+        "lua",
+        "vim",
+        "vimdoc",
+        "query",
+        "markdown",
+        "markdown_inline"
     },
 
     sync_install = true,
