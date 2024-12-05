@@ -7,17 +7,18 @@ return {
     -- The same equation snippet, using LuaSnip's fmt function.
     -- The snippet is not shorter, but it is more *human-readable*.
     s({trig="nk", dscr="A LaTeX equation environment", snippetType="autosnippet"},
-      fmt( -- The snippet code actually looks like the equation environment it produces.
-        [[
-          \begin{equation}
-              <>,
-          \end{equation}
-        ]],
-        -- The insert node is placed in the <> angle brackets
-        { i(1) },
-        -- This is where I specify that angle brackets are used as node positions.
-        { delimiters = "<>" }
-      )
+        fmt( -- The snippet code actually looks like the equation environment it produces.
+            [[
+                \begin{equation}
+                    <>,
+                \end{equation}
+            ]],
+            -- The insert node is placed in the <> angle brackets
+            { i(1) },
+            -- This is where I specify that angle brackets are used as node positions.
+            { delimiters = "<>" }
+        ),
+        { condition = line_begin }
     ),
     s(
         {trig="dk", dscr="display mode equation", snippetType="autosnippet"},

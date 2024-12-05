@@ -185,35 +185,52 @@ return {
     ),
 
     -- Summation
-    s({trig = "sum", dscr = "Summation from n=1 to N", wordTrig = true},
-        fmta("\\sum_{i=<>}^{<>} <>", { i(1, "1"), i(2, "N"), i(3) }),
+    s({trig = "sum", dscr = "Summation from n=1 to N", snippetType = "autosnippet"},
+        fmta("\\sum_{<>}^{<>} <>", { i(1, "i=1"), i(2, "N"), i(3) }),
+        { condition = in_mathzone }
+    ),
+   
+    -- Integral
+    s({trig = "int", dscr = "Integral from 0 to T", snippetType = "autosnippet"},
+        fmta(
+            "\\int_{<>}^{<>} <> \\mathrm{d}<>",
+            {
+                i(1, "0"),
+                i(2, "T"),
+                i(3),
+                i(4)
+            }
+        ),
         { condition = in_mathzone }
     ),
 
     -- Limit
-    s({trig = "lim", dscr = "Limit expression", wordTrig = true, snippetType = "autosnippet"},
+    s({trig = "lim", dscr = "Limit expression", snippetType = "autosnippet"},
         fmta("\\lim_{<> \\to <>}", { i(1, "n"), i(2, "\\infty") }),
         { condition = in_mathzone }
     ),
 
     -- Product
-    s({trig = "prod", dscr = "Product expression", wordTrig = true, snippetType = "autosnippet"},
-        fmta("\\prod_{<>}^{<>} <>", { 
-            fmta("n=<>", { i(1, "1") }),
-            i(2, "\\infty"),
-            i(3) 
-        }),
+    s({trig = "prod", dscr = "Product expression", snippetType = "autosnippet"},
+        fmta("\\prod_{<>}^{<>} <>",
+            { 
+                i(1, "n=1"),
+                i(2, "N"),
+                i(3) 
+            }
+        ),
         { condition = in_mathzone }
     ),
 
     -- Partial derivative
-    s({trig = "part", dscr = "Partial derivative", wordTrig = true, snippetType = "autosnippet"},
+    s({trig = "part", dscr = "Partial derivative",
+        snippetType = "autosnippet", priority=100},
         fmta("\\frac{\\partial <>}{\\partial <>}", { i(1, "u"), i(2, "x") }),
         { condition = in_mathzone }
     ),
 
     -- Einstein derivative notation
-    s({trig = "eins", dscr = "Einstein derivative notation", wordTrig = true, snippetType = "autosnippet"},
+    s({trig = "eins", dscr = "Einstein derivative notation", snippetType = "autosnippet"},
         fmta("\\partial_{<>} <>", { i(1, "x"), i(2, "u") }),
         { condition = in_mathzone }
     ),
@@ -456,4 +473,21 @@ return {
         t("\\mathbb{R}"),
         { condition = in_mathzone }
     ),
+
+    -- Derivatives
+    s({trig="d_([%a])", dscr="first derivative",
+        regTrig = true, wordTrig = false, snippetType="autosnippet", priority=100},
+        fmta("\\frac{\\partial}{\\partial <><> } <>",
+           { f( function(_, snip) return snip.captures[1] end ), i(1), i(0) }
+        ),
+        { condition = in_mathzone }
+    ),
+    s({trig="d2_([%a])", dscr="second derivative",
+        regTrig = true, wordTrig = false, snippetType="autosnippet", priority=100},
+        fmta("\\frac{\\partial^2}{\\partial <>^2<> } <>",
+           { f( function(_, snip) return snip.captures[1] end ), i(1), i(0) }
+        ),
+        { condition = in_mathzone }
+    ),
+    
 }
