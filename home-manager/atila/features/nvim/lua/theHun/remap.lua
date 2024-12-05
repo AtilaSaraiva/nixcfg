@@ -46,3 +46,6 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<leader><Tab>", '/<++><Enter>"_c4l')
 vim.keymap.set("i", "<leader><Tab>", '<Esc>/<++><Enter>"_c4l')
 vim.keymap.set("v", "<leader><Tab>", '<Esc>/<++><Enter>"_c4l')
+
+-- terminal
+vim.keymap.set("n", "<leader>t", '<cmd>terminal<CR>a')
