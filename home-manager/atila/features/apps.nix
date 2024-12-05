@@ -27,5 +27,6 @@
     wayvnc
     wlvncc
     chromium
+    calibre
   ];
 }
