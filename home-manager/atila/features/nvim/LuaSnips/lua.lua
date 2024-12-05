@@ -57,8 +57,9 @@ return {
     s({trig="msnip", dscr="A snippet to create auto snippets for math"},
         fmta(
             [=[
-                s({trig="<>", dscr="<>", snippetType="autosnippet"},
-                    fmta("<>")
+                s({trig="<>", dscr="<>",
+                    regTrig = true, wordTrig = false, snippetType="autosnippet"},
+                    fmta("<>",
                        { i(1) }
                     ),
                     { condition = in_mathzone }
