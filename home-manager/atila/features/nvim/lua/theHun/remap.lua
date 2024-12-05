@@ -41,3 +41,8 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 
 -- make script executable
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+-- a way to make custom templates for any file type
+vim.keymap.set("n", "<leader><Tab>", '/<++><Enter>"_c4l')
+vim.keymap.set("i", "<leader><Tab>", '<Esc>/<++><Enter>"_c4l')
+vim.keymap.set("v", "<leader><Tab>", '<Esc>/<++><Enter>"_c4l')
