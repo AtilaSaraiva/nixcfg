@@ -11,6 +11,10 @@ local get_visual = function(args, parent)
   end
 end
 
+local in_comment = function()  -- comment detection
+  return vim.fn['vimtex#syntax#in_comment']() == 1
+end
+
 return {
     s({trig="tt", dscr="Expands 'tt' into '\texttt{}'"},
         {

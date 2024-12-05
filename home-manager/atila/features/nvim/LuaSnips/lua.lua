@@ -29,7 +29,6 @@ return {
             { i(1), i(2), i(3), i(4) }
         )
     ),
-    -- Example: italic font implementing visual selection
     s({trig="dsnip", dscr="A snippet to create dynamic snippets"},
         fmta(
             [=[
@@ -42,6 +41,30 @@ return {
                 )
             ]=],
             { i(1), i(2), i(3), i(4) }
+        )
+    ),
+    s({trig="ssnip", dscr="A snippet to create auto snippets"},
+        fmta(
+            [=[
+                s({trig="<>", dscr="<>", snippetType="autosnippet"},
+                    t("<>"),
+                    { condition = in_mathzone }
+                ),
+            ]=],
+            { i(1), i(2), i(3) }
+        )
+    ),
+    s({trig="msnip", dscr="A snippet to create auto snippets for math"},
+        fmta(
+            [=[
+                s({trig="<>", dscr="<>", snippetType="autosnippet"},
+                    fmta("<>")
+                       { i(1) }
+                    ),
+                    { condition = in_mathzone }
+                ),
+            ]=],
+            { i(1), i(2), i(3) }
         )
     ),
 }
