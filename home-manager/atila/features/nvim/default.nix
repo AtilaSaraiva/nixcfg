@@ -13,24 +13,18 @@ in
 
   programs.neovim.enable = true;
 
-  home = {
-    file = {
-      ".local/share/nvim/site/autoload/plug.vim".source = "${vim-plug}/plug.vim";
-    };
-
-    packages = [
-      pkgs.python3Packages.pynvim
-    ];
-  };
-
   xdg.configFile = {
-    "nvim/init.vim".source = ./init.vim;
-    "nvim/config" = {
-      source = ./config;
+    "nvim/init.lua".source = ./init.lua;
+    "nvim/lua" = {
+      source = ./lua;
       recursive = true;
     };
-    "nvim/UltiSnips" = {
-      source = ./UltiSnips;
+    "nvim/after" = {
+      source = ./lua;
+      recursive = true;
+    };
+    "nvim/LuaSnips" = {
+      source = ./LuaSnips;
       recursive = true;
     };
   };
