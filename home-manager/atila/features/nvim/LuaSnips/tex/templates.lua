@@ -44,7 +44,6 @@ return {
                 \usepackage[english]{babel}
                 \usepackage{amsmath, amssymb}
 
-
                 % figure support
                 \usepackage{import}
                 \usepackage{xifthen}
@@ -63,13 +62,18 @@ return {
 
                 \pdfsuppresswarningpagegroup=1
 
+                \title{<>}
+                \author{Átila Saraiva Quintela Soares}
+
                 \begin{document}
+                    \maketitle
+
                     <>
 
                     \printbibliography
                 \end{document}
            ]],
-           { i(0) }
+           { i(1), i(0) }
         )
     ),
 }
