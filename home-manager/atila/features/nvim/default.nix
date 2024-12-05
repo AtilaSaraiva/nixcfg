@@ -20,7 +20,7 @@ in
       recursive = true;
     };
     "nvim/after" = {
-      source = ./lua;
+      source = ./after;
       recursive = true;
     };
     "nvim/LuaSnips" = {
