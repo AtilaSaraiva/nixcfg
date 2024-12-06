@@ -448,7 +448,7 @@ return {
         ),
         { condition = in_mathzone }
     ),
-    s({trig="([%a])bf", dscr="hat", snippetType="autosnippet", regTrig = true,
+    s({trig="([%a])bf", dscr="bold", snippetType="autosnippet", regTrig = true,
        wordTrig = false},
         fmta("\\mathbf{<>}",
            { f( function(_, snip) return snip.captures[1] end ) }
