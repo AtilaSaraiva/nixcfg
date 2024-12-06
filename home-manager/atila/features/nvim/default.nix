@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   vim-plug = pkgs.fetchFromGitHub {
@@ -12,6 +12,10 @@ in
   home.sessionVariables.EDITOR = "nvim";
 
   programs.neovim.enable = true;
+
+  home.packages = [
+    inputs.nixd
+  ];
 
   xdg.configFile = {
     "nvim/init.lua".source = ./init.lua;
