@@ -18,6 +18,10 @@
       type = lib.types.str;
       default = "Files/annex";
     };
+    syncthing = lib.mkOption {
+      type = lib.types.str;
+      default = "Files/synced";
+    };
   };
 
   imports = [

@@ -15,6 +15,7 @@
       $HOME/${config.folders.repos}|repos
       $HOME/${config.folders.nixcfg}|ni
       $HOME/${config.folders.annex}|an
+      $HOME/${config.folders.syncthing}|sy
     '' + config.zshmarks;
   };
 }
