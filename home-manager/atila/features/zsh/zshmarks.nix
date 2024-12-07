@@ -14,6 +14,7 @@
       $HOME/${config.folders.projects}/julia|jl
       $HOME/${config.folders.repos}|repos
       $HOME/${config.folders.nixcfg}|ni
+      $HOME/${config.folders.annex}|an
     '' + config.zshmarks;
   };
 }
