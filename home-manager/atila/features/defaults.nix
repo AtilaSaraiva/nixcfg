@@ -14,6 +14,10 @@
       type = lib.types.str;
       default = "Files/Codigos/repos/nixcfg";
     };
+    annex = lib.mkOption {
+      type = lib.types.str;
+      default = "Files/annex";
+    };
   };
 
   imports = [
