@@ -15,6 +15,14 @@ local in_comment = function()  -- comment detection
   return vim.fn['vimtex#syntax#in_comment']() == 1
 end
 
+local function clipFirstWord(
+    args,     -- text from i(2) in this example i.e. { { "456" } }
+    parent,   -- parent snippet or parent node
+    user_args -- user_args from opts.user_args 
+    )
+    return string.match(args[1][1], "%w+")
+end
+
 return {
     s({trig="tt", dscr="Expands 'tt' into '\texttt{}'"},
         {
@@ -73,6 +81,47 @@ return {
             {
                 d(1, get_visual),
             }
+        )
+    ),
+    s({trig="([^%a])eq", dscr="Reference to equation", snippetType="autosnippet",
+        regTrig = true, wordTrig = false},
+        fmta("<>\\Eq.~\\ref{<>}",
+           { 
+               f( function(_, snip) return snip.captures[1] end ),
+               i(1)
+           }
+        )
+    ),
+    s({trig="([^%a])fig", dscr="Reference to figure", snippetType="autosnippet",
+        regTrig = true, wordTrig = false},
+        fmta("<>\\Fig.~\\ref{<>}",
+           { 
+               f( function(_, snip) return snip.captures[1] end ),
+               i(1)
+           }
+        )
+    ),
+
+    s({trig="sec", dscr="Section Latex", priority=5000},
+        fmta(
+           [[
+           \section{<>}\label{sec:<>} %{{{
+
+               <>
+
+           % end of section <>}}}
+
+
+           ]],
+           { 
+               i(1),
+               f(
+                   clipFirstWord,  -- callback (args, parent, user_args) -> string
+                   {1} -- node indice(s) whose text is passed to fn, i.e. i(2)
+               ),
+               i(0),
+               rep(1)
+           }
         )
     ),
 }
