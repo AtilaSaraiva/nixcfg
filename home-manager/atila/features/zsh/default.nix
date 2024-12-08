@@ -12,6 +12,7 @@
     autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
+      n = "nvim .";
       sl = "exa";
       ls = "exa";
       l = "exa -l";
