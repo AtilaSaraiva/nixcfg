@@ -71,6 +71,11 @@
 
   services.bukusync.enable = true;
 
+  zshmarks = ''
+    $HOME/Files/storage/downloads|dw
+    $HOME/Files/storage/|st
+  '';
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.05";
 }
