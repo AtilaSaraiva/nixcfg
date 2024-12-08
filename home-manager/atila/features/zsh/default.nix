@@ -28,6 +28,7 @@
       j = "jump";
       nixGL = "nix run --impure github:nix-community/nixGL -- ";
       pj = "cd $(${pkgs.fzf}/bin/fzf --walker=dir,hidden --walker-root=$HOME/${config.folders.projects})";
+      ga = "git annex";
     };
 
     history = {
