@@ -26,6 +26,7 @@
     ./features/qutebrowser
     ./features/xournalpp
     ./features/tmux
+    ./features/vifm
     ./features/lf
     ./features/zsh
     ./features/feh.nix

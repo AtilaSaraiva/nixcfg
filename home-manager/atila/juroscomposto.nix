@@ -31,6 +31,7 @@
     ./features/sirula
     ./features/xournalpp
     ./features/tmux
+    ./features/vifm
     ./features/sway
     ./features/lf
     ./features/zsh

@@ -25,6 +25,7 @@
     ./features/zathura
     ./features/qutebrowser
     ./features/tmux
+    ./features/vifm
     ./features/lf
     ./features/zsh
     ./features/feh.nix

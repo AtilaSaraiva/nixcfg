@@ -28,6 +28,7 @@
     ./features/zathura
     ./features/qutebrowser
     ./features/tmux
+    ./features/vifm
     ./features/sirula
     ./features/xournalpp
     ./features/sway
