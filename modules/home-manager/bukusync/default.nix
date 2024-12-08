@@ -10,6 +10,11 @@ in
 {
   options.services.bukusync = {
     enable = lib.mkEnableOption "Sync engine for buku files on different computers";
+    schedule = lib.mkOption {
+      type = lib.types.str;
+      default = "daily"; # Default schedule
+      description = "The OnCalendar value to control the service schedule (e.g., daily, weekly, or custom).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -21,7 +26,7 @@ in
           Unit = "bukusync";
           OnBootSec = "5m";
           OnUnitActiveSec = "1m";
-          OnCalendar = "Mon *-*-* 10:00:00 America/Edmonton";
+          OnCalendar = cfg.schedule;
         };
         Install.WantedBy = [ "timers.target" ];
       };
