@@ -38,6 +38,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 -- These are example language servers. 
 require('lspconfig').julials.setup({})
+require('lspconfig').nixd.setup({})
 
 local cmp = require('cmp')
 

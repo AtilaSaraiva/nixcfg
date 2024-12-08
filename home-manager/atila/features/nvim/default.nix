@@ -14,7 +14,7 @@ in
   programs.neovim.enable = true;
 
   home.packages = [
-    inputs.nixd
+    pkgs.nixd
   ];
 
   xdg.configFile = {
