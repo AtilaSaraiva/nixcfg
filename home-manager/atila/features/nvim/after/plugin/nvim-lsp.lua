@@ -39,6 +39,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- These are example language servers. 
 require('lspconfig').julials.setup({})
 require('lspconfig').nixd.setup({})
+require'lspconfig'.markdown_oxide.setup{}
 
 local cmp = require('cmp')
 
