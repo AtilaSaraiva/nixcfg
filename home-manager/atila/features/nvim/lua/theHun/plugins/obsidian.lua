@@ -1,7 +1,7 @@
 return {
   "epwalsh/obsidian.nvim",
   version = "*",  -- recommended, use latest release instead of latest commit
-  lazy = true,
+  lazy = false,
   ft = "markdown",
   -- event = {
   --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
