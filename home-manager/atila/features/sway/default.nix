@@ -556,11 +556,11 @@ in
           "${mod}+Shift+i" = "exec ${term} --class bookmarkViewer -e oil";
           "${mod}+Pause" = "exec systemctl suspend";
           "${mod}+Ctrl+o" = "exec \"${pkgs.rofi}/bin/rofi -show run -font 'DejaVu 9' -run-shell-command '{terminal} -e \" {cmd}; read -n 1 -s\"'\"";
-          "${mod}+comma" = "exec amixer set Master -q 5%-";
-          "${mod}+period" = "exec amixer set Master -q 5%+";
-          "XF86AudioRaiseVolume" = "exec --no-startup-id amixer set Master -q 5%+";
-          "XF86AudioLowerVolume" = "exec --no-startup-id amixer set Master -q 5%-";
-          "XF86AudioMute" = "exec --no-startup-id pactl set-sink-mute 0 toggle";
+          "${mod}+comma" = "exec ${pkgs.alsa-utils}/bin/amixer set Master -q 5%-";
+          "${mod}+period" = "exec ${pkgs.alsa-utils}/bin/amixer set Master -q 5%+";
+          "XF86AudioRaiseVolume" = "exec --no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master -q 5%+";
+          "XF86AudioLowerVolume" = "exec --no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master -q 5%-";
+          "XF86AudioMute" = "exec --no-startup-id ${pkgs.pulseaudio}/bin/pactl set-sink-mute 0 toggle";
           "XF86AudioPlay" = "exec ${pkgs.playerctl}/bin/playerctl play-pause";
           "XF86AudioPause" = "exec ${pkgs.playerctl}/bin/playerctl pause";
           "XF86AudioNext" = "exec ${pkgs.playerctl}/bin/playerctl next";
