@@ -1,13 +1,5 @@
 { pkgs, ... }:
 
-let
-  vim-plug = pkgs.fetchFromGitHub {
-    owner = "junegunn";
-    repo = "vim-plug";
-    rev = "ca0ae0a8b1bd6380caba2d8be43a2a19baf7dbe2";
-    sha256 = "1ay2f1liya4ycf7ybiqhz02sywxkw7vhschl2kwl5hvxjahpi9p7";
-  };
-in
 {
   home.sessionVariables.EDITOR = "nvim";
 
