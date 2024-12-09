@@ -481,7 +481,7 @@ in
           "${mod}+Return" = "exec ${term}";
           "${mod}+t" = "exec ${term} --class dropdown_terminal -e zsh";
           "${mod}+n" = "exec ${term} --class lf -e ${pkgs.lf}/bin/lf";
-          "${mod}+Shift+n" = "exec ${term} --class=notes vifm ~/Files/Mega/phd/notes";
+          "${mod}+Shift+n" = "exec ${term} --class=notes ${pkgs.vifm}/bin/vifm ~/Files/synced/phd/notes";
           "${mod}+Shift+q" = "kill";
           "${mod}+b" = "exec ${browser}";
           "${mod}+d" = "exec ${menu}";
