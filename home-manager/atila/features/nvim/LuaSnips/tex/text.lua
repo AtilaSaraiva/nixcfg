@@ -83,16 +83,16 @@ return {
             }
         )
     ),
-    s({trig="([^%a])eq", dscr="Reference to equation", snippetType="autosnippet",
+    s({trig="([^%a])eq", dscr="Reference to equation",
         regTrig = true, wordTrig = false},
-        fmta("<>\\Eq.~\\ref{<>}",
+        fmta("<>Eq.~\\ref{<>}",
            { 
                f( function(_, snip) return snip.captures[1] end ),
                i(1)
            }
         )
     ),
-    s({trig="([^%a])fig", dscr="Reference to figure", snippetType="autosnippet",
+    s({trig="([^%a])fig", dscr="Reference to figure",
         regTrig = true, wordTrig = false},
         fmta("<>\\Fig.~\\ref{<>}",
            { 
