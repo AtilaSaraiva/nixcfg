@@ -70,7 +70,7 @@ return {
         ),
         { condition = in_mathzone }
     ),
-    s({trig = '([%a])/', regTrig = true, wordTrig = false, snippetType="autosnippet"},
+    s({trig = '([%a%d])/', regTrig = true, wordTrig = false, snippetType="autosnippet"},
         fmta(
             "\\frac{<>}{<>}",
             {
@@ -148,7 +148,7 @@ return {
     ),
 
     -- Left and right absolute value
-    s({trig = "rr|", dscr = "Left and right absolute value with subscript", snippetType = "autosnippet"},
+    s({trig = "rr|", dscr = "Left and right absolute value with ubscript", snippetType = "autosnippet"},
         fmta("\\left. <> \\right|_{<>}", { d(1, get_visual), i(2) }),
         { condition = in_mathzone }
     ),
@@ -236,32 +236,40 @@ return {
     ),
 
     -- Square root
-    s({trig = "sq", dscr = "Square root", snippetType = "autosnippet"},
+    s({trig = "sq", dscr = "Square root", snippetType = "autosnippet", priority=2000},
         fmta("\\sqrt{<>}", { d(1, get_visual) }),
         { condition = in_mathzone }
     ),
 
-    -- Superscript 2
-    s({trig = "sr", dscr = "Superscript 2", snippetType = "autosnippet"},
-        t("^2"),
+    s({trig = "([%a%d%)%]%}])sr", dscr = "Superscript 2",
+        regTrig = true, wordTrig = false, snippetType = "autosnippet", priority=2000},
+        fmta("<>^2",
+            { f( function(_, snip) return snip.captures[1] end ) }
+        ),
+        { condition = in_mathzone }
+    ),
+    
+    s({trig = "([%a%d%)%]%}])cb", dscr = "Superscript 3",
+        regTrig = true, wordTrig = false, snippetType = "autosnippet", priority=2000},
+        fmta("<>^3",
+            { f( function(_, snip) return snip.captures[1] end ) }
+        ),
         { condition = in_mathzone }
     ),
 
-    -- Superscript 3
-    s({trig = "cb", dscr = "Superscript 3", snippetType = "autosnippet"},
-        t("^3"),
+    s({trig = "([%a%d%)%]%}])td", dscr = "general superscript",
+        regTrig = true, wordTrig = false, snippetType = "autosnippet", priority=2000},
+        fmta("<>^{<>}",
+            { f( function(_, snip) return snip.captures[1] end ), i(1) }
+        ),
         { condition = in_mathzone }
     ),
 
-    -- General superscript
-    s({trig = "td", dscr = "General superscript", snippetType = "autosnippet"},
-        fmta("^{<>}", { i(1) }),
-        { condition = in_mathzone }
-    ),
-
-    -- Parenthesized superscript
-    s({trig = "rd", dscr = "Parenthesized superscript", snippetType = "autosnippet"},
-        fmta("^{(<>)}", { i(1) }),
+    s({trig = "([%a%d%)%]%}])rd", dscr = "parathensized superscript",
+        regTrig = true, wordTrig = false, snippetType = "autosnippet", priority=2000},
+        fmta("<>^{(<>)}",
+            { f( function(_, snip) return snip.captures[1] end ), i(1) }
+        ),
         { condition = in_mathzone }
     ),
 
@@ -361,6 +369,15 @@ return {
         { condition = in_mathzone }
     ),
 
+    s({trig = "leq", dscr = "Less-or-equal symbol", snippetType = "autosnippet"},
+        t("\\leqslant"),
+        { condition = in_mathzone }
+    ),
+    s({trig = "geq", dscr = "greater-or-equal symbol", snippetType = "autosnippet"},
+        t("\\geqslant"),
+        { condition = in_mathzone }
+    ),
+
     -- Tilde (sim)
     s({trig = "~~", dscr = "Tilde symbol", snippetType = "autosnippet"},
         t("\\sim"),
@@ -382,6 +399,14 @@ return {
     -- Subset (subset)
     s({trig = "cc", dscr = "Subset symbol", snippetType = "autosnippet"},
         t("\\subset"),
+        { condition = in_mathzone }
+    ),
+
+    s({trig="tq", dscr="writes a long pipe in a set construction",
+        snippetType="autosnippet"},
+        fmta(" \\, \\middle| \\, <>",
+           { i(0) }
+        ),
         { condition = in_mathzone }
     ),
 
