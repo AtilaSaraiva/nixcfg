@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 let
   vim-plug = pkgs.fetchFromGitHub {
@@ -13,8 +13,9 @@ in
 
   programs.neovim.enable = true;
 
-  home.packages = [
-    pkgs.nixd
+  home.packages = with pkgs; [
+    nixd
+    markdown-oxide
   ];
 
   xdg.configFile = {
