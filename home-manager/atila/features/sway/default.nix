@@ -49,6 +49,18 @@ let
     $GIT push origin main || exit 1
   '';
 
+  swapDisplay = pkgs.writeShellScriptBin "swapDisplay" ''
+    #!/usr/bin/env bash
+
+    IFS=:
+    swaymsg -t get_outputs | ${pkgs.jq}/bin/jq -r '.[]|"\(.name):\(.current_workspace)"' | grep -v '^null:null$' | \
+    while read -r name current_workspace; do
+        echo "moving $current_workspace right..."
+        swaymsg workspace "$current_workspace"
+        swaymsg move workspace to output right
+    done
+  '';
+
   snapWindowPinP = pkgs.writeShellScriptBin "snapWindowPinP" ''
     JQ=${pkgs.jq}/bin/jq
 
@@ -550,7 +562,7 @@ in
           "${mod}+Shift+Ctrl+l" = "exec --no-startup-id ${i3empty} --move next";
           "${mod}+x" = "move workspace to output right";
           "${mod}+Shift+x" = "move container to output right";
-          "${mod}+c" = "exec ${pkgs.sway-display-swap}/bin/sway-display-swap";
+          "${mod}+c" = "exec ${swapDisplay}/bin/swapDisplay";
           "${mod}+Shift+semicolon" = "exec qutebrowser http://127.0.0.1:3875";
           "${mod}+semicolon" = "exec ${pkgs.mako}/bin/makoctl dismiss --all";
           "${mod}+Shift+i" = "exec ${term} --class bookmarkViewer -e oil";
