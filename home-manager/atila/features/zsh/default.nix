@@ -13,6 +13,8 @@
     enableCompletion = true;
     shellAliases = {
       n = "nvim . +Telescope find_files";
+      note = "nvim +'ObsidianNew'";
+      noteo = "nvim +'ObsidianQuickSwitch'";
       sl = "exa";
       ls = "exa";
       l = "exa -l";
