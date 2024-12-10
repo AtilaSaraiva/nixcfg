@@ -12,7 +12,7 @@
     autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
-      n = "nvim .";
+      n = "nvim . +Telescope find_files";
       sl = "exa";
       ls = "exa";
       l = "exa -l";
