@@ -76,6 +76,10 @@
     $HOME/Files/storage/|st
   '';
 
+  home.packages = [
+    pkgs.mathematica
+  ];
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.05";
 }
