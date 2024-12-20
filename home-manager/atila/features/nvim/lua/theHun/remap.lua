@@ -47,5 +47,46 @@ vim.keymap.set("n", "<leader><Tab>", '/<++><Enter>"_c4l')
 vim.keymap.set("i", "<leader><Tab>", '<Esc>/<++><Enter>"_c4l')
 vim.keymap.set("v", "<leader><Tab>", '<Esc>/<++><Enter>"_c4l')
 
+-- Window navigation using :wincmd
+vim.keymap.set('n', '<leader>h', '<Cmd>wincmd h<CR>', { desc = 'Move to the left window' })
+vim.keymap.set('n', '<leader>j', '<Cmd>wincmd j<CR>', { desc = 'Move to the below window' })
+vim.keymap.set('n', '<leader>k', '<Cmd>wincmd k<CR>', { desc = 'Move to the above window' })
+vim.keymap.set('n', '<leader>l', '<Cmd>wincmd l<CR>', { desc = 'Move to the right window' })
+vim.keymap.set('n', '<leader>p', '<Cmd>wincmd p<CR>', { desc = 'Swap windows' })
+
+vim.keymap.set('t', '<leader>h', '<C-\\><C-N><Cmd>wincmd h<CR>')
+vim.keymap.set('t', '<leader>j', '<C-\\><C-N><Cmd>wincmd j<CR>')
+vim.keymap.set('t', '<leader>k', '<C-\\><C-N><Cmd>wincmd k<CR>')
+vim.keymap.set('t', '<leader>l', '<C-\\><C-N><Cmd>wincmd l<CR>')
+vim.keymap.set('i', '<leader>h', '<C-\\><C-N><Cmd>wincmd h<CR>')
+vim.keymap.set('i', '<leader>j', '<C-\\><C-N><Cmd>wincmd j<CR>')
+vim.keymap.set('i', '<leader>k', '<C-\\><C-N><Cmd>wincmd k<CR>')
+vim.keymap.set('i', '<leader>l', '<C-\\><C-N><Cmd>wincmd l<CR>')
+
 -- terminal
 vim.keymap.set("n", "<leader>t", '<cmd>terminal<CR>a')
+vim.keymap.set("t", "<Esc>", '<C-\\><C-N>')
+
+vim.api.nvim_create_autocmd('TermOpen', {
+    group = vim.api.nvim_create_augroup('custom-term-open', { clear = true }),
+    callback = function()
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+    end,
+})
+
+local job_id = 0
+vim.keymap.set("n", "<leader>st", function()
+    vim.cmd.vnew()
+    vim.cmd.term()
+    vim.cmd.wincmd("J")
+    vim.api.nvim_win_set_height(0, 10)
+    job_id = vim.bo.channel
+
+    vim.cmd('normal! a')
+end)
+
+-- Example of how to create a custom terminal command
+-- vim.keymap.set("n", "<leader>example", function()
+--     vim.fn.chansend(job_id, { "ls -al\r\n" })
+-- end)
