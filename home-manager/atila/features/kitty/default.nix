@@ -1,11 +1,7 @@
-{ pkgs, ... }:
-
 {
   xdg.configFile."kitty/kitty.conf".source = ./kitty.conf;
 
-  home.packages = [
-    pkgs.kitty
-  ];
+  programs.kitty.enable = true;
 
   xdg.mimeApps = {
     enable = true;

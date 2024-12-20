@@ -98,8 +98,9 @@
     tmux.enableShellIntegration = true;
   };
 
+  programs.eza.enable = true;
+
   home.packages = with pkgs; [
-    eza
     vl
     cl
     vg

@@ -2,7 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    spotify
     zotero_7
     bitwarden
     mpv
@@ -29,4 +28,6 @@
     chromium
     calibre
   ];
+
+  programs.spotify-player.enable = true;
 }

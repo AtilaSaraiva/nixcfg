@@ -1,9 +1,5 @@
-{ pkgs, ... }:
-
 {
   xdg.configFile."vifm/vifmrc".source = ./vifmrc;
 
-  home.packages = [
-    pkgs.vifm
-  ];
+  programs.vifm.enable = true;
 }
