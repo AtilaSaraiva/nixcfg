@@ -40,6 +40,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 require('lspconfig').julials.setup({})
 require('lspconfig').nixd.setup({})
 require'lspconfig'.markdown_oxide.setup{}
+require'lspconfig'.digestif.setup{}
 
 local cmp = require('cmp')
 
