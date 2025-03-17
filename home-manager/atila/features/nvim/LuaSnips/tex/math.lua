@@ -91,7 +91,7 @@ return {
         { condition = in_mathzone }
     ),
     s({trig="=>", dscr="imply", snippetType="autosnippet"},
-        t("\\imply"),
+        t("\\implies"),
         { condition = in_mathzone }
     ),
     s({trig="<=", dscr="imply", snippetType="autosnippet"},
