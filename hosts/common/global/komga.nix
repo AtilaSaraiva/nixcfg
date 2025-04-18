@@ -2,7 +2,7 @@
   services.komga = {
     enable = true;
     user = "atila";
-    port = 8080;
     openFirewall = true;
+    settings.server.port = 8080;
   };
 }
