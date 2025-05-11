@@ -76,6 +76,10 @@
     $HOME/Files/storage/|st
   '';
 
+  services.flatpak.packages = [
+    "com.heroicgameslauncher.hgl"
+  ];
+
   home.packages = [
     pkgs.stable.mathematica
   ];
