@@ -78,6 +78,7 @@
 
   services.flatpak.packages = [
     "com.heroicgameslauncher.hgl"
+    "com.usebottles.bottles"
   ];
 
   home.packages = [
