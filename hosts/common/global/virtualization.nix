@@ -8,12 +8,10 @@
       dockerSocket.enable = true;
     };
 
-    virtualbox = {
-      guest.enable = true;
-      host = {
-        enable = true;
-        enableKvm = true;
-      };
-    };
+    libvirtd.enable = true;
+    spiceUSBRedirection.enable = true;
   };
+  programs.virt-manager.enable = true;
+
+  users.groups.libvirtd.members = ["atila"];
 }
