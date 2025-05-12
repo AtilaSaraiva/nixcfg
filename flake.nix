@@ -15,7 +15,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     jovian-nixos.url = "github:Jovian-Experiments/Jovian-NixOS/development";
 
