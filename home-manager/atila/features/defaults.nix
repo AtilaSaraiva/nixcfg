@@ -1,4 +1,4 @@
-{ outputs, lib, machine, ... }:
+{ outputs, lib, machine, pkgs, ... }:
 
 {
   options.folders = {
@@ -71,5 +71,10 @@
     # Nicely reload system units when changing configs
     # systemd.user.startServices = "sd-switch";
     systemd.user.startServices = "suggest";
+
+    nix = {
+      package = pkgs.nix;
+      settings.experimental-features = [ "nix-command" "flakes" ];
+    };
   };
 }
