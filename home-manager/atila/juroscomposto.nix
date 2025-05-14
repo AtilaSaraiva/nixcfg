@@ -83,7 +83,7 @@
   ];
 
   home.packages = [
-    pkgs.stable.mathematica
+    (lib.hiPrio pkgs.stable.mathematica)
   ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
