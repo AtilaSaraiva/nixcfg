@@ -12,7 +12,6 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     wine-wayland
     steam-run
     protontricks
-    openmw
     gamemode
     vesktop # alternate client for discord
   ];
@@ -82,7 +81,6 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
         wine-wayland
         steam-run
         protontricks
-        openmw
       ];
 
       system.stateVersion = config.system.stateVersion;
