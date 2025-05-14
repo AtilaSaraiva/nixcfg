@@ -35,6 +35,7 @@
     ./features/sirula
     ./features/xournalpp
     ./features/feh.nix
+    ./features/wolframEngine.nix
     ./features/devtools.nix
     ./features/clitools.nix
     ./features/nixtools.nix

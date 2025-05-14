@@ -30,6 +30,7 @@
     ./features/lf
     ./features/zsh
     ./features/feh.nix
+    ./features/wolframEngine.nix
     ./features/devtools.nix
     ./features/clitools.nix
     ./features/nixtools.nix
