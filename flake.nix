@@ -20,6 +20,9 @@
     jovian-nixos.url = "github:Jovian-Experiments/Jovian-NixOS/development";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    nixgl.url = "github:bb010g/nixGL";
+    nixgl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
