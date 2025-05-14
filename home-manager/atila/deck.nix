@@ -101,6 +101,12 @@
 
   programs.zsh.oh-my-zsh.theme = "kolo";
 
+  keyboard = {
+    xkb_layout = "us,us";
+    xkb_variant = "altgr-intl,dvp";
+    xkb_options = "caps:swapescape,grp:ralt_rshift_toggle";
+  };
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "24.11";
 }
