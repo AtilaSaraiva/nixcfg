@@ -228,6 +228,11 @@ return {
         fmta("\\frac{\\partial <>}{\\partial <>}", { i(1, "u"), i(2, "x") }),
         { condition = in_mathzone }
     ),
+    s({trig = "dt", dscr = "Partial derivative",
+        snippetType = "autosnippet", priority=100},
+        fmta("\\frac{\\mathrm{d} <>}{\\mathrm{d} <>}", { i(1, "u"), i(2, "x") }),
+        { condition = in_mathzone }
+    ),
 
     -- Einstein derivative notation
     s({trig = "eins", dscr = "Einstein derivative notation", snippetType = "autosnippet"},
