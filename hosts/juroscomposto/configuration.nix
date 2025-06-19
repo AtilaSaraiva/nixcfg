@@ -62,7 +62,7 @@
   networking.hostName = "juroscomposto";
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
-  i18n.defaultLocale = "pt_BR.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   time.timeZone = "America/Edmonton";
 
