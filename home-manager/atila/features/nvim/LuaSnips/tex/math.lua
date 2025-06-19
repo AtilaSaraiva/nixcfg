@@ -523,7 +523,15 @@ return {
     -- Gateaux derivative
     s({trig="dd_([%a])", dscr="first derivative",
         regTrig = true, wordTrig = false, snippetType="autosnippet", priority=1000},
-        fmta("\\partial_<> <>(<>; <>) <>",
+        fmta("\\partial_{<>} <>(<>; <>) <>",
+           { f( function(_, snip) return snip.captures[1] end ), i(1), i(2), i(3), i(0) }
+        ),
+        { condition = in_mathzone }
+    ),
+    -- Gateaux derivative with implicit dependency between variables
+    s({trig="ddt_([%a])", dscr="first derivative",
+        regTrig = true, wordTrig = false, snippetType="autosnippet", priority=1000},
+        fmta("\\mathrm{d}_{<>} <>(<>; <>) <>",
            { f( function(_, snip) return snip.captures[1] end ), i(1), i(2), i(3), i(0) }
         ),
         { condition = in_mathzone }
