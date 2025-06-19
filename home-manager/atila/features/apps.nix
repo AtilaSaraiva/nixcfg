@@ -27,6 +27,7 @@
     wlvncc
     chromium
     calibre
+    homebank
   ];
 
   programs.spotify-player.enable = true;
