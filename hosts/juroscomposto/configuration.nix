@@ -109,6 +109,7 @@
   boot.kernel.sysctl = {
     "vm.dirty_ratio" = 1;
     "vm.dirty_background_ratio" = 1;
+    "kernel.split_lock_mitigate" =0;
   };
 
   services.preload.enable = true;
