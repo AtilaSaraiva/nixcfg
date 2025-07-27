@@ -4,6 +4,11 @@ python3Packages.buildPythonApplication rec {
   pname = "amdgpu-fan";
   version = "unstable-2022-01-15";
 
+  # format = "pyproject";
+  pyproject = true;
+
+  build-system = [ python3Packages.setuptools python3Packages.wheel ];
+
   postPatch = ''
     substituteInPlace setup.py --replace "PROJECTVERSION" "0.0.6"
   '';
