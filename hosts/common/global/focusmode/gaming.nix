@@ -21,6 +21,11 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     enable = true;
     gamescopeSession = {
       enable = true; # Gamescope session is better for AAA gaming.
+      args = [
+        "--adaptive-sync"
+        "--rt"
+        "--mangoapp"
+      ];
     };
   };
   programs.gamescope = {
