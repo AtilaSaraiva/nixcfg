@@ -54,6 +54,7 @@
     ../common/global/tmpfs.nix
     ../common/global/pluto.nix
     ../common/global/btrfs.nix
+    ../common/global/sunshine.nix
 
     ../common/users/atila.nix
   ];
