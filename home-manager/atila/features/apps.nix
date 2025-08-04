@@ -16,7 +16,7 @@
     libreoffice-fresh
     yt-dlp
     gimp
-    transmission-qt
+    transmission_4-qt
     kopia
     openconnect
     firefox
