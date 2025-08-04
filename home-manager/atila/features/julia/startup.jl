@@ -23,6 +23,90 @@ function pluto()
                     require_secret_for_access=false)
 end
 
+
+"""
+    plotit(array, d, o; width=95)
+
+Plot the 2D array `array` as a heatmap, using
+
+  • grid spacings  d = (dx, dy)
+  • origin         o = (x0, y0)
+
+so that
+
+  xᵢ = x0 + (i-1)*dx   for i=1:size(array,2)
+  yⱼ = y0 + (j-1)*dy   for j=1:size(array,1)
+
+Keyword `width` is passed through to UnicodePlots.
+"""
+function plotit(
+    array::AbstractMatrix{<:Real};
+    d::Tuple{<:Real,<:Real},
+    o::Tuple{<:Real,<:Real},
+    width::Int = 95
+)
+
+    @eval using UnicodePlots
+
+    dy, dx = d
+    y0, x0 = o
+
+    heatmap(
+        array;
+        yfact = dy,
+        xfact = dx,
+        yoffset = y0,
+        xoffset = x0,
+        width = width,
+        yflip = true,
+        xlabel = "x",
+        ylabel = "y",
+        title  = ""
+    )
+end
+
+function __calculate_pclip(A::AbstractArray{<:Real}; pclip=98)
+    @eval using Statistics: quantile
+    if (pclip<=100)
+        a = -quantile(abs.(A[:]), (pclip/100))
+    else
+        a = -quantile(abs.(A[:]), 1)*pclip/100
+    end
+    b = -a
+
+    return a, b
+end
+
+function plotit(
+    array::AbstractMatrix{<:Real},
+    pclip::Integer;
+    d::Tuple{<:Real,<:Real},
+    o::Tuple{<:Real,<:Real},
+    width::Int = 95
+)
+
+    @eval using UnicodePlots
+
+    a,b = __calculate_pclip(array)
+
+    dy, dx = d
+    y0, x0 = o
+
+    heatmap(
+        array;
+        zlim=(a,b),
+        yfact = dy,
+        xfact = dx,
+        yoffset = y0,
+        xoffset = x0,
+        width = width,
+        yflip = true,
+        xlabel = "x",
+        ylabel = "y",
+        title  = ""
+    )
+end
+
 """
     converts a figure size in cm to pixels for Makie plotting
 """
@@ -96,7 +180,7 @@ if Base.isinteractive() &&
         :Test           => Symbol.([
                                "@test", "@testset", "@test_broken", "@test_deprecated",
                                "@test_logs", "@test_nowarn", "@test_skip",
-                               "@test_throws", "@test_warn",
+                               "@test_throws", "@test_warn", "@inferred"
                            ]),
     )
     pushfirst!(REPL.repl_ast_transforms, function(ast::Union{Expr,Nothing})
