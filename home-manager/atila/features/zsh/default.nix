@@ -8,7 +8,7 @@
   programs.zsh = {
     enable = true;
     autocd = true;
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
@@ -80,13 +80,10 @@
       }
     ];
 
-    initExtraFirst = ''
+    initContent = lib.mkBefore ''
       ${pkgs.any-nix-shell}/bin/any-nix-shell zsh --info-right | source /dev/stdin
       zvm_after_init_commands+=('eval "$(${pkgs.fzf}/bin/fzf --zsh)"')
-    '';
 
-      #zvm_after_init_commands+=('[ -f ~/ ] && source ~/.fzf.zsh')
-    initExtra = ''
       bindkey '^ ' autosuggest-accept
     '';
 
