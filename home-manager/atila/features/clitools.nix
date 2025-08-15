@@ -21,5 +21,6 @@
     git-annex
     mount-zip
     fuse-archive
+    spectrogram
   ];
 }
