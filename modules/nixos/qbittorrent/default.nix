@@ -3,12 +3,12 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  cfg = config.services.qbittorrent;
+  cfg = config.services.qbittorrentDaemon;
   configDir = "/var/lib/qbittorrent";
   # openFilesLimit = 4096;
 in
 {
-  options.services.qbittorrent = {
+  options.services.qbittorrentDaemon = {
     enable = mkOption {
       type = types.bool;
       default = false;

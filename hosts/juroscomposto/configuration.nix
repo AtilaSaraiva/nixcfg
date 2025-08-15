@@ -90,7 +90,7 @@
     };
   };
 
-  services.qbittorrent = {
+  services.qbittorrentDaemon = {
     enable = true;
     user = "atila";
     port = 35910;
