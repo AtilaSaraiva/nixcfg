@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Create Spectrograms directory if it doesn't exist
+mkdir -p Spectrograms
+
+# Full spectrograms
+for file in "$@"; do
+    sox "$file" -n remix 1 spectrogram \
+        -x 3000 -y 513 -z 120 -w Kaiser \
+        -o "Spectrograms/$(basename "$file")-full.png"
+done
+
+# Zoom spectrograms
+for file in "$@"; do
+    sox "$file" -n remix 1 spectrogram \
+        -X 500 -y 1025 -z 120 -w Kaiser \
+        -S 1:00 -d 0:02 \
+        -o "Spectrograms/$(basename "$file")-zoom.png"
+done

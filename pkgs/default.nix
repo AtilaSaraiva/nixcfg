@@ -34,6 +34,12 @@ pkgs: rec {
       "rgf" = "${rgf}/bin/rgf";
     };
   };
+  spectrogram = pkgs.callPackage ./scripts {
+    scriptName = "spectrogram";
+    substitutions = {
+      "sox" = "${pkgs.sox}/bin/sox";
+    };
+  };
   sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
   toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
 
