@@ -41,17 +41,17 @@ Keyword `width` is passed through to UnicodePlots.
 """
 function plotit(
     array::AbstractMatrix{<:Real};
-    d::Tuple{<:Real,<:Real},
-    o::Tuple{<:Real,<:Real},
+    d::Tuple{<:Real,<:Real}=(10,10),
+    o::Tuple{<:Real,<:Real}=(0,0),
     width::Int = 95
 )
 
-    @eval using UnicodePlots
+    @eval import UnicodePlots as uniplots
 
     dy, dx = d
     y0, x0 = o
 
-    heatmap(
+    uniplots.heatmap(
         array;
         yfact = dy,
         xfact = dx,
