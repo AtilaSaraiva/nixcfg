@@ -22,5 +22,7 @@
     mount-zip
     fuse-archive
     spectrogram
+    mediainfo
+    mktorrent
   ];
 }
