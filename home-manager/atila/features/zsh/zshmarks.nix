@@ -11,6 +11,7 @@
       /tmp|tmp
       $HOME/Files/synced/phd|phd
       $HOME/Files/synced/phd/notes|note
+      $HOME/Files/synced/phd/classes/PHYS 580 computational physics|ta
       $HOME/${config.folders.projects}|proj
       $HOME/${config.folders.projects}/julia|jl
       $HOME/${config.folders.repos}|repos
