@@ -7,7 +7,7 @@
     mpv
     buku
     oil-buku
-    libsForQt5.okular
+    kdePackages.okular
     qbittorrent
     xournalpp
     obs-studio-wrapped
