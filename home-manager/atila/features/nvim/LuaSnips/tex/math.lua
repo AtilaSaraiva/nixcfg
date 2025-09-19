@@ -193,11 +193,11 @@ return {
     -- Integral
     s({trig = "int", dscr = "Integral from 0 to T", snippetType = "autosnippet"},
         fmta(
-            "\\int_{<>}^{<>} <> \\mathrm{d}<>",
+            "\\int_{<>}^{<>} <> \\;\\mathrm{d}<>",
             {
                 i(1, "0"),
                 i(2, "T"),
-                i(3),
+                d(3, get_visual),
                 i(4)
             }
         ),
