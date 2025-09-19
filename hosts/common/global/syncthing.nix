@@ -33,6 +33,7 @@ let
   };
 
   removeHost = attrset: builtins.removeAttrs attrset [ config.networking.hostName ];
+  removePhone = attrset: builtins.removeAttrs attrset [ "s20" ];
 in
 {
   services.syncthing = {
@@ -48,7 +49,7 @@ in
       folders = {
         "main" = {
           path = "/home/atila/Files/synced";
-          devices = builtins.attrNames (removeHost fullDeviceList);
+          devices = builtins.attrNames ( removePhone ( removeHost fullDeviceList) );
           versioning = {
             type = "staggered";
             params = {
@@ -65,6 +66,11 @@ in
         "Camera" = {
           id = "sm-g781b_uygd-photos";
           path = "/home/atila/Files/Imagens/Camera";
+          devices = builtins.attrNames (removeHost fullDeviceList);
+        };
+        "Notes" = {
+          id = "v6zu8-nq2rb";
+          path = "/home/atila/Files/notes";
           devices = builtins.attrNames (removeHost fullDeviceList);
         };
       };
