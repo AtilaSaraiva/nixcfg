@@ -63,6 +63,10 @@
     xkb_options = "caps:swapescape,grp:ralt_rshift_toggle";
   };
 
+  home.packages = [
+    (lib.hiPrio pkgs.mathematica)
+  ];
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "21.11";
 
