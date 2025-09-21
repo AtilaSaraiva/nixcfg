@@ -28,6 +28,7 @@
         "aspnetcore-runtime-wrapped-6.0.36"
         "dotnet-sdk-6.0.428"
         "dotnet-sdk-wrapped-6.0.428"
+        "qtwebengine-5.15.19"
       ];
     };
   };
