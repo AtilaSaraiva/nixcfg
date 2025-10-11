@@ -5,15 +5,6 @@
 -- Reserve a space in the gutter
 vim.opt.signcolumn = 'yes'
 
--- Add cmp_nvim_lsp capabilities settings to lspconfig
--- This should be executed before you configure any language server
-local lspconfig_defaults = require('lspconfig').util.default_config
-lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-  'force',
-  lspconfig_defaults.capabilities,
-  require('cmp_nvim_lsp').default_capabilities()
-)
-
 -- This is where you enable features that only work
 -- if there is a language server active in the file
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -37,10 +28,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- You'll find a list of language servers here:
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 -- These are example language servers. 
-require('lspconfig').julials.setup({})
-require('lspconfig').nixd.setup({})
-require'lspconfig'.markdown_oxide.setup{}
-require'lspconfig'.digestif.setup{}
+vim.lsp.enable('julials')
+vim.lsp.enable('nixd')
+vim.lsp.enable('markdown_oxide')
+vim.lsp.enable('digestif')
 
 local cmp = require('cmp')
 
