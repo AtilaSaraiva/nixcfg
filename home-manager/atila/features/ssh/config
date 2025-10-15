@@ -4,14 +4,7 @@ IdentityFile ~/.ssh/id_private
 
 Host *
     Compression yes
-
-Host ogbon
-    HostName ogbon-login8.fieb.org.br
-    User atila.saraiva
-    ForwardX11 yes
-    ForwardX11Trusted yes
-    Port 5001
-    IdentityFile ~/.ssh/id_hpc
+    ServerAliveInterval 240
 
 Host jc
     HostName juroscomposto
@@ -80,38 +73,26 @@ Host hijitus
 Host cedar
     HostName cedar.computecanada.ca
     User saraivaq
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
-Host niagara
-    HostName niagara.computecanada.ca
+Host tri
+    HostName trillium.computecanada.ca
     User saraivaq
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host mist
     HostName mist.scinet.utoronto.ca
     User saraivaq
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host beluga
     HostName beluga.computecanada.ca
     User saraivaq
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host graham
     HostName graham.computecanada.ca
     User saraivaq
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host narval
     HostName narval.computecanada.ca
     User saraivaq
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host saigml
     HostName saig-ml.physics.ualberta.ca
