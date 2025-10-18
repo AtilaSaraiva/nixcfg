@@ -71,11 +71,11 @@ Host hijitus
     ForwardX11Trusted yes
 
 Host cedar
-    HostName cedar.computecanada.ca
+    HostName cedar.alliancecan.ca
     User saraivaq
 
 Host tri
-    HostName trillium.computecanada.ca
+    HostName trillium.alliancecan.ca
     User saraivaq
 
 Host mist
@@ -83,15 +83,15 @@ Host mist
     User saraivaq
 
 Host beluga
-    HostName beluga.computecanada.ca
+    HostName beluga.alliancecan.ca
     User saraivaq
 
 Host graham
-    HostName graham.computecanada.ca
+    HostName graham.alliancecan.ca
     User saraivaq
 
 Host narval
-    HostName narval.computecanada.ca
+    HostName narval.alliancecan.ca
     User saraivaq
 
 Host saigml
