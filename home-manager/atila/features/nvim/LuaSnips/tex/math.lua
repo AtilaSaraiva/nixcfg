@@ -113,13 +113,13 @@ return {
 
     -- Ceiling function
     s({trig = "ceil", dscr = "Left ceil and right ceil", snippetType = "autosnippet"},
-        fmta("\\left\\lceil <> \\right\\rceil", { i(1) }),
+        fmta("\\Ceiling{<>}", { i(1) }),
         { condition = in_mathzone }
     ),
 
     -- Floor function
     s({trig = "floor", dscr = "Left floor and right floor", snippetType = "autosnippet"},
-        fmta("\\left\\lfloor <> \\right\\rfloor", { i(1) }),
+        fmta("\\Floor{<>}", { i(1) }),
         { condition = in_mathzone }
     ),
 
@@ -180,25 +180,23 @@ return {
 
     -- Conjugate
     s({trig = "conj", dscr = "Conjugate", snippetType = "autosnippet"},
-        fmta("\\overline{<>}", { i(1) }),
+        fmta("\\Conj{<>}", { i(1) }),
         { condition = in_mathzone }
     ),
 
     -- Summation
     s({trig = "sum", dscr = "Summation from n=1 to N", snippetType = "autosnippet"},
-        fmta("\\sum_{<>}^{<>} <>", { i(1, "i=1"), i(2, "N"), i(3) }),
+        fmta("\\Sum{<>}{<>}", { d(1, get_visual), i(2) }),
         { condition = in_mathzone }
     ),
    
     -- Integral
     s({trig = "int", dscr = "Integral from 0 to T", snippetType = "autosnippet"},
         fmta(
-            "\\int_{<>}^{<>} <> \\;\\mathrm{d}<>",
+            "\\Int{<>}{<>}",
             {
-                i(1, "0"),
-                i(2, "T"),
-                d(3, get_visual),
-                i(4)
+                d(1, get_visual),
+                i(2)
             }
         ),
         { condition = in_mathzone }
@@ -212,11 +210,10 @@ return {
 
     -- Product
     s({trig = "prod", dscr = "Product expression", snippetType = "autosnippet"},
-        fmta("\\prod_{<>}^{<>} <>",
+        fmta("\\Prod{<>}{<>}",
             { 
-                i(1, "n=1"),
-                i(2, "N"),
-                i(3) 
+                d(1, get_visual),
+                i(2)
             }
         ),
         { condition = in_mathzone }
@@ -225,12 +222,12 @@ return {
     -- Partial derivative
     s({trig = "part", dscr = "Partial derivative",
         snippetType = "autosnippet", priority=100},
-        fmta("\\frac{\\partial <>}{\\partial <>}", { i(1, "u"), i(2, "x") }),
+        fmta("\\pderiv[<>]{<>}{<>}", { i(1, "1"), d(2, get_visual), i(3, "x") }),
         { condition = in_mathzone }
     ),
     s({trig = "dt", dscr = "Partial derivative",
         snippetType = "autosnippet", priority=100},
-        fmta("\\frac{\\mathrm{d} <>}{\\mathrm{d} <>}", { i(1, "u"), i(2, "x") }),
+        fmta("\\D[<>]{<>}{<>}", { i(1, "1"), d(2, get_visual), i(3, "x") }),
         { condition = in_mathzone }
     ),
 
