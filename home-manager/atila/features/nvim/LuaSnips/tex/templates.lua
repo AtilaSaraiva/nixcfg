@@ -8,6 +8,7 @@ return {
                 \usepackage[T1]{fontenc}
                 \usepackage{textcomp}
                 \usepackage[english]{babel}
+                \usepackage{cool}
                 \usepackage{amsmath, amssymb}
 
 
@@ -43,6 +44,7 @@ return {
                 \usepackage{textcomp}
                 \usepackage[english]{babel}
                 \usepackage{amsmath, amssymb}
+                \usepackage{cool}
 
                 % figure support
                 \usepackage{import}
