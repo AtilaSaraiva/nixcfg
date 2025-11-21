@@ -59,9 +59,8 @@
     }
     {
       name = "HEADLESS-1";
-      position = "6400,0";
-      mode = "1280x800@60.000Hz";
-      subpixel = "rgb";
+      mode = "3840x2160@60.000Hz";
+      disable = "";
     }
   ];
 
