@@ -8,8 +8,26 @@ return {
                 \usepackage[T1]{fontenc}
                 \usepackage{textcomp}
                 \usepackage[english]{babel}
-                \usepackage{cool}
                 \usepackage{amsmath, amssymb}
+
+                \usepackage{cool}
+                \usepackage{xparse}
+
+                % Save the original cool derivatives if you ever need them
+                \let\CoolD\D
+                \let\CoolDt\Dt
+
+                \RenewDocumentCommand{\D}{ m g }{%
+                    \IfNoValueTF{#2}
+                        {\frac{\partial}{\partial #1}}%
+                        {\frac{\partial #1}{\partial #2}}%
+                }
+
+                \NewDocumentCommand{\Dt}{ m g }{%
+                  \IfNoValueTF{#2}
+                    {\frac{d}{d #1}}%
+                    {\frac{d #1}{d #2}}%
+                }
 
 
                 % figure support
@@ -45,6 +63,23 @@ return {
                 \usepackage[english]{babel}
                 \usepackage{amsmath, amssymb}
                 \usepackage{cool}
+                \usepackage{xparse}
+
+                % Save the original cool derivatives if you ever need them
+                \let\CoolD\D
+                \let\CoolDt\Dt
+
+                \RenewDocumentCommand{\D}{ m g }{%
+                    \IfNoValueTF{#2}
+                        {\frac{\partial}{\partial #1}}%
+                        {\frac{\partial #1}{\partial #2}}%
+                }
+
+                \NewDocumentCommand{\Dt}{ m g }{%
+                  \IfNoValueTF{#2}
+                    {\frac{d}{d #1}}%
+                    {\frac{d #1}{d #2}}%
+                }
 
                 % figure support
                 \usepackage{import}

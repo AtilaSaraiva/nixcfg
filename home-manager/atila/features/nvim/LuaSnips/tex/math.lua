@@ -220,14 +220,14 @@ return {
     ),
 
     -- Partial derivative
-    s({trig = "part", dscr = "Partial derivative",
+    s({trig = "lb", dscr = "Partial derivative",
         snippetType = "autosnippet", priority=100},
-        fmta("\\pderiv[<>]{<>}{<>}", { i(1, "1"), d(2, get_visual), i(3, "x") }),
+        fmta("\\D{<>}{<>}", {  d(1, get_visual), i(2, "x") }),
         { condition = in_mathzone }
     ),
-    s({trig = "dt", dscr = "Partial derivative",
+    s({trig = "lt", dscr = "Partial derivative",
         snippetType = "autosnippet", priority=100},
-        fmta("\\D[<>]{<>}{<>}", { i(1, "1"), d(2, get_visual), i(3, "x") }),
+        fmta("\\Dt{<>}{<>}", { d(1, get_visual), i(2, "x") }),
         { condition = in_mathzone }
     ),
 
