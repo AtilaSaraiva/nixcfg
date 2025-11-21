@@ -113,6 +113,13 @@
     "kernel.split_lock_mitigate" =0;
   };
 
+
+  hardware.amdgpu.overdrive = {
+    enable = true;
+  };
+
+  services.lact.enable = true;
+
   services.preload.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
