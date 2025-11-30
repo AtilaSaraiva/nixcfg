@@ -55,6 +55,11 @@
       position = "1080,0";
       res = "1920x1080";
     }
+    {
+      name = "HEADLESS-1";
+      mode = "3840x2160@60.000Hz";
+      disable = "";
+    }
   ];
 
   keyboard = {
