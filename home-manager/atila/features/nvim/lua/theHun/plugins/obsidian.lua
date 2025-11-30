@@ -17,7 +17,7 @@ return {
     workspaces = {
       {
         name = "personal",
-        path = "~/Files/synced/Obsidian",
+        path = "/home/atila/Files/annex/obsidian",
       },
     },
   },
