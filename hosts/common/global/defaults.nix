@@ -67,7 +67,7 @@
       noto-fonts-cjk-sans
       open-fonts
       roboto
-      ubuntu_font_family
+      ubuntu-classic
     ];
     fontconfig = {
       cache32Bit = true;

@@ -652,6 +652,9 @@ in
           "type:touchpad" = {
             tap = "enabled";
           };
+          "1356:3302:Sony_Interactive_Entertainment_DualSense_Wireless_Controller_Touchpad" = {
+            events = "disabled";
+          };
         };
 
         seat = {

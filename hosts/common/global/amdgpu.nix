@@ -4,7 +4,7 @@
   hardware.graphics.extraPackages = with pkgs; [ # TODO: create an option for amdgpus
     #rocm-opencl-icd
     #amdvlk
-    vaapiVdpau
+    libva-vdpau-driver
     libvdpau-va-gl
     libva
   ];

@@ -3,7 +3,7 @@
 lib.mkIf (!config.focusMode) {
   environment.systemPackages = with pkgs; [
     # Social
-    tdesktop
+    telegram-desktop
     jellyfin-media-player
   ];
 }

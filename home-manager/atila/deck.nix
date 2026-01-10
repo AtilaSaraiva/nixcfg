@@ -79,7 +79,7 @@
       noto-fonts
       noto-fonts-cjk-sans
       open-fonts
-      ubuntu_font_family
+      ubuntu-classic
       dejavu_fonts
       freefont_ttf
       gyre-fonts # TrueType substitutes for standard PostScript fonts
