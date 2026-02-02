@@ -413,7 +413,6 @@ in
           { command = "${pkgs.udiskie}/bin/udiskie --tray"; }
           { command = "${pkgs.blueman}/bin/blueman-tray"; }
           { command = "${pkgs.wlsunset}/bin/wlsunset -l 53.631611 -L -113.323975"; }
-          { command = "${pkgs.transmission-qt}/bin/transmission-qt"; }
           { command = "${pkgs.dropbox}/bin/dropbox"; }
           { command = "flatpak run nz.mega.MEGAsync"; }
           {
@@ -675,7 +674,7 @@ in
         lib.mkOptionDefault {
           "apps" = withLeaveOptions {
             "m" = "exec ${pkgs.spotify}/bin/spotify; [instance=\"spotify\"] scratchpad show; mode default";
-            "c" = "exec ${pkgs.bitwarden}/bin/bitwarden; mode default";
+            "c" = "exec ${pkgs.bitwarden-desktop}/bin/bitwarden; mode default";
             "z" = "exec ${pkgs.firefox}/bin/firefox \"https://web.whatsapp.com/\"; mode default";
             "s" = "exec steam -steamos3; mode default";
             "period" = "exec ${bigsteam}/bin/bigsteam ${TV}";

@@ -12,8 +12,8 @@
     chafa
     archivemount
     fzf
-    xdragon
-    poppler_utils
+    dragon-drop
+    poppler-utils
     ffmpegthumbnailer
     imagemagick
   ];

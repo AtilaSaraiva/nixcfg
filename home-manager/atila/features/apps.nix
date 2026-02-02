@@ -2,8 +2,8 @@
 
 {
   home.packages = with pkgs; [
-    zotero_7
-    bitwarden
+    zotero
+    bitwarden-desktop
     mpv
     buku
     oil-buku
@@ -16,7 +16,6 @@
     libreoffice-fresh
     yt-dlp
     gimp
-    transmission_4-qt
     kopia
     openconnect
     firefox
