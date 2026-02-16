@@ -421,7 +421,7 @@ in
               before-sleep '${lock}'
             '';
           }
-          { command = "${oguriWallpaper}/bin/oguriWallpaper static"; }
+          # { command = "${oguriWallpaper}/bin/oguriWallpaper static"; }
           { command = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.clipman}/bin/clipman store --no-persist"; }
           { command = "swaymsg create_output HEADLESS-1"; }
         ];
@@ -591,7 +591,7 @@ in
           "--release Ctrl+Shift+Print" = "exec ${pkgs.sway-contrib.grimshot}/bin/grimshot copy area";
           "${mod}+Shift+f" = "gaps inner current toggle ${innerGap}; gaps outer current toggle ${outerGap}";
           "${mod}+Shift+z" = "exec ${lock}";
-          "--release ${mod}+i" = "exec ${oguriWallpaper}/bin/oguriWallpaper static";
+          # "--release ${mod}+i" = "exec ${oguriWallpaper}/bin/oguriWallpaper static";
           "${mod}+Shift+d" = "exec ${term} -t 'launcher' -e ${pkgs.sway-launcher-desktop}/bin/sway-launcher-desktop";
           "${mod}+q" = "mode \"apps\"";
           "${mod}+Shift+p" = "mode \"PinPmove\"";
