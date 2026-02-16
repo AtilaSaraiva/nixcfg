@@ -413,8 +413,8 @@ in
           { command = "${pkgs.udiskie}/bin/udiskie --tray"; }
           { command = "${pkgs.blueman}/bin/blueman-tray"; }
           { command = "${pkgs.wlsunset}/bin/wlsunset -l 53.631611 -L -113.323975"; }
-          { command = "${pkgs.dropbox}/bin/dropbox"; }
-          { command = "flatpak run nz.mega.MEGAsync"; }
+          # { command = "${pkgs.dropbox}/bin/dropbox"; }
+          # { command = "flatpak run nz.mega.MEGAsync"; }
           {
             command = ''${pkgs.swayidle}/bin/swayidle -w \
               timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
