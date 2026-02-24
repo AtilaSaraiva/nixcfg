@@ -478,7 +478,7 @@ in
             { criteria = { app_id = "com.rafaelmardojai.Blanket"; }; command = "move scratchpad"; }
             { criteria = { app_id = "dropdown_terminal"; }; command = "floating enable, sticky enable, resize set 1800 400, move position center, move down 300 px"; }
             { criteria = { app_id = "transmission-qt"; title="Transmission"; }; command = "move scratchpad"; }
-            { criteria = { class = "Bitwarden"; }; command = "move scratchpad"; }
+            { criteria = { app_id = "Bitwarden"; }; command = "move scratchpad"; }
             { criteria = { app_id = "todolist"; }; command = "floating enable, sticky enable"; }
             { criteria = { app_id = "klavaro"; }; command = "floating enable"; }
           ];
