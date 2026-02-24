@@ -9,13 +9,13 @@ let
       ];
       id = "FDQLIPX-66WWRBQ-JDVUEA3-BDPNIRD-LSEAZYM-ED6COS6-SOJ3WVC-AR724AM";
     };
-    "igris" = {
-      addresses = [
-        "tcp://100.122.44.105:22000"
-        "tcp://igris:22000"
-      ];
-      id = "MXHKQWK-EP2WM3O-SDFREV5-EJGTLS4-B32GTUH-S44E5QW-C4MGSEE-G5HCJQU";
-    };
+    # "igris" = {
+    #   addresses = [
+    #     "tcp://100.122.44.105:22000"
+    #     "tcp://igris:22000"
+    #   ];
+    #   id = "MXHKQWK-EP2WM3O-SDFREV5-EJGTLS4-B32GTUH-S44E5QW-C4MGSEE-G5HCJQU";
+    # };
     "betinha" = {
       addresses = [
         "tcp://100.85.111.84:22000"
