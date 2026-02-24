@@ -504,7 +504,7 @@ in
           "${mod}+minus" = "scratchpad show";
           "${mod}+Ctrl+t" = "[app_id=\"org.telegram.desktop\"] scratchpad show";
           "${mod}+Ctrl+b" = "[app_id=\"com.rafaelmardojai.Blanket\"] scratchpad show";
-          "${mod}+Ctrl+a" = "[class=\"Bitwarden\"] scratchpad show";
+          "${mod}+Ctrl+a" = "[app_id=\"Bitwarden\"] scratchpad show";
           "${mod}+Ctrl+d" = "[app_id=\"org.qbittorrent.qBittorrent\"] scratchpad show";
           "${mod}+Ctrl+q" = "[instance=\"spotify\"] scratchpad show";
           "${mod}+Ctrl+r" = "[class=\"Slack\"] scratchpad show";
