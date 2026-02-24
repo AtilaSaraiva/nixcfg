@@ -60,8 +60,6 @@ Host deck
     HostName steamdeck
     User deck
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host hijitus
     HostName hijitus.physics.ualberta.ca
