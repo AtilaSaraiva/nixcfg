@@ -47,6 +47,7 @@
     ../common/global/zram.nix
     ../common/global/verifyStore.nix
     ../common/global/jellyfin.nix
+    ../common/global/gitea.nix
     ../common/global/komga.nix
     ../common/global/tailscale.nix
     ../common/global/nix-serve.nix
