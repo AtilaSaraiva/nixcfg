@@ -49,6 +49,7 @@
     ../common/global/jellyfin.nix
     ../common/global/gitea.nix
     ../common/global/msmtp.nix
+    ../common/global/smartd.nix
     ../common/global/komga.nix
     ../common/global/tailscale.nix
     ../common/global/nix-serve.nix
