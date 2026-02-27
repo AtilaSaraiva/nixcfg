@@ -26,6 +26,5 @@
         };
       }
     ];
-    ensureDefaultPrinter = "BrotherDCPL2550DW";
   };
 }
