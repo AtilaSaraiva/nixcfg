@@ -1,7 +1,8 @@
 {
   programs.msmtp = {
     enable = true;
-    acounts.default = {
+    setSendmail = true;
+    accounts.default = {
       auth = true;
       host = "smtp.gmail.com";
       passwordeval = "cat /secrets/password.txt";
@@ -13,5 +14,4 @@
   };
 
   services.mail.sendmailSetuidWrapper = true;
-  systemd.services.smartd.notifications.mail.enable = true;
 }
