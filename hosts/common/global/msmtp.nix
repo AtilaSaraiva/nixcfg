@@ -13,5 +13,5 @@
     };
   };
 
-  services.mail.sendmailSetuidWrapper = true;
+  services.mail.sendmailSetuidWrapper.enable = true;
 }
