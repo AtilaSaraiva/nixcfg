@@ -183,6 +183,9 @@ filextype *.xopp xournalpp %c &
 " Pdf
 filextype *.epub zathura %c %i &
 
+" cbz
+filextype *.cbz zathura %c %i &
+
 " Pdf
 filextype *.pdf zathura %c %i &, apvlv %c, xpdf %c
 fileviewer *.pdf pdftotext -nopgbrk %c -
