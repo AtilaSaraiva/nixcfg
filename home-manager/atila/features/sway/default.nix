@@ -422,6 +422,7 @@ in
             '';
           }
           # { command = "${oguriWallpaper}/bin/oguriWallpaper static"; }
+          { command = "${pkgs.swaybg}/bin/swaybg -i $(${pkgs.findutils}/bin/find ~/${config.folders.annex}/pictures/wallpapers | ${pkgs.coreutils}/bin/shuf -n 1) -o '*' "; }
           { command = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.clipman}/bin/clipman store --no-persist"; }
           { command = "swaymsg create_output HEADLESS-1"; }
         ];
@@ -592,6 +593,7 @@ in
           "${mod}+Shift+f" = "gaps inner current toggle ${innerGap}; gaps outer current toggle ${outerGap}";
           "${mod}+Shift+z" = "exec ${lock}";
           # "--release ${mod}+i" = "exec ${oguriWallpaper}/bin/oguriWallpaper static";
+          "--release ${mod}+i" = "exec ${pkgs.swaybg}/bin/swaybg -i $(${pkgs.findutils}/bin/find ~/${config.folders.annex}/pictures/wallpapers | ${pkgs.coreutils}/bin/shuf -n 1) -o '*' ";
           "${mod}+Shift+d" = "exec ${term} -t 'launcher' -e ${pkgs.sway-launcher-desktop}/bin/sway-launcher-desktop";
           "${mod}+q" = "mode \"apps\"";
           "${mod}+Shift+p" = "mode \"PinPmove\"";
