@@ -494,11 +494,11 @@ in
           "${mod}+Return" = "exec ${term}";
           "${mod}+t" = "exec ${term} --class dropdown_terminal -e zsh";
           "${mod}+n" = "exec ${term} --class lf -e ${pkgs.lf}/bin/lf";
-          "${mod}+Shift+n" = "exec ${term} --class=notes ${pkgs.vifm}/bin/vifm ~/Files/synced/phd/notes";
+          "${mod}+Shift+n" = "exec ${term} --class=notes ${pkgs.vifm}/bin/vifm ~/${config.folders.annex}/obsidian";
           "${mod}+Shift+q" = "kill";
           "${mod}+b" = "exec ${browser}";
           "${mod}+d" = "exec ${menu}";
-          "${mod}+Shift+backslash" = "output ${mon0} toggle";
+          # "${mod}+Shift+backslash" = "output ${mon0} toggle";
           "${mod}+backslash" = "output ${mon1} toggle";
           "${mod}+u" = "focus output left";
           "${mod}+Shift+minus" = "move scratchpad";
