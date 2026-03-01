@@ -51,6 +51,7 @@
     ../common/global/msmtp.nix
     ../common/global/smartd.nix
     ../common/global/komga.nix
+    ../common/global/qui.nix
     ../common/global/tailscale.nix
     ../common/global/nix-serve.nix
     ../common/global/focusmode
