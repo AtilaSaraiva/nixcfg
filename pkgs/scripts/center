@@ -12,18 +12,16 @@ $TERM --class side_term_left -d "$PWD" &
 
 # 4. Spawn the RIGHT terminal
 $TERM --class side_term_right -d "$PWD" &
-sleep 0.2
+sleep 0.3
 
 # Focus the new left terminal, forcefully move it left (defeating autotiling), and set its size
 swaymsg '[app_id="side_term_left"] focus'
 swaymsg move left
-
-# # 3. Return focus to our marked middle terminal
-# swaymsg '[con_mark="center_term"] focus'
-
+swaymsg move left
 
 # Focus the new right terminal, forcefully move it right, and set its size
 swaymsg '[app_id="side_term_right"] focus'
+swaymsg move right
 swaymsg move right
 swaymsg resize set width 20 ppt
 
