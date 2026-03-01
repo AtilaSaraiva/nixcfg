@@ -52,8 +52,13 @@
       fsType = "btrfs";
       options = [ "subvol=@storage" "autodefrag" "nofail" "space_cache=v2" "compress-force=zstd:2" ];
     };
-
   fileSystems."/mnt/storage" =
+    { device = "/dev/disk/by-uuid/111c9c9a-130f-4840-be07-5a6414cd5296";
+      fsType = "btrfs";
+      options = [ "subvol=@storage" "autodefrag" "nofail" "space_cache=v2" "compress-force=zstd:2" ];
+    };
+
+  fileSystems."/mnt/2tbdisc" =
     { device = "/dev/disk/by-uuid/34081a37-6fb1-418a-9d88-427d1e866d6c";
       fsType = "btrfs";
       options = [ "subvol=storage"  "autodefrag" "nofail" "space_cache=v2" "compress=lzo" ];
