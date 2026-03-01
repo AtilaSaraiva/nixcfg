@@ -8,6 +8,7 @@
     mani
     latexit
     multissh
+    center
   ];
 
   home.file."${config.folders.projects}/mani.yaml".text = ''

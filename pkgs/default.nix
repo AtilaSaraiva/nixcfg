@@ -15,6 +15,12 @@ pkgs: rec {
       "$(which pdfcrop)" = "${pkgs.texliveFull}/bin/pdfcrop";
     };
   };
+  center = pkgs.callPackage ./scripts {
+    scriptName = "center";
+    substitutions = {
+      "$(which kitty)" = "${pkgs.kitty}/bin/kitty";
+    };
+  };
   rgf = pkgs.callPackage ./scripts {
     scriptName = "rgf";
     substitutions = {

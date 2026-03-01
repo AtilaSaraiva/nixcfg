@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Define your terminal
+TERM=$(which kitty)
+
+# 1. Mark the current (middle) terminal so we can reliably find our way back to it
+swaymsg mark "center_term"
+
+# 2. Spawn the LEFT terminal in the background using the current directory ($PWD)
+# We give it a unique app_id (--class) so Sway knows exactly which window to target
+$TERM --class side_term_left -d "$PWD" &
+
+# 4. Spawn the RIGHT terminal
+$TERM --class side_term_right -d "$PWD" &
+sleep 0.2
+
+# Focus the new left terminal, forcefully move it left (defeating autotiling), and set its size
+swaymsg '[app_id="side_term_left"] focus'
+swaymsg move left
+
+# # 3. Return focus to our marked middle terminal
+# swaymsg '[con_mark="center_term"] focus'
+
+
+# Focus the new right terminal, forcefully move it right, and set its size
+swaymsg '[app_id="side_term_right"] focus'
+swaymsg move right
+swaymsg resize set width 20 ppt
+
+swaymsg '[app_id="side_term_left"] focus'
+swaymsg resize set width 20 ppt
+
+# 5. Finish up by focusing the center again and cleaning up the mark
+swaymsg '[con_mark="center_term"] focus'
+swaymsg unmark "center_term"
