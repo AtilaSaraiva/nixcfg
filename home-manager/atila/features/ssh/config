@@ -74,6 +74,9 @@ Host cedar
 
 Host tri
     HostName trillium.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
     User saraivaq
 
 Host mist
