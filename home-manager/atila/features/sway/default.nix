@@ -664,7 +664,7 @@ in
           };
         };
 
-        workspaceAutoBackAndForth = true;
+        workspaceAutoBackAndForth = false;
 
         modes =
         let
