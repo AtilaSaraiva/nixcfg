@@ -5,6 +5,7 @@ IdentityFile ~/.ssh/id_private
 Host *
     Compression yes
     ServerAliveInterval 240
+    ConnectTimeout 10
 
 Host jc
     HostName juroscomposto

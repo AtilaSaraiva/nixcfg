@@ -98,6 +98,7 @@
       # Remove if you want to SSH using passwords
       PasswordAuthentication = false;
       X11Forwarding = true;
+      LoginGraceTime = 10;
     };
   };
 
