@@ -6,6 +6,9 @@ Host *
     Compression yes
     ServerAliveInterval 240
     ConnectTimeout 10
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist 1h
 
 Host jc
     HostName juroscomposto
