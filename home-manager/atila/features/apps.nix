@@ -27,6 +27,7 @@
     chromium
     calibre
     homebank
+    rquickshare
   ];
 
   programs.spotify-player.enable = true;

@@ -24,5 +24,7 @@
     spectrogram
     mediainfo
     mktorrent
+    gdu
+    octave # for calculating stuff
   ];
 }
