@@ -4,7 +4,7 @@
   options.folders = {
     projects = lib.mkOption {
       type = lib.types.str;
-      default = "Files/synced/phd/projects";
+      default = "Files/Codigos/projects";
     };
     repos = lib.mkOption {
       type = lib.types.str;
