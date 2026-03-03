@@ -16,6 +16,10 @@
       simg:
         path: julia/SeismicImagingTools.jl
         url: git@github.com:AtilaSaraiva/SeismicImagingTools.jl.git
+
+        remotes:
+          lab: git@gitlab.com:AtilaSaraiva/SeismicImagingTools.jl.git
+
         desc: Seismic inversion framework
         tags: [ julia, seismic, annex ]
 
