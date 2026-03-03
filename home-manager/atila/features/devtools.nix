@@ -12,10 +12,15 @@
   ];
 
   home.file."${config.folders.projects}/mani.yaml".text = ''
+    sync_remotes: true
+    sync_gitignore: true
+
     projects:
       simg:
         path: julia/SeismicImagingTools.jl
         url: git@github.com:AtilaSaraiva/SeismicImagingTools.jl.git
+
+        single_branch: false
 
         remotes:
           lab: git@gitlab.com:AtilaSaraiva/SeismicImagingTools.jl.git
