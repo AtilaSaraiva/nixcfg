@@ -35,7 +35,7 @@
       gc = "git commit -m";
       gca = "git commit --amend";
       calc = "octave";
-      compress = "XZ_OPT='-9' tar -cvJf";
+      compress = "${pkgs.p7zip}/bin/7z -mx9 a";
     };
 
     history = {
