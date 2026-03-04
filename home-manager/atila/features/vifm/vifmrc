@@ -177,6 +177,9 @@ filextype *.vpl sfpen <%c %i&
 " Suximage
 filextype *.su suximage <%c perc=98 &
 
+" Markdown
+filextype *.md nvim %f
+
 " Xournal++
 filextype *.xopp xournalpp %c &
 
