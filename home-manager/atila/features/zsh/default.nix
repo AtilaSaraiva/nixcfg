@@ -35,6 +35,7 @@
       gc = "git commit -m";
       gca = "git commit --amend";
       calc = "octave";
+      compress = "XZ_OPT='-9' tar -cvJf";
     };
 
     history = {
