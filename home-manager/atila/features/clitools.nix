@@ -13,6 +13,7 @@
     distrobox
     ouch
     unzip
+    p7zip
     duf
     feh
     zathura
