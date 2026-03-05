@@ -3,7 +3,7 @@
     enable = true;
     autoStart = true;
     settings = {
-      address = "100.109.26.105";
+      address = "localhost";
       port = 40101;
     };
   };
