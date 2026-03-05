@@ -37,7 +37,9 @@
       gca = "git commit --amend";
       calc = "octave";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
-      vnc = "${pkgs.wlvncc}/bin/wlvncc juroscomposto 40101";
+
+      # tunnels the ip to access vnc in a one-liner
+      vnc = "ssh -fL 40101:localhost:40101 jc sleep 1 && ${pkgs.wlvncc}/bin/wlvncc localhost 40101";
     };
 
     history = {
