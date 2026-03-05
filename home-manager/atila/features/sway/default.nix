@@ -597,6 +597,7 @@ in
           "${mod}+Shift+d" = "exec ${term} -t 'launcher' -e ${pkgs.sway-launcher-desktop}/bin/sway-launcher-desktop";
           "${mod}+q" = "mode \"apps\"";
           "${mod}+Shift+p" = "mode \"PinPmove\"";
+          "${mod}+Shift+Ctrl+F12" = "mode \"vnc\"";
           "${mod}+r" = "mode \"resize\"";
         };
 
@@ -695,6 +696,9 @@ in
             "k" = "exec ${snapWindowPinP}/bin/snapWindowPinP up";
             "l" = "exec ${snapWindowPinP}/bin/snapWindowPinP right";
             "h" = "exec ${snapWindowPinP}/bin/snapWindowPinP left";
+          };
+          "vnc" = {
+            "Ctrl+Shift+${mod}+F12" = "mode default";
           };
         };
       };
