@@ -32,6 +32,7 @@
       pj = "cd $(${pkgs.fzf}/bin/fzf --walker=dir,hidden --walker-root=$HOME/${config.folders.projects})";
       ga = "git annex";
       gaa = "git annex add";
+      gas = "git annex sync";
       gc = "git commit -m";
       gca = "git commit --amend";
       calc = "octave";
