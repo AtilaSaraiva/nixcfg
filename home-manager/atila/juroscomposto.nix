@@ -33,6 +33,7 @@
     ./features/tmux
     ./features/vifm
     ./features/sway
+    ./features/wayvnc
     ./features/lf
     ./features/zsh
     ./features/feh.nix
