@@ -102,7 +102,7 @@
   };
 
   services.updateInputs = {
-    enable = true;
+    enable = false;
     flake_path = "/home/atila/Files/Codigos/repos/nixcfg";
   };
 
