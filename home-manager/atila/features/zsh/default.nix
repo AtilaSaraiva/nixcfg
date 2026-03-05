@@ -36,7 +36,7 @@
       gca = "git commit --amend";
       calc = "octave";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
-      vnc = "${pkgs.wlvnnc}/bin/wlvncc juroscomposto 40101";
+      vnc = "${pkgs.wlvncc}/bin/wlvncc juroscomposto 40101";
     };
 
     history = {
