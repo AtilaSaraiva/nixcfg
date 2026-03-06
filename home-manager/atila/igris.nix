@@ -62,6 +62,10 @@
     }
   ];
 
+  services.flatpak.packages = [
+    "com.heroicgameslauncher.hgl"
+  ];
+
   keyboard = {
     xkb_layout = "us,us";
     xkb_variant = "altgr-intl,dvp";
