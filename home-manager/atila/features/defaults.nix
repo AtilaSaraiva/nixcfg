@@ -58,7 +58,7 @@
     home = {
       username = lib.mkDefault "atila";
       homeDirectory = lib.mkDefault "/home/atila";
-      sessionPath = [
+      sessionPath = lib.mkDefault [
         "$HOME/.julia/bin"
       ];
     };
