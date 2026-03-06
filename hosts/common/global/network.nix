@@ -11,7 +11,7 @@
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
     };
-    resolvconf.enable = true;
+    # resolvconf.enable = true;
     useDHCP = false;
   };
 

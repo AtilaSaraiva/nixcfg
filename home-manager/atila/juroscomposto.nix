@@ -83,11 +83,6 @@
   ];
 
 
-  networking.firewall = {
-    allowedTCPPorts = [ 80 443 16770 ];
-    allowedUDPPorts = [ 16770 ];
-  };
-
   home.packages = [
     (lib.hiPrio pkgs.stable.mathematica)
   ];

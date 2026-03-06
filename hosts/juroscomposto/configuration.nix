@@ -67,6 +67,11 @@
   # TODO: Set your hostname
   networking.hostName = "juroscomposto";
 
+  networking.firewall = {
+    allowedTCPPorts = [ 80 443 16770 ];
+    allowedUDPPorts = [ 16770 ];
+  };
+
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   i18n.defaultLocale = "en_US.UTF-8";
 
