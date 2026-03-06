@@ -91,6 +91,7 @@
   # Feel free to remove if you don't need it.
   services.openssh = {
     enable = true;
+    openFirewall = false;
     settings = {
       # Opinionated: forbid root login through SSH.
       PermitRootLogin = "no";
