@@ -4,7 +4,7 @@
   services.jellyfin = {
     enable = true;
     user = "atila";
-    openFirewall = true;
+    openFirewall = false;
     package = pkgs.jellyfin;
   };
 

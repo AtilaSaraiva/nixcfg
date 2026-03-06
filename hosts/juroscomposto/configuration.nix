@@ -98,7 +98,7 @@
     enable = true;
     user = "atila";
     port = 35910;
-    openFirewall = true;
+    openFirewall = false;
   };
 
   services.updateInputs = {

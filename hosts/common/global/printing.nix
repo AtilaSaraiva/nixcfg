@@ -10,7 +10,7 @@
   services.avahi.enable = true;
   services.avahi.nssmdns4 = true;
   # for a WiFi printer
-  services.avahi.openFirewall = true;
+  services.avahi.openFirewall = false;
   hardware.printers = {
     ensurePrinters = [
       {

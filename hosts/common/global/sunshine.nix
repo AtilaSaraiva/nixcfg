@@ -10,7 +10,7 @@ in
     enable = true;
     autoStart = true;
     capSysAdmin = true;
-    openFirewall = true;
+    openFirewall = false;
 
     settings = {
       sunshine_name = "nixos";
