@@ -8,9 +8,8 @@
     };
 
     firewall = {
-      enable = false;
-      #allowedTCPPorts = [ ... ];
-      #allowedUDPPorts = [ ... ];
+      enable = true;
+      trustedInterfaces = [ "tailscale0" ];
     };
     resolvconf.enable = true;
     useDHCP = false;
@@ -20,5 +19,4 @@
     "net.core.default_qdisc" = "fq";
     "net.ipv4.tcp_congestion_control" = "bbr";
   };
-
 }
