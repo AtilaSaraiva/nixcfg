@@ -15,6 +15,7 @@
       keep-derivations = true
     '';
     package = pkgs.nix;
+    allowedUsers = [ "@wheel" ];
     settings = {
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
