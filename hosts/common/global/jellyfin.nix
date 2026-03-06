@@ -8,6 +8,14 @@
     package = pkgs.jellyfin;
   };
 
+  systemd.services.jellyfin.serviceConfig = {
+    ProtectHome = true;
+    ProtectSystem = true;
+    NoNewPrivileges = true;
+    ProtectKernelLogs = true;
+    ProtectKernelTunables = true;
+  };
+
   environment.systemPackages = [
     pkgs.jellyfin
     pkgs.jellyfin-web
