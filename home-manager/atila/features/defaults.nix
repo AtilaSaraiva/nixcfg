@@ -58,6 +58,9 @@
     home = {
       username = lib.mkDefault "atila";
       homeDirectory = lib.mkDefault "/home/atila";
+      sessionPath = [
+        "$HOME/.julia/bin"
+      ];
     };
 
     services.autoUpgrade = {
