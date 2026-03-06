@@ -36,6 +36,7 @@
       gc = "git commit -m";
       gca = "git commit --amend";
       calc = "octave";
+      icat = "kitten icat";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
 
       # tunnels the ip to access vnc in a one-liner
