@@ -15,13 +15,13 @@
       keep-derivations = true
     '';
     package = pkgs.nix;
-    allowedUsers = [ "@wheel" ];
     settings = {
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
       # Opinionated: disable global registry
       flake-registry = "";
       trusted-users = [ "@wheel" ];
+      allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
       trusted-public-keys = [
         "binarycache.com:F14RK+znP8o15IWh7ObV/gGDqif1cfddFbLHWh6BgCI="

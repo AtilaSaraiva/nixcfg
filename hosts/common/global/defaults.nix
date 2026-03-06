@@ -92,10 +92,6 @@
   services.openssh = {
     enable = true;
     openFirewall = false;
-    challengeResponseAuthentication = false;
-    # Opinionated: use keys only.
-    # Remove if you want to SSH using passwords
-    passwordAuthentication = false;
     settings = {
       # Opinionated: forbid root login through SSH.
       PermitRootLogin = "no";
@@ -103,6 +99,10 @@
       LoginGraceTime = 10;
       AllowStreamLocalForwarding = false;
       AuthenticationMethods = "publickey";
+      # Opinionated: use keys only.
+      # Remove if you want to SSH using passwords
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
     };
   };
 
