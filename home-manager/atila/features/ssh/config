@@ -14,8 +14,6 @@ Host jc
     HostName juroscomposto
     User atila
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host cosmos
     HostName cosmos
@@ -50,15 +48,11 @@ Host igris
     HostName igris
     User atila
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host betinha
     HostName betinha
     User atila
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host deck
     HostName steamdeck
