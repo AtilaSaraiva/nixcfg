@@ -94,12 +94,6 @@
       ${pkgs.any-nix-shell}/bin/any-nix-shell zsh --info-right | source /dev/stdin
       zvm_after_init_commands+=('eval "$(${pkgs.fzf}/bin/fzf --zsh)"')
 
-      # Nix
-      if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-          . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-      fi
-      # End Nix
-
       bindkey '^ ' autosuggest-accept
     '';
 
