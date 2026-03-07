@@ -128,7 +128,7 @@
     "vm.vfs_cache_pressure" = 50;
   };
 
-  systemd.coredump.enable = false;
+  systemd.coredump.enable = true;
 
   system.autoUpgrade = {
     enable = lib.mkDefault true;
