@@ -8,6 +8,13 @@ pkgs: rec {
   vl = pkgs.callPackage ./scripts { scriptName = "vl"; };
   vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
   fl = pkgs.callPackage ./scripts { scriptName = "fl"; };
+
+  replaceSymlinks = pkgs.callPackage ./scripts {
+    scriptName = "replaceSymlinks";
+    substitutions = {
+      "$(which trash)" = "${pkgs.trash-cli}/bin/trash";
+    };
+  };
   latexit = pkgs.callPackage ./scripts {
     scriptName = "latexit";
     substitutions = {
