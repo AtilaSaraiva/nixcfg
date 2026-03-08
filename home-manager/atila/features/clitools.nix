@@ -27,5 +27,7 @@
     mktorrent
     gdu
     octave # for calculating stuff
+
+    replaceSymlinks
   ];
 }
