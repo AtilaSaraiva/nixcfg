@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# This script is meant to replace symlinks to home
+# folders in wine prefixes. I feel list they make a mess
+# out of my document folder, so I avoid it.
+
+TRASH=$(which trash)
+
+fileList=$(find -type l)
+echo $fileList
+
+for i in $fileList; do
+    $TRASH $i
+    mkdir $i
+done
