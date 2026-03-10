@@ -66,8 +66,9 @@
   ];
 
   keyboard = {
-    xkb_layout = "br,us";
-    xkb_variant = ",dvp";
+    xkb_layout = "us,us";
+    xkb_variant = "altgr-intl,dvp";
+    xkb_options = "caps:swapescape,grp:ralt_rshift_toggle";
   };
 
   services.bukusync.enable = true;
