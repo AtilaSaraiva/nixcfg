@@ -35,6 +35,7 @@
       gas = "git annex sync";
       gc = "git commit -m";
       gca = "git commit --amend";
+      glog = "git log";
       calc = "octave";
       icat = "kitten icat";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
