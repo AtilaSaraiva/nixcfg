@@ -9,6 +9,18 @@ pkgs: rec {
   vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
   fl = pkgs.callPackage ./scripts { scriptName = "fl"; };
 
+  snippetPicker = pkgs.callPackage ./scripts {
+    scriptName = "snippetPicker";
+    substitutions = {
+      "$(which fzf)" = "${pkgs.fzf}/bin/fzf";
+      "$(which grep)" = "${pkgs.coreutils}/bin/grep";
+      "$(which notify-send)" = "${pkgs.libnotify}/bin/notify-send";
+      "$(which echo)" = "${pkgs.coreutils}/bin/echo";
+      "$(which wl-copy)" = "${pkgs.wl-clipboard}/bin/wl-copy";
+      "$(which basename)" = "${pkgs.coreutils}/bin/basename";
+      "$(which cut)" = "${pkgs.coreutils}/bin/cut";
+    };
+  };
   replaceSymlinks = pkgs.callPackage ./scripts {
     scriptName = "replaceSymlinks";
     substitutions = {

@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
+FZF=$(which fzf)
+NOTIFY=$(which notify-send)
+GREP=$(which grep)
+ECHO=$(which echo)
+COPY=$(which wl-copy)
+BASENAME=$(which basename)
+CUT=$(which cut)
+
+
 # 1. Define where your snippets are stored
-SNIPPETS_DIR="$HOME/Files/annex/snippets"
+SNIPPETS_DIR="$ANNEX/snippets"
 
 # 2. Search through the contents of all files in the directory.
 # grep -rIn "." does a recursive search, ignores binary files, 
 # prints line numbers, and matches text.
 # The output format fed to fzf looks like: "/path/to/file.jl:10: if it % 100 == 0"
-selection=$(grep -rIn "." "$SNIPPETS_DIR" | fzf --prompt="Search snippet contents: ")
+selection=$($GREP -rIn "." "$SNIPPETS_DIR" | $FZF --prompt="Search snippet contents: ")
 
 # 3. If you exit fzf without selecting anything, exit gracefully
 if [ -z "$selection" ]; then
@@ -16,11 +25,11 @@ fi
 
 # 4. Extract just the file path from the fzf selection 
 # (cut grabs everything before the first colon)
-selected_file=$(echo "$selection" | cut -d':' -f1)
+selected_file=$($ECHO "$selection" | $CUT -d':' -f1)
 
 # Double-check that the file exists just in case
 if [ ! -f "$selected_file" ]; then
-    notify-send "Snippet Error" "Could not resolve file path."
+    $NOTIFY "Snippet Error" "Could not resolve file path."
     exit 1
 fi
 
@@ -28,7 +37,7 @@ fi
 awk '
     $1 !~ /^#/ && NF > 0 { start = 1 }
     start { print }
-' "$selected_file" | wl-copy
+' "$selected_file" | $COPY
 
 # 6. Success notification!
-notify-send "Snippet Copied" "Copied from: $(basename "$selected_file")"
+$NOTIFY "Snippet Copied" "Copied from: $($BASENAME "$selected_file")"
