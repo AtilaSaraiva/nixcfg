@@ -6,6 +6,7 @@
     podman-compose
     texliveFull
     mani
+
     latexit
     multissh
     center
