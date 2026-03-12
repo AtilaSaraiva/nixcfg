@@ -61,9 +61,9 @@
       sessionPath = lib.mkDefault [
         "$HOME/.julia/bin"
       ];
-      sessionVariables.ANNEX = config.folders.annex;
-      sessionVariables.PROJECTS = config.folders.projects;
-      sessionVariables.NIXCFG = config.folders.nixcfg;
+      sessionVariables.ANNEX = "${config.home.homeDirectory}/${config.folders.annex}";
+      sessionVariables.PROJECTS = "${config.home.homeDirectory}/${config.folders.projects}";
+      sessionVariables.NIXCFG = "${config.home.homeDirectory}/${config.folders.nixcfg}";
     };
 
     services.autoUpgrade = {
