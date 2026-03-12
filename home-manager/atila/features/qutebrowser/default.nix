@@ -19,6 +19,10 @@
       "application/xhtml+xml"="org.qutebrowser.qutebrowser.desktop";
       "application/x-extension-xhtml"="org.qutebrowser.qutebrowser.desktop";
       "application/x-extension-xht"="org.qutebrowser.qutebrowser.desktop";
+      "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
+      "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+      "x-scheme-handler/about" = "org.qutebrowser.qutebrowser.desktop";
+      "x-scheme-handler/unknown" = "org.qutebrowser.qutebrowser.desktop";
     };
   };
 }
