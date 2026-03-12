@@ -131,6 +131,9 @@
   systemd.coredump.enable = true;
   systemd.tpm2.enable = false;
 
+  enviroment.systemPackages = with pkgs; [
+    xdg-utils
+  ];
 
   system.autoUpgrade = {
     enable = lib.mkDefault true;
