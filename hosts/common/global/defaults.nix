@@ -131,7 +131,7 @@
   systemd.coredump.enable = true;
   systemd.tpm2.enable = false;
 
-  enviroment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     xdg-utils
   ];
 
