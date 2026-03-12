@@ -13,7 +13,7 @@ pkgs: rec {
     scriptName = "snippetPicker";
     substitutions = {
       "$(which fzf)" = "${pkgs.fzf}/bin/fzf";
-      "$(which grep)" = "${pkgs.coreutils}/bin/grep";
+      "$(which grep)" = "${pkgs.gnugrep}/bin/grep";
       "$(which notify-send)" = "${pkgs.libnotify}/bin/notify-send";
       "$(which echo)" = "${pkgs.coreutils}/bin/echo";
       "$(which wl-copy)" = "${pkgs.wl-clipboard}/bin/wl-copy";
