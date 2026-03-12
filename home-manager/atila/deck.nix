@@ -27,6 +27,7 @@
     ./features/xournalpp
     ./features/tmux
     ./features/vifm
+    ./features/yazi
     ./features/sway
     ./features/lf
     ./features/zsh
