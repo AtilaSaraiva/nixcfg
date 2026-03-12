@@ -129,6 +129,8 @@
   };
 
   systemd.coredump.enable = true;
+  systemd.tpm2.enable = false;
+
 
   system.autoUpgrade = {
     enable = lib.mkDefault true;
