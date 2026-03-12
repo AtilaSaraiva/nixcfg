@@ -29,5 +29,6 @@
     octave # for calculating stuff
 
     replaceSymlinks
+    snippetPicker
   ];
 }
