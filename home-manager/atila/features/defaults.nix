@@ -1,4 +1,4 @@
-{ outputs, lib, machine, pkgs, ... }:
+{ outputs, lib, machine, pkgs, config, ... }:
 
 {
   options.folders = {
@@ -61,6 +61,9 @@
       sessionPath = lib.mkDefault [
         "$HOME/.julia/bin"
       ];
+      sessionVariables.ANNEX = config.folders.annex;
+      sessionVariables.PROJECTS = config.folders.projects;
+      sessionVariables.NIXCFG = config.folders.nixcfg;
     };
 
     services.autoUpgrade = {

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# 1. Define where your snippets are stored
+SNIPPETS_DIR="$HOME/Files/annex/snippets"
+
+# 2. Search through the contents of all files in the directory.
+# grep -rIn "." does a recursive search, ignores binary files, 
+# prints line numbers, and matches text.
+# The output format fed to fzf looks like: "/path/to/file.jl:10: if it % 100 == 0"
+selection=$(grep -rIn "." "$SNIPPETS_DIR" | fzf --prompt="Search snippet contents: ")
+
+# 3. If you exit fzf without selecting anything, exit gracefully
+if [ -z "$selection" ]; then
+    exit 0
+fi
+
+# 4. Extract just the file path from the fzf selection 
+# (cut grabs everything before the first colon)
+selected_file=$(echo "$selection" | cut -d':' -f1)
+
+# Double-check that the file exists just in case
+if [ ! -f "$selected_file" ]; then
+    notify-send "Snippet Error" "Could not resolve file path."
+    exit 1
+fi
+
+# 5. Strip leading comments and blank lines, then copy to Wayland clipboard
+awk '
+    $1 !~ /^#/ && NF > 0 { start = 1 }
+    start { print }
+' "$selected_file" | wl-copy
+
+# 6. Success notification!
+notify-send "Snippet Copied" "Copied from: $(basename "$selected_file")"
