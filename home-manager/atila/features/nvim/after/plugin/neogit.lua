@@ -1,4 +1,4 @@
-{
+return {
   "NeogitOrg/neogit",
   lazy = true,
   dependencies = {
