@@ -77,6 +77,13 @@ Host tri
     ControlPersist no
     User saraivaq
 
+Host fir
+    HostName fir.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
+    User saraivaq
+
 Host mist
     HostName mist.scinet.utoronto.ca
     User saraivaq
