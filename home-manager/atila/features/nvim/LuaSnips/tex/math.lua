@@ -477,7 +477,7 @@ return {
     ),
     s({trig="([%a])bf", dscr="bold", snippetType="autosnippet", regTrig = true,
        wordTrig = false},
-        fmta("\\mathbf{<>}",
+        fmta("\\bm{<>}",
            { f( function(_, snip) return snip.captures[1] end ) }
         ),
         { condition = in_mathzone }
@@ -491,7 +491,7 @@ return {
     ),
     s({trig="([^%a])bf", dscr="bf", snippetType="autosnippet", regTrig = true,
        wordTrig = false},
-        fmta("<>\\mathbf{<>}",
+        fmta("<>\\bm{<>}",
            { f( function(_, snip) return snip.captures[1] end ), i(1) }
         ),
         { condition = in_mathzone }
