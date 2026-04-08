@@ -1,11 +1,23 @@
 {
   inputs,
+  pkgs,
   ...
 }: {
   # You can import other home-manager modules here
   imports = [
     # Or modules exported from other flakes (such as nix-colors):
     inputs.steamcmd-servers.nixosModules.default
+  ];
+
+  nixpkgs = {
+    # You can add overlays here
+    overlays = [
+      inputs.steamcmd-servers.overlays.default
+    ];
+  };
+
+  environment.systemPackages = [
+    pkgs.steamcmd-ctl
   ];
 
   services.steamcmd-servers = {
