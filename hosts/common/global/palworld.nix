@@ -26,6 +26,7 @@
 
     servers = {
       pal = {
+        enable = true;
         appId = "2394010";
         appIdName = "Palworld Dedicated Server";
         executable = "PalServer.sh";
