@@ -29,7 +29,19 @@
         enable = true;
         appId = "2394010";
         appIdName = "Palworld Dedicated Server";
-        executable = "PalServer.sh";
+
+        executable = "run-wrapper.sh";
+
+        preStart = ''
+          cat << 'EOF' > run-wrapper.sh
+          #!/bin/sh
+          # Use steam-run to provide the FHS environment for the unpatched script/binary
+          exec ${pkgs.steam-run}/bin/steam-run ./PalServer.sh "$@"
+          EOF
+          
+          chmod +x run-wrapper.sh
+        '';
+
         executableArgs = [
           "-useperfthreads"
           "-NoAsyncLoadingThread"
