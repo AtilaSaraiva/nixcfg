@@ -11,7 +11,7 @@
     qbittorrent
     xournalpp
     obs-studio-wrapped
-    inkscape
+    inkscape-with-extensions
     blanket
     libreoffice-fresh
     yt-dlp
