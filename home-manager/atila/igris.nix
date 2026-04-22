@@ -32,6 +32,7 @@
     ./features/yazi
     ./features/sirula
     ./features/xournalpp
+    ./features/inkscape
     ./features/sway
     ./features/lf
     ./features/zsh

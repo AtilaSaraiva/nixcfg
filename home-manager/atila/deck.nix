@@ -25,6 +25,7 @@
     ./features/zathura
     ./features/qutebrowser
     ./features/xournalpp
+    ./features/inkscape
     ./features/tmux
     ./features/vifm
     ./features/yazi

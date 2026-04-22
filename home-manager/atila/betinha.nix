@@ -34,6 +34,7 @@
     ./features/lf
     ./features/zsh
     ./features/sirula
+    ./features/inkscape
     ./features/xournalpp
     ./features/feh.nix
     ./features/wolframEngine.nix
