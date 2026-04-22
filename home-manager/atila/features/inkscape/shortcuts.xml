@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<keys
+   name="User Shortcuts">
+  <bind
+     gaction="win.dialog-open('Transform')"
+     keys="&lt;Primary&gt;&lt;Shift&gt;x" />
+  <bind
+     gaction="win.dialog-open('Objects')"
+     keys="&lt;Primary&gt;&lt;Shift&gt;s" />
+  <bind
+     gaction="win.dialog-toggle"
+     keys="&lt;Primary&gt;&lt;Shift&gt;q" />
+  <bind
+     gaction="app.com.yourname.nvim-latex"
+     keys="l" />
+</keys>
