@@ -32,7 +32,6 @@ class NeovimLatex(inkex.EffectExtension):
 
         # 2. Prepare the workspace
         with tempfile.TemporaryDirectory() as tmpdir:
-            tmpdir = "/tmp/coolpath"
             editor_file = os.path.join(tmpdir, 'equation.txt')
             
             # Write the initial state for Neovim
@@ -86,25 +85,25 @@ class NeovimLatex(inkex.EffectExtension):
 \\usepackage{{amssymb}}
 \\usepackage{{scrextend}}
 \\changefontsizes{{{font_size}}}
-\\usepackage{cool}
-\\usepackage{xparse}
-\\usepackage{bm}
+\\usepackage{{cool}}
+\\usepackage{{xparse}}
+\\usepackage{{bm}}
 
 % Save the original cool derivatives if you ever need them
 \\let\\CoolD\\D
 \\let\\CoolDt\\Dt
 
-\\RenewDocumentCommand{\\D}{ m g }{%
-    \\IfNoValueTF{#2}
-        {\\frac{\\partial}{\\partial #1}}%
-        {\\frac{\\partial #1}{\\partial #2}}%
-}
+\\RenewDocumentCommand{{\\D}}{{ m g }}{{%
+    \\IfNoValueTF{{#2}}
+        {{\\frac{{\\partial}}{{\\partial #1}}}}%
+        {{\\frac{{\\partial #1}}{{\\partial #2}}}}%
+}}
 
-\\NewDocumentCommand{\\Dt}{ m g }{%
-  \\IfNoValueTF{#2}
-    {\\frac{d}{d #1}}%
-    {\\frac{d #1}{d #2}}%
-}
+\\NewDocumentCommand{{\\Dt}}{{ m g }}{{%
+  \\IfNoValueTF{{#2}}
+    {{\\frac{{d}}{{d #1}}}}%
+    {{\\frac{{d #1}}{{d #2}}}}%
+}}
 
 \\begin{{document}}
 $\\displaystyle {latex_code} $
