@@ -112,12 +112,16 @@ $\\displaystyle {latex_code} $
             with open(tex_file, 'w') as f:
                 f.write(tex_template)
 
-            # 6. Compile: tex -> dvi -> svg
+            # 6. Compile: tex -> pdf -> svg
             try:
-                subprocess.run(['latex', '-interaction=nonstopmode', '-halt-on-error', 'doc.tex'], 
-                               cwd=tmpdir, stdout=subprocess.DEVNULL, check=True)
-                subprocess.run(['dvisvgm', '--no-fonts', '--exact', 'doc.dvi', '-o', 'doc.svg'], 
-                               cwd=tmpdir, stdout=subprocess.DEVNULL, check=True)
+                subprocess.run(
+                    ['pdflatex', '-interaction=nonstopmode', '-halt-on-error', 'doc.tex'],
+                    cwd=tmpdir, stdout=subprocess.DEVNULL, check=True
+                )
+                subprocess.run(
+                    ['pdftocairo', '-svg', 'doc.pdf', 'doc.svg'],
+                    cwd=tmpdir, stdout=subprocess.DEVNULL, check=True
+                )
             except subprocess.CalledProcessError:
                 inkex.errormsg("LaTeX compilation failed. Check your syntax.")
                 return
@@ -127,30 +131,12 @@ $\\displaystyle {latex_code} $
             with open(svg_file, 'rb') as f:
                 compiled_svg = etree.parse(f).getroot()
 
-            # Create an inner group to correct dvisvgm's internal coordinates
-            inner_group = inkex.Group()
+            # Inkscape's PDF->SVG export gives us a clean, correctly scaled SVG.
+            # We just need to grab the contents and wrap them in a group.
+            new_group = inkex.Group()
             for elem in compiled_svg:
                 if isinstance(elem, etree._Element):
-                    inner_group.append(elem)
-
-            # Extract the viewBox. dvisvgm uses this to frame the paths.
-            viewbox = compiled_svg.get('viewBox')
-            if viewbox:
-                parts = viewbox.split()
-                if len(parts) == 4:
-                    min_x, min_y = float(parts[0]), float(parts[1])
-
-                    # 72.27 is TeX's point, 96 is Inkscape's DPI
-                    scale_factor = 72.27 / 96 
-                    # scale_factor = 0.5 
-                    
-                    # Apply both the translation AND the scale correction
-                    new_transform = f'scale({scale_factor}) translate({-min_x}, {-min_y})'
-                    inner_group.set('transform', new_transform)
-
-            # Create the outer group that acts as the final editable Inkscape object
-            new_group = inkex.Group()
-            new_group.append(inner_group)
+                    new_group.append(elem)
 
             # Store the data so we can edit it later
             new_group.set('data-latex-code', latex_code)
@@ -169,4 +155,3 @@ $\\displaystyle {latex_code} $
 
 if __name__ == '__main__':
     NeovimLatex().run()
-
