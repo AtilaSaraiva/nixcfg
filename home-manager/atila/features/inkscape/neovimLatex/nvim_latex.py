@@ -139,8 +139,14 @@ $\\displaystyle {latex_code} $
                 parts = viewbox.split()
                 if len(parts) == 4:
                     min_x, min_y = float(parts[0]), float(parts[1])
-                    # Translate the paths so the equation's top-left corner is precisely at 0,0
-                    inner_group.set('transform', f'translate({-min_x}, {-min_y})')
+
+                    # 72.27 is TeX's point, 96 is Inkscape's DPI
+                    scale_factor = 72.27 / 96 
+                    # scale_factor = 0.5 
+                    
+                    # Apply both the translation AND the scale correction
+                    new_transform = f'scale({scale_factor}) translate({-min_x}, {-min_y})'
+                    inner_group.set('transform', new_transform)
 
             # Create the outer group that acts as the final editable Inkscape object
             new_group = inkex.Group()
@@ -163,3 +169,4 @@ $\\displaystyle {latex_code} $
 
 if __name__ == '__main__':
     NeovimLatex().run()
+
