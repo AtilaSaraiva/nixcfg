@@ -134,13 +134,28 @@ $\\displaystyle {latex_code} $
             svg_file = os.path.join(tmpdir, 'doc.svg')
             with open(svg_file, 'rb') as f:
                 compiled_svg = etree.parse(f).getroot()
- 
-            # Wrap in a group and embed the whole <svg> as a nested svg,
-            # preserving its width/height/viewBox so sizing is correct.
+
+# pdftocairo outputs in pt (1/72 inch).
+# Inkscape's document is in mm, so we scale by 25.4/72.
+            scale = 25.4 / 72.0
+
+# Move <defs> contents into the document's <defs>
+            svg_defs = compiled_svg.find('{http://www.w3.org/2000/svg}defs')
+            if svg_defs is not None:
+                doc_defs = self.svg.defs
+                for child in svg_defs:
+                    doc_defs.append(child)
+
+# Wrap remaining non-defs elements in a scaled group
+            content_group = inkex.Group()
+            content_group.set('transform', f'scale({scale})')
+            for elem in compiled_svg:
+                tag = etree.QName(elem.tag).localname if isinstance(elem.tag, str) else None
+                if tag and tag != 'defs':
+                    content_group.append(elem)
+
             new_group = inkex.Group()
-            new_group.append(compiled_svg)
- 
-            # Store the data so we can edit it later
+            new_group.append(content_group)
             new_group.set('data-latex-code', latex_code)
             new_group.set('data-font-size', font_size)
  
