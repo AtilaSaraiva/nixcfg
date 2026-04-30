@@ -19,7 +19,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEDTsJbNXgPwji8XKlMjrqtO6w62nJYshtaLHyTWmZ8W atilasaraiva@gmail.com"
       ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
-      extraGroups = ["wheel" "docker" "audio" "networkmanager"];
+      extraGroups = ["wheel" "docker" "audio" "networkmanager" "devgroup"];
     };
     claude = {
       # TODO: You can set an initial password for your user.
@@ -38,10 +38,6 @@
       ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       extraGroups = [
-        "wheel"
-        "docker"
-        "audio"
-        "networkmanager"
         "devgroup"
       ];
     };
