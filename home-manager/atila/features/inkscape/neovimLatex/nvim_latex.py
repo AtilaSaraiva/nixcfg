@@ -86,7 +86,7 @@ class NeovimLatex(inkex.EffectExtension):
             # 5. Create the TeX document
             tex_file = os.path.join(tmpdir, 'doc.tex')
             tex_template = f"""
-\\documentclass{{standalone}}
+\\documentclass{{article}}
 \\usepackage{{lmodern}}
 \\usepackage{{amsmath}}
 \\usepackage{{amssymb}}
@@ -95,6 +95,10 @@ class NeovimLatex(inkex.EffectExtension):
 \\usepackage{{cool}}
 \\usepackage{{xparse}}
 \\usepackage{{bm}}
+\\usepackage[active,tightpage]{{preview}}
+\\PreviewEnvironment{{equation*}}
+\\setlength{{\\textwidth}}{{100cm}}
+\\setlength{{\\paperwidth}}{{100cm}}
 
 % Save the original cool derivatives if you ever need them
 \\let\\CoolD\\D
@@ -113,7 +117,9 @@ class NeovimLatex(inkex.EffectExtension):
 }}
 
 \\begin{{document}}
-$\\displaystyle {latex_code} $
+\\begin{{equation*}}
+{latex_code}
+\\end{{equation*}}
 \\end{{document}}
 """
             with open(tex_file, 'w') as f:
