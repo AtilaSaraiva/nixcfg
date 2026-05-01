@@ -11,4 +11,6 @@
     port = 11434;
     syncModels = true;
   };
+
+  services.open-webui.enable = true;
 }
