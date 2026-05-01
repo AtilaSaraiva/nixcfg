@@ -5,6 +5,8 @@
     enable = true;
     loadModels = [
       "qwen2.5-coder:14b"
+      "devstral-small-2"
+      "qwen3.6:35b"
     ];
     openFirewall = false;
     package = pkgs.ollama-cpu;
