@@ -4,7 +4,7 @@
   services.ollama = {
     enable = true;
     loadModels = [
-      "qwen3.6:27b-coding-mxfp8"
+      "qwen2.5-coder:14b"
     ];
     openFirewall = false;
     package = pkgs.ollama-cpu;
@@ -12,5 +12,9 @@
     syncModels = true;
   };
 
-  services.open-webui.enable = true;
+  services.open-webui = {
+    enable = true;
+    port = 11345;
+    openFirewall = false;
+  };
 }
