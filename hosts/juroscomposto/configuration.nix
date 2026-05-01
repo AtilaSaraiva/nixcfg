@@ -48,6 +48,7 @@
     ../common/global/verifyStore.nix
     ../common/global/jellyfin.nix
     ../common/global/gitea.nix
+    ../common/global/ollama.nix
     ../common/global/palworld.nix
     ../common/global/msmtp.nix
     ../common/global/smartd.nix
