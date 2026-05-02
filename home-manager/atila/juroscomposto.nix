@@ -18,34 +18,35 @@
     # inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
-    ./features/nvim
-    ./features/julia
-    ./features/jupyter
-    ./features/ssh
-    ./features/git
-    ./features/waybar
-    ./features/kitty
-    ./features/mpv
-    ./features/zathura
-    ./features/qutebrowser
-    ./features/sirula
-    ./features/xournalpp
-    ./features/inkscape
-    ./features/tmux
-    ./features/vifm
-    ./features/yazi
-    ./features/sway
-    ./features/wayvnc
-    ./features/lf
-    ./features/zsh
-    ./features/feh.nix
-    ./features/wolframEngine.nix
-    ./features/devtools.nix
-    ./features/clitools.nix
-    ./features/nixtools.nix
-    ./features/flatpak.nix
-    ./features/apps.nix
-    ./features/defaults.nix
+    ../common/features/nvim
+    ../common/features/julia
+    ../common/features/jupyter
+    ../common/features/ssh
+    ../common/features/git
+    ../common/features/waybar
+    ../common/features/kitty
+    ../common/features/mpv
+    ../common/features/zathura
+    ../common/features/qutebrowser
+    ../common/features/sirula
+    ../common/features/xournalpp
+    ../common/features/inkscape
+    ../common/features/tmux
+    ../common/features/vifm
+    ../common/features/yazi
+    ../common/features/sway
+    ../common/features/wayvnc
+    ../common/features/lf
+    ../common/features/zsh
+    ../common/features/feh.nix
+    ../common/features/wolframEngine.nix
+    ../common/features/devtools.nix
+    ../common/features/clitools.nix
+    ../common/features/nixtools.nix
+    ../common/features/nix.nix
+    ../common/features/flatpak.nix
+    ../common/features/apps.nix
+    ../common/features/defaults.nix
   ];
 
   displays = [

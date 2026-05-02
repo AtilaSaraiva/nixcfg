@@ -1,9 +1,7 @@
 { inputs, pkgs, lib, ... }:
 
 {
-  nix = let
-    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-  in {
+  nix = {
     gc = {
       automatic = true;
       persistent = true;
@@ -19,9 +17,9 @@
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
       # Opinionated: disable global registry
-      flake-registry = "";
+      # flake-registry = "";
       trusted-users = [ "@wheel" ];
-      allowed-users = [ "@wheel" ];
+      allowed-users = [ "@wheel" "claude" ];
       auto-optimise-store = true;
       trusted-public-keys = [
         "binarycache.com:F14RK+znP8o15IWh7ObV/gGDqif1cfddFbLHWh6BgCI="
@@ -33,9 +31,5 @@
         "http://juroscomposto:5000?priority=1"
       ];
     };
-
-    # Opinionated: make flake registry and nix path match nix run ripgrep#nixpkgs defaultUserShellflake inputs
-    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-    nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 }
