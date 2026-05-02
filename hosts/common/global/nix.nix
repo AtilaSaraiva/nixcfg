@@ -19,7 +19,7 @@
       # Opinionated: disable global registry
       # flake-registry = "";
       trusted-users = [ "@wheel" ];
-      allowed-users = [ "@wheel" ];
+      allowed-users = [ "@wheel" "claude" ];
       auto-optimise-store = true;
       trusted-public-keys = [
         "binarycache.com:F14RK+znP8o15IWh7ObV/gGDqif1cfddFbLHWh6BgCI="
