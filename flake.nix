@@ -157,12 +157,28 @@
           ./home-manager/atila/deck.nix
         ];
       };
+      "claude@juroscomposto" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
+        modules = [
+          # > Our main home-manager configuration file <
+          ./home-manager/atila/juroscomposto.nix
+        ];
+      };
+      "claude@igris" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
+        modules = [
+          # > Our main home-manager configuration file <
+          ./home-manager/atila/igris.nix
+        ];
+      };
       "claude@betinha" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/atila/claude.nix
+          ./home-manager/atila/betinha.nix
         ];
       };
     };
