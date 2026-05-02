@@ -17,23 +17,24 @@
     # inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
-    ./features/nvim
-    ./features/julia
-    ./features/jupyter
-    ./features/ssh
-    ./features/git
-    ./features/zathura
-    ./features/qutebrowser
-    ./features/tmux
-    ./features/vifm
-    ./features/yazi
-    ./features/lf
-    ./features/zsh
-    ./features/feh.nix
-    ./features/devtools.nix
-    ./features/clitools.nix
-    ./features/nixtools.nix
-    ./features/defaults.nix
+    ../common/features/nvim
+    ../common/features/julia
+    ../common/features/jupyter
+    ../common/features/ssh
+    ../common/features/git
+    ../common/features/zathura
+    ../common/features/qutebrowser
+    ../common/features/tmux
+    ../common/features/vifm
+    ../common/features/yazi
+    ../common/features/lf
+    ../common/features/zsh
+    ../common/features/feh.nix
+    ../common/features/devtools.nix
+    ../common/features/clitools.nix
+    ../common/features/nixtools.nix
+    ../common/features/nix.nix
+    ../common/features/defaults.nix
   ];
 
   folders = {

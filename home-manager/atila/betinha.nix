@@ -17,33 +17,34 @@
     # inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
-    ./features/nvim
-    ./features/julia
-    ./features/jupyter
-    ./features/ssh
-    ./features/git
-    ./features/waybar
-    ./features/kitty
-    ./features/mpv
-    ./features/zathura
-    ./features/qutebrowser
-    ./features/tmux
-    ./features/vifm
-    ./features/yazi
-    ./features/sway
-    ./features/lf
-    ./features/zsh
-    ./features/sirula
-    ./features/inkscape
-    ./features/xournalpp
-    ./features/feh.nix
-    ./features/wolframEngine.nix
-    ./features/devtools.nix
-    ./features/clitools.nix
-    ./features/nixtools.nix
-    ./features/apps.nix
-    ./features/flatpak.nix
-    ./features/defaults.nix
+    ../common/features/nvim
+    ../common/features/julia
+    ../common/features/jupyter
+    ../common/features/ssh
+    ../common/features/git
+    ../common/features/waybar
+    ../common/features/kitty
+    ../common/features/mpv
+    ../common/features/zathura
+    ../common/features/qutebrowser
+    ../common/features/tmux
+    ../common/features/vifm
+    ../common/features/yazi
+    ../common/features/sway
+    ../common/features/lf
+    ../common/features/zsh
+    ../common/features/sirula
+    ../common/features/inkscape
+    ../common/features/xournalpp
+    ../common/features/feh.nix
+    ../common/features/wolframEngine.nix
+    ../common/features/devtools.nix
+    ../common/features/clitools.nix
+    ../common/features/nixtools.nix
+    ../common/features/nix.nix
+    ../common/features/apps.nix
+    ../common/features/flatpak.nix
+    ../common/features/defaults.nix
   ];
 
   displays = [
