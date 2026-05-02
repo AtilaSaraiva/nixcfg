@@ -17,7 +17,7 @@
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
       # Opinionated: disable global registry
-      flake-registry = "";
+      # flake-registry = "";
       trusted-users = [ "@wheel" ];
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
