@@ -162,7 +162,7 @@
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/atila/juroscomposto.nix
+          ./home-manager/claude/juroscomposto.nix
         ];
       };
       "claude@igris" = home-manager.lib.homeManagerConfiguration {
@@ -170,7 +170,7 @@
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/atila/igris.nix
+          ./home-manager/claude/igris.nix
         ];
       };
       "claude@betinha" = home-manager.lib.homeManagerConfiguration {
@@ -178,7 +178,7 @@
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/atila/betinha.nix
+          ./home-manager/claude/betinha.nix
         ];
       };
     };
