@@ -21,7 +21,7 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    steamcmd-servers.url = "github:kagurazaka-ayano/steamcmd-servers";
+    steamcmd-servers.url = "github:AtilaSaraiva/steamcmd-servers";
 
     nixgl.url = "github:bb010g/nixGL";
     nixgl.inputs.nixpkgs.follows = "nixpkgs";

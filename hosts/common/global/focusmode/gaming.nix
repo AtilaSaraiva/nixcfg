@@ -7,7 +7,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     winetricks
     mangohud
     zeroad
-    lutris
+    # lutris Temporarily disabling to make build pass
     rpcs3
     wine-wayland
     steam-run
