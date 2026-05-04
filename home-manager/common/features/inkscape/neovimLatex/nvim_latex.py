@@ -92,6 +92,8 @@ class NeovimLatex(inkex.EffectExtension):
 \\usepackage{{amssymb}}
 \\usepackage{{scrextend}}
 \\changefontsizes{{{font_size}}}
+\\usepackage{{exscale}}
+\\usepackage{{relsize}}
 \\usepackage{{cool}}
 \\usepackage{{xparse}}
 \\usepackage{{bm}}
@@ -118,6 +120,7 @@ class NeovimLatex(inkex.EffectExtension):
 
 \\begin{{document}}
 \\begin{{equation*}}
+\\displaystyle
 {latex_code}
 \\end{{equation*}}
 \\end{{document}}
