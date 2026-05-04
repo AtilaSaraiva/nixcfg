@@ -38,6 +38,7 @@
       glog = "git log";
       calc = "octave";
       icat = "kitten icat";
+      claude = "nix run github:sadjow/claude-code-nix";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
 
       # tunnels the ip to access vnc in a one-liner
