@@ -30,8 +30,8 @@
         tags: [ julia, seismic, annex ]
 
       seqcomp:
-        path: julia/SequentialCompression.jl
-        url: git@github.com:AtilaSaraiva/SequentialCompression.jl.git
+        path: julia/SequentialZfpCompression.jl
+        url: git@github.com:AtilaSaraiva/SequentialZfpCompression.jl.git
         tags: [ julia, compression ]
 
       seismakie:
