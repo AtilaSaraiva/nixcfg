@@ -15,6 +15,11 @@ Host jc
     User atila
     PreferredAuthentications publickey
 
+Host clau
+    HostName juroscomposto
+    User claude
+    PreferredAuthentications publickey
+
 Host cosmos
     HostName cosmos
     User atila
