@@ -20,6 +20,7 @@
           "grep *" = "allow";
           "rg *" = "allow";
           "cat *" = "allow";
+          "cp *" = "allow";
           "rm *" = "deny";
         };
       };
@@ -32,18 +33,18 @@
         model: opencode/gemini-3.1-pro
         temperature: 0.2
         permissions:
-          read: true
-          list: true
-          glob: true
-          grep: true
-          line_view: true
-          find_symbol: true
-          get_symbols_overview: true
-          write: false
-          edit: false
-          bash: false
-          task: true
-          webfetch: false
+          read: allow
+          list: allow
+          glob: allow
+          grep: allow
+          line_view: allow
+          find_symbol: allow
+          get_symbols_overview: allow
+          write: deny
+          edit: deny
+          bash: deny
+          task: allow
+          webfetch: deny
         ---
 
         # Project manager
@@ -80,9 +81,9 @@
         model: opencode/gpt-5.4-mini
         temperature: 0.4
         permissions:
-          write: false
-          edit: false
-          bash: false
+          write: deny
+          edit: deny
+          bash: deny
         ---
 
         # The Explorer
@@ -98,9 +99,9 @@
         model: opencode/kimi-k2.6
         temperature: 0.3
         permissions:
-          write: true
-          edit: true
-          bash: false
+          write: allow
+          edit: allow
+          bash: deny
         ---
       '';
       coder = ''
@@ -110,9 +111,9 @@
         model: opencode/claude-opus-4-7
         temperature: 0.2
         permissions:
-          write: true
-          edit: true
-          bash: true
+          write: allow
+          edit: allow
+          bash: allow
         ---
       '';
       researcher = ''
@@ -122,9 +123,9 @@
         model: opencode/kimi-k2.6
         temperature: 0.8
         permissions:
-          write: false
-          edit: false
-          bash: false
+          write: deny
+          edit: deny
+          bash: deny
         ---
 
         # The Researcher
@@ -138,9 +139,9 @@
         model: opencode/gpt-5.3-codex
         temperature: 0.4
         permissions:
-          write: true
-          edit: true
-          bash: true
+          write: allow
+          edit: allow
+          bash: allow
         ---
 
         # The debugger
@@ -158,9 +159,9 @@
         model: opencode/gemini-3.1-pro
         temperature: 0.3
         permissions:
-          write: true
-          edit: true
-          bash: true
+          write: allow
+          edit: allow
+          bash: allow
         ---
 
         # Mathematician
