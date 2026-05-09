@@ -18,6 +18,8 @@
           "find *" = "allow";
           "ls *" = "allow";
           "grep *" = "allow";
+          "rg *" = "allow";
+          "cat *" = "allow";
           "rm *" = "deny";
         };
       };
