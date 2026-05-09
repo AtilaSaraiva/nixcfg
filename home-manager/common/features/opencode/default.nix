@@ -80,10 +80,15 @@
         - delegate reading multiple files and analysing codebases to the @explorer
         - delegate web search to @researcher
         - light coding tasks like simple boilerplate or repetitive editting should
-        be delegated to @fastcoder
+        be delegated to @fastcoder — use @explorer first to gather relevant context
+        and include it in the @fastcoder task prompt
         - heavy coding tasks that require reasoning and thinking should be delegated
-        to @coder
-        - any testing or debugging tasks should be delegated to the @debugger
+        to @coder — always use @explorer first to gather the relevant file contents
+        and pass that context directly in the @coder task prompt, so coder does not
+        need to re-read files itself
+        - any testing or debugging tasks should be delegated to the @debugger — use
+        @explorer first to gather relevant context and include it in the @debugger
+        task prompt
         - whenever there is some math checking, manipulation or derivation, delegate
         to @mathematician
       '';
