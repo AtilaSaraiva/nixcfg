@@ -59,6 +59,8 @@
         - heavy coding tasks that require reasoning and thinking should be delegated
         to @coder
         - any testing or debugging tasks should be delegated to the @debugger
+        - whenever there is some math checking, manipulation or derivation, delegate
+        to @mathematician
       '';
       explorer = ''
         ---
@@ -137,6 +139,25 @@
         Usually the user will suggest the tests that should be done, and those
         take priority. Otherwise, try to think of how to check for the expected
         functionality of functions, and test the code yourself by running it.
+      '';
+      mathematician = ''
+        ---
+        description: Check and develop math notes, scripts and codes
+        mode: subagent
+        model: opencode/gemini-3.1-pro
+        temperature: 0.3
+        tools:
+          write: true
+          edit: true
+          bash: true
+        ---
+
+        # Mathematician
+
+        You are a senior mathematician. Your sole reponsibility is to check and do math.
+        Everytime you
+        do a symbolic calculation, try your best to check again and be thorough.
+        You are free to use code to think and check your math.
       '';
     };
   };  
