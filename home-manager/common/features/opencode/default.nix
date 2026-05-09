@@ -7,23 +7,23 @@
       model = "opencode/qwen3.6-plus";
       autoshare = false;
       autoupdate = true;
-      default_agent = "build";
+      default_agent = "manager";
       lsp = true;
-      # permission = {
-      #   bash = {
-      #     "*" = "ask";
-      #     "git *" = "allow";
-      #     "julia *" = "allow";
-      #     "python *" = "allow";
-      #     "find *" = "allow";
-      #     "ls *" = "allow";
-      #     "grep *" = "allow";
-      #     "rg *" = "allow";
-      #     "cat *" = "allow";
-      #     "cp *" = "allow";
-      #     "rm *" = "deny";
-      #   };
-      # };
+      permission = {
+        bash = {
+          "*" = "ask";
+          "git *" = "allow";
+          "julia *" = "allow";
+          "python *" = "allow";
+          "find *" = "allow";
+          "ls *" = "allow";
+          "grep *" = "allow";
+          "rg *" = "allow";
+          "cat *" = "allow";
+          "cp *" = "allow";
+          "rm *" = "deny";
+        };
+      };
     };
     agents = {
       manager = ''
@@ -32,7 +32,7 @@
         mode: primary
         model: opencode/gemini-3.1-pro
         temperature: 0.2
-        permissions:
+        permission:
           read: allow
           list: allow
           glob: allow
@@ -42,7 +42,9 @@
           get_symbols_overview: allow
           write: deny
           edit: deny
-          bash: deny
+          bash:
+            "git *": allow
+            "*": deny
           task: allow
           webfetch: deny
         ---
@@ -57,6 +59,17 @@
         You are also responsible of managing git commits, adding all the files
         yourself and writing the commit messages.
 
+        # Available subagents
+        The ONLY subagents you may delegate to are:
+        - @explorer — read and analyse codebases
+        - @fastcoder — simple boilerplate, repetitive edits, and running simple bash commands
+        - @coder — heavy coding tasks requiring reasoning
+        - @debugger — debugging and testing
+        - @researcher — web search and fact-checking
+        - @mathematician — math derivations and checks
+
+        Never delegate to @general or any other agent not listed above.
+
         # Guidelines
         - for projects that use git-annex (check by seeing if '.git/annex' exists),
         add all files with 'git annex add' and assume that the owner of the repository
@@ -65,9 +78,9 @@
         - avoid adding too many files to the same commit, or code modifications that
         are not part of the same feature
         - delegate reading multiple files and analysing codebases to the @explorer
-        - delegate web search to @research
+        - delegate web search to @researcher
         - light coding tasks like simple boilerplate or repetitive editting should
-        be delegated to @fastCoder
+        be delegated to @fastcoder
         - heavy coding tasks that require reasoning and thinking should be delegated
         to @coder
         - any testing or debugging tasks should be delegated to the @debugger
@@ -80,7 +93,7 @@
         mode: subagent
         model: opencode/gpt-5.4-mini
         temperature: 0.4
-        permissions:
+        permission:
           write: deny
           edit: deny
           bash: deny
@@ -98,10 +111,10 @@
         mode: subagent
         model: opencode/kimi-k2.6
         temperature: 0.3
-        permissions:
+        permission:
           write: allow
           edit: allow
-          bash: deny
+          bash: allow
         ---
       '';
       coder = ''
@@ -110,7 +123,7 @@
         mode: subagent
         model: opencode/claude-opus-4-7
         temperature: 0.2
-        permissions:
+        permission:
           write: allow
           edit: allow
           bash: allow
@@ -122,7 +135,7 @@
         mode: subagent
         model: opencode/kimi-k2.6
         temperature: 0.8
-        permissions:
+        permission:
           write: deny
           edit: deny
           bash: deny
@@ -138,7 +151,7 @@
         mode: subagent
         model: opencode/gpt-5.3-codex
         temperature: 0.4
-        permissions:
+        permission:
           write: allow
           edit: allow
           bash: allow
@@ -158,7 +171,7 @@
         mode: subagent
         model: opencode/gemini-3.1-pro
         temperature: 0.3
-        permissions:
+        permission:
           write: allow
           edit: allow
           bash: allow
