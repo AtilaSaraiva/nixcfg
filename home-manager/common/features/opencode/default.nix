@@ -50,7 +50,7 @@
         # Guidelines
         - for projects that use git-annex (check by seeing if '.git/annex' exists),
         add all files with 'git annex add' and assume that the owner of the repository
-        configure the rules of what files should be managed by git or git-annex
+        configured the rules of what files should be managed by git or git-annex
         - write commit messages to be comprehensive, one liners should not suffice
         - avoid adding too many files to the same commit, or code modifications that
         are not part of the same feature
