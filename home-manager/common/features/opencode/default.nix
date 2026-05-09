@@ -9,21 +9,21 @@
       autoupdate = true;
       default_agent = "build";
       lsp = true;
-      permission = {
-        bash = {
-          "*" = "ask";
-          "git *" = "allow";
-          "julia *" = "allow";
-          "python *" = "allow";
-          "find *" = "allow";
-          "ls *" = "allow";
-          "grep *" = "allow";
-          "rg *" = "allow";
-          "cat *" = "allow";
-          "cp *" = "allow";
-          "rm *" = "deny";
-        };
-      };
+      # permission = {
+      #   bash = {
+      #     "*" = "ask";
+      #     "git *" = "allow";
+      #     "julia *" = "allow";
+      #     "python *" = "allow";
+      #     "find *" = "allow";
+      #     "ls *" = "allow";
+      #     "grep *" = "allow";
+      #     "rg *" = "allow";
+      #     "cat *" = "allow";
+      #     "cp *" = "allow";
+      #     "rm *" = "deny";
+      #   };
+      # };
     };
     agents = {
       manager = ''
