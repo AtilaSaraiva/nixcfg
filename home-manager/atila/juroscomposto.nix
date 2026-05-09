@@ -32,6 +32,7 @@
     ../common/features/xournalpp
     ../common/features/inkscape
     ../common/features/tmux
+    ../common/features/opencode
     ../common/features/vifm
     ../common/features/yazi
     ../common/features/sway
