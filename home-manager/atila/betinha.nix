@@ -28,6 +28,7 @@
     ../common/features/zathura
     ../common/features/qutebrowser
     ../common/features/tmux
+    ../common/features/opencode
     ../common/features/vifm
     ../common/features/yazi
     ../common/features/sway

@@ -24,6 +24,7 @@
     ../common/features/git
     ../common/features/zathura
     ../common/features/tmux
+    ../common/features/opencode
     ../common/features/vifm
     ../common/features/yazi
     ../common/features/lf
