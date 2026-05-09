@@ -65,7 +65,7 @@
       explorer = ''
         ---
         description: Fast agent for analysing code bases
-        mode: primary
+        mode: subagent
         model: opencode/gpt-5.4-mini
         temperature: 0.4
         permissions:
