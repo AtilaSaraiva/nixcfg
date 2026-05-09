@@ -32,9 +32,18 @@
         model: opencode/gemini-3.1-pro
         temperature: 0.2
         permissions:
+          read: true
+          list: true
+          glob: true
+          grep: true
+          line_view: true
+          find_symbol: true
+          get_symbols_overview: true
           write: false
           edit: false
-          bash: true
+          bash: false
+          task: true
+          webfetch: false
         ---
 
         # Project manager
