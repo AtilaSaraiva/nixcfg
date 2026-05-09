@@ -8,7 +8,6 @@
   home.packages = with pkgs; [
     nixd
     markdown-oxide
-    opencode
     lsof
   ];
 
