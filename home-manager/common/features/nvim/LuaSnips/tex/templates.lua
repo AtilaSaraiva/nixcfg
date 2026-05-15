@@ -12,6 +12,7 @@ return {
 
                 \usepackage{cool}
                 \usepackage{xparse}
+                \usepackage{bm}
 
                 % Save the original cool derivatives if you ever need them
                 \let\CoolD\D
@@ -64,6 +65,7 @@ return {
                 \usepackage{amsmath, amssymb}
                 \usepackage{cool}
                 \usepackage{xparse}
+                \usepackage{bm}
 
                 % Save the original cool derivatives if you ever need them
                 \let\CoolD\D
