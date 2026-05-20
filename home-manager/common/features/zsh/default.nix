@@ -38,6 +38,7 @@
       glog = "git log";
       calc = "octave";
       icat = "kitten icat";
+      yp = "pwd | ${pkgs.wl-clipboard}/bin/wl-copy";
       claude = "nix run github:sadjow/claude-code-nix";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
 
