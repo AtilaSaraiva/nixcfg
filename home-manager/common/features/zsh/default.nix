@@ -23,6 +23,7 @@
       ma = "mani run";
       cleanBranches = "git branch --merged | grep -v \* | xargs git branch -D";
       julia = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia";
+      juliac = "julia --project -e 'using JuliaC; JuliaC.main(ARGS)' -- ";
       jl = "LD_LIBRARY_PATH=/run/opengl-driver/lib/ julia --project -t auto";
       v = "${pkgs.fzf}/bin/fzf --bind 'enter:become(nvim {})'";
       cf = "cd $(find . -type d | fzf)";
