@@ -114,7 +114,13 @@
     Defaults passwd_timeout=0
   '';
 
-  programs.nix-ld.enable = lib.mkDefault true;
+  programs.nix-ld = {
+    enable = lib.mkDefault true;
+    libraries = with pkgs; [
+      hwloc
+    ];
+  };
+
 
   security.pam.loginLimits = [
     { domain = "*"; item = "memlock"; type = "hard"; value = "unlimited"; }
