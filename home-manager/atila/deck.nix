@@ -66,8 +66,8 @@
     homeDirectory = "/home/deck";
   };
 
-  nixGL.packages = inputs.nixgl.packages;
-  nixGL.defaultWrapper = "mesa";
+  targets.genericLinux.nixGL.packages = inputs.nixgl.packages;
+  targets.genericLinux.nixGL.defaultWrapper = "mesa";
 
   wayland.windowManager.sway.package = (config.lib.nixGL.wrap pkgs.sway);
 
