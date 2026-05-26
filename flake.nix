@@ -157,6 +157,14 @@
           ./home-manager/atila/deck.nix
         ];
       };
+      "userland@s20" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "userland@localhost";};
+        modules = [
+          # > Our main home-manager configuration file <
+          ./home-manager/atila/s20.nix
+        ];
+      };
       "claude@juroscomposto" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "claude@betinha";};
