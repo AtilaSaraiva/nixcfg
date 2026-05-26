@@ -1,0 +1,86 @@
+# This is your home-manager configuration file
+# Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
+  # You can import other home-manager modules here
+  imports = [
+    # If you want to use modules your own flake exports (from modules/home-manager):
+    # outputs.homeManagerModules.example
+
+    # Or modules exported from other flakes (such as nix-colors):
+    # inputs.nix-colors.homeManagerModules.default
+
+    # You can also split up your configuration and import pieces of it here:
+    ../common/features/nvim
+    ../common/features/julia
+    ../common/features/jupyter
+    ../common/features/ssh
+    ../common/features/git
+    ../common/features/tmux
+    ../common/features/vifm
+    ../common/features/yazi
+    ../common/features/lf
+    ../common/features/zsh
+    ../common/features/feh.nix
+    ../common/features/wolframEngine.nix
+    ../common/features/devtools.nix
+    ../common/features/clitools.nix
+    ../common/features/nixtools.nix
+    ../common/features/nix.nix
+    ../common/features/defaults.nix
+  ];
+
+  folders = {
+    repos = "codes";
+    projects = "projects";
+    nixcfg = "codes/nixcfg";
+  };
+
+  home = {
+    username = "userland";
+    homeDirectory = "/home/userland";
+  };
+
+  nixGL.packages = inputs.nixgl.packages;
+  nixGL.defaultWrapper = "mesa";
+
+  home.packages = with pkgs; [
+      borg-sans-mono
+      cantarell-fonts
+      fira
+      fira-code
+      fira-code-symbols
+      font-awesome_4
+      font-awesome_5
+      noto-fonts
+      noto-fonts-cjk-sans
+      open-fonts
+      ubuntu-classic
+      dejavu_fonts
+      freefont_ttf
+      gyre-fonts # TrueType substitutes for standard PostScript fonts
+      liberation_ttf
+      unifont
+      noto-fonts-color-emoji
+  ];
+
+  fonts = {
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        serif = [ "Noto Serif" ];
+        sansSerif = [ "Roboto" ];
+        monospace = [ "Fira Code" ];
+      };
+    };
+  };
+
+  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+  home.stateVersion = "26.05";
+}
