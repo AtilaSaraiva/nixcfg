@@ -31,6 +31,7 @@
     ../common/features/sirula
     ../common/features/xournalpp
     ../common/features/inkscape
+    ../common/features/homebank
     ../common/features/tmux
     ../common/features/opencode
     ../common/features/vifm

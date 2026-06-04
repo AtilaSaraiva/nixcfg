@@ -26,7 +26,6 @@
     wlvncc
     chromium
     calibre
-    homebank
     rquickshare
   ];
 
