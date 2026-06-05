@@ -7,6 +7,7 @@ in
 {
   home.packages = with pkgs; [
     homebank
+    finances
   ];
 
   xdg.configFile = {
