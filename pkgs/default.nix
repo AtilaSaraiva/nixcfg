@@ -9,6 +9,11 @@ pkgs: rec {
   vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
   fl = pkgs.callPackage ./scripts { scriptName = "fl"; };
 
+  finances = pkgs.callPackage ./scripts {
+    scriptName = "finances";
+    substitutions = {
+    };
+  };
   snippetPicker = pkgs.callPackage ./scripts {
     scriptName = "snippetPicker";
     substitutions = {

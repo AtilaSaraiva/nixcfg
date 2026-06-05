@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+git -C $ANNEX annex unlock "$ANNEX/important documents/finances/homebank/my finances.xhb"
+homebank "$ANNEX/important documents/finances/homebank/my finances.xhb"
+git -C $ANNEX annex add "$ANNEX/important documents/finances/homebank/my finances.xhb"
+git -C $ANNEX commit -m "adding updated finances file"
