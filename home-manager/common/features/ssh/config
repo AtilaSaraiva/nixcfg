@@ -111,7 +111,14 @@ Host vulcan
     User saraivaq
 
 Host rorq
-    HostName rorqual.tamia.alliancecan.ca
+    HostName rorqual.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
+    User saraivaq
+
+Host kill
+    HostName killarney.alliancecan.ca
     ControlMaster auto
     ControlPath ~/.ssh/multi/%r@%h:%p
     ControlPersist no
