@@ -89,6 +89,34 @@ Host fir
     ControlPersist no
     User saraivaq
 
+Host nibi
+    HostName nibi.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
+    User saraivaq
+
+Host tam
+    HostName tamia.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
+    User saraivaq
+
+Host vulcan
+    HostName vulcan.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
+    User saraivaq
+
+Host rorq
+    HostName rorqual.tamia.alliancecan.ca
+    ControlMaster auto
+    ControlPath ~/.ssh/multi/%r@%h:%p
+    ControlPersist no
+    User saraivaq
+
 Host mist
     HostName mist.scinet.utoronto.ca
     User saraivaq
