@@ -30,5 +30,6 @@
 
     replaceSymlinks
     snippetPicker
+    balance
   ];
 }

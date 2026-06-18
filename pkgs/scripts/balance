@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo btrfs balance start -v -dusage=55 -musage=55 $1

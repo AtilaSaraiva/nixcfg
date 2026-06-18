@@ -14,6 +14,11 @@ pkgs: rec {
     substitutions = {
     };
   };
+  balance = pkgs.callPackage ./scripts {
+    scriptName = "balance";
+    substitutions = {
+    };
+  };
   snippetPicker = pkgs.callPackage ./scripts {
     scriptName = "snippetPicker";
     substitutions = {
