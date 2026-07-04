@@ -29,7 +29,6 @@
     ../common/features/tmux
     ../common/features/vifm
     ../common/features/yazi
-    ../common/features/sway
     ../common/features/lf
     ../common/features/zsh
     ../common/features/feh.nix
