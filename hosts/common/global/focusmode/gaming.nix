@@ -7,8 +7,8 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     winetricks
     mangohud
     zeroad
-    # lutris Temporarily disabling to make build pass
-    rpcs3
+    stable.lutris
+    stable.rpcs3
     wine-wayland
     steam-run
     protontricks
