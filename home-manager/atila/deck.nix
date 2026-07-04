@@ -40,19 +40,19 @@
     ../common/features/defaults.nix
   ];
 
-  displays = [
-    {
-      name = "X11-1";
-      position = "0,0";
-      mode = "1280x800";
-    }
-    {
-      name = "HDMI-A-1";
-      disable = "";
-      position = "1280,0";
-      mode = "3840x2160@60.000Hz";
-    }
-  ];
+  # displays = [
+  #   {
+  #     name = "X11-1";
+  #     position = "0,0";
+  #     mode = "1280x800";
+  #   }
+  #   {
+  #     name = "HDMI-A-1";
+  #     disable = "";
+  #     position = "1280,0";
+  #     mode = "3840x2160@60.000Hz";
+  #   }
+  # ];
 
   folders = {
     repos = "codes";
@@ -103,11 +103,11 @@
 
   programs.zsh.oh-my-zsh.theme = "kolo";
 
-  keyboard = {
-    xkb_layout = "us,us";
-    xkb_variant = "altgr-intl,dvp";
-    xkb_options = "caps:swapescape,grp:ralt_rshift_toggle";
-  };
+  # keyboard = {
+  #   xkb_layout = "us,us";
+  #   xkb_variant = "altgr-intl,dvp";
+  #   xkb_options = "caps:swapescape,grp:ralt_rshift_toggle";
+  # };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "24.11";
