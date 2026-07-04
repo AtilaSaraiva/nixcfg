@@ -28,6 +28,7 @@
     ../common/features/vifm
     ../common/features/yazi
     ../common/features/lf
+    ../common/features/opencode
     ../common/features/zsh
     ../common/features/feh.nix
     ../common/features/devtools.nix
