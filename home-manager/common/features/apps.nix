@@ -3,7 +3,8 @@
 {
   home.packages = with pkgs; [
     zotero
-    bitwarden-desktop
+    # Temporarily removing bitwarden because electron is insecure
+    # bitwarden-desktop
     mpv
     buku
     oil-buku

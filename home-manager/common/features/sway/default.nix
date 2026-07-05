@@ -673,13 +673,16 @@ in
             "Return" = "mode default";
             "Escape" = "mode default";
           };
+
+          defaultMaxFPS = 50;
         in
         lib.mkOptionDefault {
           "apps" = withLeaveOptions {
             "m" = "exec ${pkgs.spotify}/bin/spotify; [instance=\"spotify\"] scratchpad show; mode default";
-            "c" = "exec ${pkgs.bitwarden-desktop}/bin/bitwarden; mode default";
+            # Temporarily removing bitwarden because electron is insecure
+            # "c" = "exec ${pkgs.bitwarden-desktop}/bin/bitwarden; mode default";
             "z" = "exec ${pkgs.firefox}/bin/firefox \"https://web.whatsapp.com/\"; mode default";
-            "s" = "exec steam -steamos3; mode default";
+            "s" = "exec VKD3D_FRAME_RATE=${builtins.toString defaultMaxFPS} DXVK_FRAME_RATE=${builtins.toString defaultMaxFPS} MESA_VK_WSI_PRESENT_MODE=immediate steam -steamos3; mode default";
             "period" = "exec ${bigsteam}/bin/bigsteam ${TV}";
             "d" = "exec env -u WAYLAND_DISPLAY lutris; mode default";
             "y" = "exec \"QT_QPA_PLATFORM=xcb yuzu\"; mode default";
