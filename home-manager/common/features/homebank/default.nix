@@ -1,8 +1,17 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 let
-  # here I need to convert 5.10 to 51000
-  versionInCorrectFormat = builtins.toString (builtins.floor ( (builtins.fromJSON pkgs.homebank.version) * 10000 ));
+  # here I need to convert 5.10.2 to 51002
+  # Splits "5.10.2" into a list of strings: ["5" "10" "2"]
+  parts = builtins.splitVersion pkgs.homebank.version;
+  
+  # Extract and convert each part to an integer
+  major = lib.toInt (builtins.elemAt parts 0);
+  minor = lib.toInt (builtins.elemAt parts 1);
+  patch = lib.toInt (builtins.elemAt parts 2);
+  
+  # Calculate the final number and convert it back to a string
+  versionInCorrectFormat = builtins.toString (major * 10000 + minor * 100 + patch);
 in
 {
   home.packages = with pkgs; [
