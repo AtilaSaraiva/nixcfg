@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   virtualisation = {
@@ -11,8 +11,11 @@
       enable = true;
       onBoot = "ignore";
       onShutdown = "shutdown";
-      qemuRunAsRoot = true; #option has no impact 
-      qemu.swtpm.enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+      };
       #quickfix run hooks manually
       #do not uncomment, doesn't work 
       #hooks.qemu = {   
@@ -26,6 +29,7 @@
 
   users.groups.libvirtd.members = ["atila"];
 
+  hardware.opengl.enable = true;
 
    #Enables VM connection
   programs.dconf.profiles.user.databases = [
