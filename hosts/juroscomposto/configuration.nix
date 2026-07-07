@@ -130,7 +130,13 @@
     "intel_iommu=on"
     "iommu=pt"
     #Do not use these example vfio-pci ids, they are user-specific 
-    # "vfio-pci.ids=1a2b:3c4d,5e6f:7g8h"
+    "vfio-pci.ids=1da2:e353,1da2:aaf0"
+  ];
+
+  boot.initrd.kernelModules = [ 
+    "vfio_pci"
+    "vfio"
+    "vfio_iommu_type1"
   ];
 
 
