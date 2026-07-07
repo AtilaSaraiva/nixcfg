@@ -70,7 +70,7 @@
   networking.hostName = "juroscomposto";
 
   networking.firewall = {
-    allowedTCPPorts = [ 80 443 16770 ];
+    allowedTCPPorts = [ 80 443 16770 5900 5901];
     allowedUDPPorts = [ 16770 ];
   };
 
@@ -124,6 +124,14 @@
     "vm.dirty_background_ratio" = 1;
     "kernel.split_lock_mitigate" =0;
   };
+
+      # Sets the kernel parameters, equivalent to editing /etc/sysconfig/grub 
+  boot.kernelParams = [
+    "intel_iommu=on"
+    "iommu=pt"
+    #Do not use these example vfio-pci ids, they are user-specific 
+    # "vfio-pci.ids=1a2b:3c4d,5e6f:7g8h"
+  ];
 
 
   hardware.amdgpu.overdrive = {
