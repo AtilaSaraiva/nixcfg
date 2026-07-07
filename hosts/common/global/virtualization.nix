@@ -11,8 +11,8 @@
       enable = true;
       onBoot = "ignore";
       onShutdown = "shutdown";
-      qemuOvmf = true;
       qemuRunAsRoot = true; #option has no impact 
+      qemu.swtpm.enable = true;
       #quickfix run hooks manually
       #do not uncomment, doesn't work 
       #hooks.qemu = {   
