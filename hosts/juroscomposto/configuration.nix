@@ -70,7 +70,10 @@
   networking.hostName = "juroscomposto";
 
   networking.firewall = {
-    allowedTCPPorts = [ 80 443 16770 5900 5901];
+    # TEMP(debug): 22 opens SSH over LAN for VFIO debugging. Normally SSH is
+    # reachable only via tailscale0 (trustedInterfaces in network.nix). Remove
+    # the 22 when done.
+    allowedTCPPorts = [ 22 80 443 16770 5900 5901];
     allowedUDPPorts = [ 16770 ];
   };
 
