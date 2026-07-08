@@ -41,7 +41,7 @@
     ../common/global/network.nix
     ../common/global/sound.nix
     ../common/global/sway.nix
-    ../common/global/virtualization.nix
+    ../common/global/virtualization
     ../common/global/locate.nix
     ../common/global/quietboot.nix
     ../common/global/zram.nix
@@ -125,19 +125,30 @@
     "kernel.split_lock_mitigate" =0;
   };
 
-      # Sets the kernel parameters, equivalent to editing /etc/sysconfig/grub 
+      # Sets the kernel parameters, equivalent to editing /etc/sysconfig/grub
+      # Only enable the IOMMU here. For SINGLE-GPU passthrough we deliberately do
+      # NOT set "vfio-pci.ids=" — that would bind the GPU to vfio at boot and
+      # leave the host with no display. The libvirt hooks (gpuPassthrough below)
+      # detach the GPU from amdgpu and bind vfio only when the VM starts.
   boot.kernelParams = [
     "intel_iommu=on"
     "iommu=pt"
-    #Do not use these example vfio-pci ids, they are user-specific 
-    "vfio-pci.ids=1da2:e353,1da2:aaf0"
   ];
 
-  boot.initrd.kernelModules = [ 
+  boot.initrd.kernelModules = [
     "vfio_pci"
     "vfio"
     "vfio_iommu_type1"
   ];
+
+  # Single-GPU passthrough libvirt hooks. Verify the ids against
+  # `virsh nodedev-list --tree` (or `--cap pci`) for this machine's GPU.
+  gpuPassthrough = {
+    enable = true;
+    vmName = "win10";
+    gpuVideoId = "pci_0000_03_00_0";
+    gpuAudioId = "pci_0000_03_00_1";
+  };
 
 
   hardware.amdgpu.overdrive = {
