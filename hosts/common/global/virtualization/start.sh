@@ -31,7 +31,12 @@ set -x
 # again (the stop hook rebinds the GPU).
 pkill -u @user@ -x sway || true
 
-# Give the compositor a moment to die and release DRM.
+# Stop the daemons that keep the amdgpu driver open. lactd (services.lact) and
+# amdgpu-fan hold the GPU's sysfs/DRM nodes, which makes `modprobe -r amdgpu`
+# fail with "Module amdgpu is in use". The stop hook restarts them.
+systemctl stop lactd.service amdgpu-fan.service || true
+
+# Give the compositor and daemons a moment to die and release DRM.
 sleep 2
 
 # Unbind the VT consoles (ignore the ones that don't exist).
@@ -49,6 +54,17 @@ sleep 1
 
 # Unload the AMD kernel modules so the GPU can be rebound to vfio.
 modprobe -r amdgpu
+
+# If something still holds amdgpu the unload above fails but the script would
+# otherwise carry on and hand libvirt a GPU that is still bound to the host,
+# producing a broken VM on the emulated display. Abort loudly instead: exiting
+# non-zero here makes libvirt cancel the start and run the release hook, which
+# restarts the daemons and brings the desktop back. Check the log / `lsof
+# /dev/dri/*` to find the remaining holder.
+if [ -d /sys/module/amdgpu ]; then
+    echo "ERROR: amdgpu still loaded after modprobe -r; something is holding it. Aborting." >&2
+    exit 1
+fi
 
 # Detach the GPU video + audio functions from the host (binds them to vfio-pci).
 virsh nodedev-detach @gpuVideo@

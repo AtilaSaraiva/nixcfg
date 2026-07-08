@@ -32,6 +32,10 @@ modprobe -r vfio-pci || true
 # Reload the AMD kernel modules.
 modprobe amdgpu
 
+# Restart the GPU daemons the start hook stopped (services.lact / amdgpu-fan),
+# now that amdgpu owns the card again.
+systemctl start lactd.service amdgpu-fan.service || true
+
 # Rebind the EFI framebuffer, if present.
 if [ -d /sys/bus/platform/drivers/efi-framebuffer ]; then
     echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/bind || true
@@ -42,5 +46,8 @@ for vtcon in /sys/class/vtconsole/vtcon*; do
     echo 1 > "$vtcon/bind" || true
 done
 
-# At this point the GPU is back on the host but sway is not running. Log in on
-# tty1 to relaunch it (your zsh profile execs sway there).
+# The getty on tty1 was spawned while the GPU/console were torn down, so it will
+# not repaint on the restored framebuffer on its own. Restart it to force a fresh
+# login prompt on the reloaded GPU. There is no display manager: logging back in
+# on tty1 execs sway again (see programs.zsh.profileExtra in the sway feature).
+systemctl restart getty@tty1.service || true
