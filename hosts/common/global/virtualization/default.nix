@@ -16,8 +16,10 @@ let
   # Bake the PCI ids, target VM name and binary paths into each hook script and
   # copy the result to the nix store. libvirt runs every file it finds in
   # /var/lib/libvirt/hooks/qemu.d/ for every qemu event; each script filters on
-  # the arguments libvirt passes (see start.sh / stop.sh). replaceVars errors on
-  # tokens it can't find, so each script only gets the ones it actually uses.
+  # the arguments libvirt passes (see start.sh / stop.sh). replaceVarsWith errors
+  # on tokens it can't find, so each script only gets the ones it actually uses.
+  # isExecutable is required: libvirt silently ignores non-executable hook files,
+  # and replaceVars/substitute produce 0444 output by default.
   commonVars = {
     binPath  = hookPath;
     vmName   = cfg.vmName;
@@ -78,8 +80,16 @@ in
         # /var/lib/libvirt/hooks/qemu.d/ and runs them for every qemu event; the
         # scripts self-filter on the guest name and event.
         hooks.qemu = lib.mkIf cfg.enable {
-          gpu-passthrough-start = pkgs.replaceVars ./start.sh (commonVars // { user = cfg.user; });
-          gpu-passthrough-stop  = pkgs.replaceVars ./stop.sh commonVars;
+          gpu-passthrough-start = pkgs.replaceVarsWith {
+            src = ./start.sh;
+            replacements = commonVars // { user = cfg.user; };
+            isExecutable = true;
+          };
+          gpu-passthrough-stop = pkgs.replaceVarsWith {
+            src = ./stop.sh;
+            replacements = commonVars;
+            isExecutable = true;
+          };
         };
       };
 
