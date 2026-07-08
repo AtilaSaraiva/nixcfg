@@ -46,13 +46,13 @@
     ../common/global/quietboot.nix
     ../common/global/zram.nix
     ../common/global/verifyStore.nix
-    # ../common/global/jellyfin.nix
-    # ../common/global/gitea.nix
-    # ../common/global/ollama.nix
-    # ../common/global/palworld.nix
+    ../common/global/jellyfin.nix
+    ../common/global/gitea.nix
+    ../common/global/ollama.nix
+    ../common/global/palworld.nix
     ../common/global/msmtp.nix
     ../common/global/smartd.nix
-    # ../common/global/komga.nix
+    ../common/global/komga.nix
     ../common/global/caddy.nix
     ../common/global/qui.nix
     ../common/global/tailscale.nix
@@ -61,7 +61,7 @@
     ../common/global/tmpfs.nix
     ../common/global/pluto.nix
     ../common/global/btrfs.nix
-    # ../common/global/sunshine.nix
+    ../common/global/sunshine.nix
 
     ../common/users/atila.nix
   ];
@@ -106,7 +106,7 @@
   };
 
   services.qbittorrentDaemon = {
-    enable = false;
+    enable = true;
     user = "atila";
     port = 35910;
     openFirewall = false;
