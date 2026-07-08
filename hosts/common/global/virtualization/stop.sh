@@ -17,6 +17,11 @@ SUB_OPERATION="$3"
 [ "$GUEST_NAME" = "@vmName@" ] || exit 0
 [ "$OPERATION" = "release" ] && [ "$SUB_OPERATION" = "end" ] || exit 0
 
+# DEBUG: see start.sh. Remove when working.
+exec >>/var/log/libvirt-gpu-hook.log 2>&1
+echo "=== stop hook $(date -Is) guest=$GUEST_NAME op=$OPERATION sub=$SUB_OPERATION ==="
+set -x
+
 # Unbind the GPU functions from vfio-pci and give them back to the host.
 virsh nodedev-reattach @gpuVideo@
 virsh nodedev-reattach @gpuAudio@

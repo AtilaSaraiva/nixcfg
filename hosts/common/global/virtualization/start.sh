@@ -18,6 +18,13 @@ SUB_OPERATION="$3"
 [ "$GUEST_NAME" = "@vmName@" ] || exit 0
 [ "$OPERATION" = "prepare" ] && [ "$SUB_OPERATION" = "begin" ] || exit 0
 
+# DEBUG: trace every command to a logfile so we can see exactly where the hook
+# dies (libvirt aborts the VM start if this script exits non-zero). Tail it with
+# `journalctl` or `tail -f /var/log/libvirt-gpu-hook.log`. Remove when working.
+exec >>/var/log/libvirt-gpu-hook.log 2>&1
+echo "=== start hook $(date -Is) guest=$GUEST_NAME op=$OPERATION sub=$SUB_OPERATION ==="
+set -x
+
 # Stop the sway compositor so it releases the GPU. There is no display manager:
 # sway is launched from the tty1 login shell, so killing it drops that tty back
 # to a getty login prompt. Log back in on tty1 after the VM exits to get sway
