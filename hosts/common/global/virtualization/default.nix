@@ -1,83 +1,107 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
 
-{
-  virtualisation = {
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      dockerSocket.enable = true;
-    };
-    libvirtd = {
-      enable = true;
-      onBoot = "ignore";
-      onShutdown = "shutdown";
-      qemu = {
-        package = pkgs.qemu_kvm;
-        runAsRoot = true;
-        swtpm.enable = true;
-      };
-      #quickfix run hooks manually
-      #do not uncomment, doesn't work 
-      #hooks.qemu = {   
-      #win10 = "/etc/nixos/";
-       #};
-    };
+let
+  cfg = config.gpuPassthrough;
 
-    spiceUSBRedirection.enable = true;
+  # Binaries the hook scripts need on their PATH.
+  hookPath = lib.makeBinPath (with pkgs; [
+    bash
+    coreutils   # tee, sleep, echo
+    libvirt     # virsh
+    kmod        # modprobe
+    procps      # pkill
+    systemd     # systemctl
+  ]);
+
+  # Bake the PCI ids, target VM name and binary paths into each hook script and
+  # copy the result to the nix store. libvirt runs every file it finds in
+  # /var/lib/libvirt/hooks/qemu.d/ for every qemu event; each script filters on
+  # the arguments libvirt passes (see start.sh / stop.sh). replaceVars errors on
+  # tokens it can't find, so each script only gets the ones it actually uses.
+  commonVars = {
+    binPath  = hookPath;
+    vmName   = cfg.vmName;
+    gpuVideo = cfg.gpuVideoId;
+    gpuAudio = cfg.gpuAudioId;
   };
-  programs.virt-manager.enable = true;
+in
+{
+  options.gpuPassthrough = {
+    enable = lib.mkEnableOption "single-GPU passthrough libvirt hooks for an AMD GPU";
 
-  users.groups.libvirtd.members = ["atila"];
+    vmName = lib.mkOption {
+      type = lib.types.str;
+      default = "win10";
+      description = "Name of the libvirt guest the passthrough hooks act on.";
+    };
 
-  hardware.opengl.enable = true;
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "atila";
+      description = "User whose sway session owns the GPU and must be killed to release it.";
+    };
 
-   #Enables VM connection
-  programs.dconf.profiles.user.databases = [
-    { lockAll = true;
+    gpuVideoId = lib.mkOption {
+      type = lib.types.str;
+      example = "pci_0000_03_00_0";
+      description = ''
+        virsh nodedev name of the GPU video function (as printed by
+        `virsh nodedev-list --tree` / `virsh nodedev-list --cap pci`).
+      '';
+    };
 
-      settings = {
-        "org/virt-manager/virt-manager/connections" = {
-          autoconnect = [ "qemu:///system" ];
-          uris = [ "qemu:///system" ];
+    gpuAudioId = lib.mkOption {
+      type = lib.types.str;
+      example = "pci_0000_03_00_1";
+      description = "virsh nodedev name of the GPU audio function.";
+    };
+  };
+
+  config = {
+    virtualisation = {
+      podman = {
+        enable = true;
+        dockerCompat = true;
+        dockerSocket.enable = true;
+      };
+      libvirtd = {
+        enable = true;
+        onBoot = "ignore";
+        onShutdown = "shutdown";
+        qemu = {
+          package = pkgs.qemu_kvm;
+          runAsRoot = true;
+          swtpm.enable = true;
+        };
+
+        # Single-GPU passthrough hooks. libvirt copies these store paths into
+        # /var/lib/libvirt/hooks/qemu.d/ and runs them for every qemu event; the
+        # scripts self-filter on the guest name and event.
+        hooks.qemu = lib.mkIf cfg.enable {
+          gpu-passthrough-start = pkgs.replaceVars ./start.sh (commonVars // { user = cfg.user; });
+          gpu-passthrough-stop  = pkgs.replaceVars ./stop.sh commonVars;
         };
       };
-    }
-  ];
 
-    # Add binaries to path so that hooks can use it
-  systemd.services.libvirtd = {
-    path = let
-             env = pkgs.buildEnv {
-               name = "qemu-hook-env";
-               paths = with pkgs; [
-                 bash
-                 libvirt
-                 kmod
-                 systemd
-                 ripgrep
-                 sd
-               ];
-             };
-           in
-           [ env ];
+      spiceUSBRedirection.enable = true;
+    };
+    programs.virt-manager.enable = true;
 
-    preStart =
-    ''
-      mkdir -p /var/lib/libvirt/hooks
-      mkdir -p /var/lib/libvirt/hooks/qemu.d/win10/prepare/begin
-      mkdir -p /var/lib/libvirt/hooks/qemu.d/win10/release/end
-      mkdir -p /var/lib/libvirt/vgabios
-      
-      ln -sf /home/owner/Desktop/Sync/Files/Linux_Config/symlinks/qemu /var/lib/libvirt/hooks/qemu
-      ln -sf /home/owner/Desktop/Sync/Files/Linux_Config/symlinks/kvm.conf /var/lib/libvirt/hooks/kvm.conf
-      ln -sf /home/owner/Desktop/Sync/Files/Linux_Config/symlinks/start.sh /var/lib/libvirt/hooks/qemu.d/win10/prepare/begin/start.sh
-      ln -sf /home/owner/Desktop/Sync/Files/Linux_Config/symlinks/stop.sh /var/lib/libvirt/hooks/qemu.d/win10/release/end/stop.sh
-      ln -sf /home/owner/Desktop/Sync/Files/Linux_Config/symlinks/patched.rom /var/lib/libvirt/vgabios/patched.rom
-      
-      chmod +x /var/lib/libvirt/hooks/qemu
-      chmod +x /var/lib/libvirt/hooks/kvm.conf
-      chmod +x /var/lib/libvirt/hooks/qemu.d/win10/prepare/begin/start.sh
-      chmod +x /var/lib/libvirt/hooks/qemu.d/win10/release/end/stop.sh
-    '';
+    users.groups.libvirtd.members = ["atila"];
+
+    hardware.graphics.enable = true;
+
+     #Enables VM connection
+    programs.dconf.profiles.user.databases = [
+      { lockAll = true;
+
+        settings = {
+          "org/virt-manager/virt-manager/connections" = {
+            autoconnect = [ "qemu:///system" ];
+            uris = [ "qemu:///system" ];
+          };
+        };
+      }
+    ];
   };
 }

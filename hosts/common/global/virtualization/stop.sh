@@ -1,43 +1,44 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
+#
+# Single-GPU passthrough hook: reattach the AMD GPU to the host after the VM
+# shuts down. See start.sh for how libvirt invokes this (same qemu.d mechanism,
+# same argument filtering).
+#   $1 = guest name   $2 = operation   $3 = sub-operation
+#
+# Templated by Nix (replaceVars).
 
-# Debugging
-# exec 19>/home/owner/Desktop/stoplogfile
-# BASH_XTRACEFD=19
-# set -x
+export PATH="@binPath@:$PATH"
 
-# Load variables we defined
-source "/var/lib/libvirt/hooks/kvm.conf"
+GUEST_NAME="$1"
+OPERATION="$2"
+SUB_OPERATION="$3"
 
-# Unload vfio module
-modprobe -r vfio-pci
+# Only act for our VM, and only after it has released its devices.
+[ "$GUEST_NAME" = "@vmName@" ] || exit 0
+[ "$OPERATION" = "release" ] && [ "$SUB_OPERATION" = "end" ] || exit 0
 
-# Attach GPU devices from host
-virsh nodedev-reattach $VIRSH_GPU_VIDEO
-virsh nodedev-reattach $VIRSH_GPU_AUDIO
+# Unbind the GPU functions from vfio-pci and give them back to the host.
+virsh nodedev-reattach @gpuVideo@
+virsh nodedev-reattach @gpuAudio@
 
-# Read nvidia x config
-nvidia-xconfig --query-gpu-info > /dev/null 2>&1
+# Unload vfio-pci now that nothing is using it.
+modprobe -r vfio-pci || true
 
-# Load NVIDIA kernel modules
-modprobe nvidia_drm nvidia_modeset nvidia_uvm nvidia
+# Reload the AMD kernel modules.
+modprobe amdgpu
 
-# Avoid race condition
-# sleep 5
+# Rebind the EFI framebuffer, if present.
+if [ -d /sys/bus/platform/drivers/efi-framebuffer ]; then
+    echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/bind || true
+fi
 
-# Bind EFI Framebuffer
-echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/bind
+# Rebind the VT consoles.
+for vtcon in /sys/class/vtconsole/vtcon*; do
+    echo 1 > "$vtcon/bind" || true
+done
 
-# Bind VTconsoles
-echo 1 > /sys/class/vtconsole/vtcon0/bind
-echo 1 > /sys/class/vtconsole/vtcon1/bind
-
-# Start display manager
-systemctl start display-manager.service
-
-# Return host to all cores
-systemctl set-property --runtime -- user.slice AllowedCPUs=0-3
-systemctl set-property --runtime -- system.slice AllowedCPUs=0-3
-systemctl set-property --runtime -- init.scope AllowedCPUs=0-3
-
-# Change to powersave governor
+# Change back to powersave governor.
 echo powersave | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+# At this point the GPU is back on the host but sway is not running. Log in on
+# tty1 to relaunch it (your zsh profile execs sway there).

@@ -1,43 +1,54 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
+#
+# Single-GPU passthrough hook: detach the AMD GPU from the host and hand it to
+# the VM. libvirt runs every file in /var/lib/libvirt/hooks/qemu.d/ for *every*
+# qemu event, so we filter on the arguments libvirt passes us:
+#   $1 = guest name   $2 = operation   $3 = sub-operation
+#
+# This script is templated by Nix (replaceVars); the at-sign delimited tokens
+# are substituted at build time.
 
-# Debugging
-# exec 19>/home/owner/Desktop/startlogfile
-# BASH_XTRACEFD=19
-# set -x
+export PATH="@binPath@:$PATH"
 
-# Load variables we defined
-source "/var/lib/libvirt/hooks/kvm.conf"
+GUEST_NAME="$1"
+OPERATION="$2"
+SUB_OPERATION="$3"
+
+# Only act for our VM, and only right before it starts.
+[ "$GUEST_NAME" = "@vmName@" ] || exit 0
+[ "$OPERATION" = "prepare" ] && [ "$SUB_OPERATION" = "begin" ] || exit 0
 
 # Change to performance governor
 echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
-# Isolate host to core 0
-systemctl set-property --runtime -- user.slice AllowedCPUs=0
-systemctl set-property --runtime -- system.slice AllowedCPUs=0
-systemctl set-property --runtime -- init.scope AllowedCPUs=0
+# Stop the sway compositor so it releases the GPU. There is no display manager:
+# sway is launched from the tty1 login shell, so killing it drops that tty back
+# to a getty login prompt. Log back in on tty1 after the VM exits to get sway
+# again (the stop hook rebinds the GPU).
+pkill -u @user@ -x sway || true
 
-# Logout
-source "/home/owner/Desktop/Sync/Files/Tools/logout.sh"
+# Give the compositor a moment to die and release DRM.
+sleep 2
 
-# Stop display manager
-systemctl stop display-manager.service
+# Unbind the VT consoles (ignore the ones that don't exist).
+for vtcon in /sys/class/vtconsole/vtcon*; do
+    echo 0 > "$vtcon/bind" || true
+done
 
-# Unbind VTconsoles
-echo 0 > /sys/class/vtconsole/vtcon0/bind
-echo 0 > /sys/class/vtconsole/vtcon1/bind
+# Unbind the EFI framebuffer, if present.
+if [ -e /sys/bus/platform/drivers/efi-framebuffer/efi-framebuffer.0 ]; then
+    echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind || true
+fi
 
-# Unbind EFI Framebuffer
-echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
+# Avoid a race between the compositor tearing down and the module unload.
+sleep 1
 
-# Avoid race condition
-# sleep 5
+# Unload the AMD kernel modules so the GPU can be rebound to vfio.
+modprobe -r amdgpu
 
-# Unload NVIDIA kernel modules
-modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia
+# Detach the GPU video + audio functions from the host (binds them to vfio-pci).
+virsh nodedev-detach @gpuVideo@
+virsh nodedev-detach @gpuAudio@
 
-# Detach GPU devices from host
-virsh nodedev-detach $VIRSH_GPU_VIDEO
-virsh nodedev-detach $VIRSH_GPU_AUDIO
-
-# Load vfio module
+# Make sure vfio-pci is loaded.
 modprobe vfio-pci
