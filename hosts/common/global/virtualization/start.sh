@@ -50,7 +50,7 @@ if [ -e /sys/bus/platform/drivers/efi-framebuffer/efi-framebuffer.0 ]; then
 fi
 
 # Avoid a race between the compositor tearing down and the module unload.
-sleep 1
+sleep 2
 
 # Unload the AMD kernel modules so the GPU can be rebound to vfio.
 modprobe -r amdgpu
