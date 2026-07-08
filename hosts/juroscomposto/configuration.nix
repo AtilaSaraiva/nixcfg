@@ -106,7 +106,7 @@
   };
 
   services.qbittorrentDaemon = {
-    enable = true;
+    enable = false;
     user = "atila";
     port = 35910;
     openFirewall = false;
