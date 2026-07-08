@@ -18,9 +18,6 @@ SUB_OPERATION="$3"
 [ "$GUEST_NAME" = "@vmName@" ] || exit 0
 [ "$OPERATION" = "prepare" ] && [ "$SUB_OPERATION" = "begin" ] || exit 0
 
-# Change to performance governor
-echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-
 # Stop the sway compositor so it releases the GPU. There is no display manager:
 # sway is launched from the tty1 login shell, so killing it drops that tty back
 # to a getty login prompt. Log back in on tty1 after the VM exits to get sway

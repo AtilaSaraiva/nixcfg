@@ -37,8 +37,5 @@ for vtcon in /sys/class/vtconsole/vtcon*; do
     echo 1 > "$vtcon/bind" || true
 done
 
-# Change back to powersave governor.
-echo powersave | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-
 # At this point the GPU is back on the host but sway is not running. Log in on
 # tty1 to relaunch it (your zsh profile execs sway there).
