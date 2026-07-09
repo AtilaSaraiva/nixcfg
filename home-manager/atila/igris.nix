@@ -71,9 +71,9 @@
   ];
 
   keyboard = {
-    xkb_layout = "us,us";
-    xkb_variant = "altgr-intl,dvp";
-    xkb_options = "caps:swapescape,grp:ralt_rshift_toggle";
+    xkb_layout = "us";
+    xkb_variant = "altgr-intl";
+    xkb_options = "caps:swapescape";
   };
 
   home.packages = [
