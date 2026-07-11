@@ -13,6 +13,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     steam-run
     protontricks
     gamemode
+    ludusavi
     vesktop # alternate client for discord
   ];
 
