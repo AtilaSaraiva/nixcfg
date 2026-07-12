@@ -133,12 +133,13 @@
   boot.kernelParams = [
     "intel_iommu=on"
     "iommu=pt"
+    "pcie_aspm=off"
   ];
 
   boot.initrd.kernelModules = [
     "vfio_pci"
     "vfio"
-    "vfio_iommu_type1"
+    "vfio_iommu_type1" # nvme freezing
   ];
 
   # Single-GPU passthrough libvirt hooks. Verify the ids against
