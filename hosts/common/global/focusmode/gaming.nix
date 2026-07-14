@@ -14,7 +14,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     protontricks
     gamemode
     ludusavi
-    vesktop # alternate client for discord
+    discord
   ];
 
   # Special apps (requires more than their package to work).
