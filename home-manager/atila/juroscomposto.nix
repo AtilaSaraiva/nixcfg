@@ -86,6 +86,7 @@
   services.flatpak.packages = [
     "com.heroicgameslauncher.hgl"
     "com.usebottles.bottles"
+    "com.fightcade.Fightcade"
   ];
 
 
