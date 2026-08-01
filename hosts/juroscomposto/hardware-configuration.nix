@@ -42,6 +42,12 @@
       options = [ "subvol=@games" "nofail" "discard=async" "space_cache=v2" "compress=lzo" ];
     };
 
+  fileSystems."/home/claude/Files" =
+    { device = "/dev/disk/by-uuid/111c9c9a-130f-4840-be07-5a6414cd5296";
+      fsType = "btrfs";
+      options = [ "subvol=@agentStorage" "autodefrag"  "compress-force=zstd:2" "space_cache=v2" ];
+    };
+
   fileSystems."/home/atila/Files" =
     { device = "/dev/disk/by-uuid/2d116175-d8cf-4b70-bb02-1e57927cc982";
       fsType = "btrfs";
