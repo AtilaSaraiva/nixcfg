@@ -87,6 +87,7 @@
     "com.heroicgameslauncher.hgl"
     "com.usebottles.bottles"
     "com.fightcade.Fightcade"
+    "io.mrarm.mcpelauncher"
   ];
 
 
