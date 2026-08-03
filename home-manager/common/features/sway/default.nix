@@ -722,7 +722,7 @@ in
       nemo
       wev
       lxappearance
-      adapta-gtk-theme
+      adementary-theme
       adwaita-icon-theme
       wdisplays
     ];
