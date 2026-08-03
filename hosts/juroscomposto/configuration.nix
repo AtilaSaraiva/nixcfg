@@ -122,7 +122,8 @@
   boot.kernel.sysctl = {
     "vm.dirty_ratio" = 1;
     "vm.dirty_background_ratio" = 1;
-    "kernel.split_lock_mitigate" =0;
+    "kernel.split_lock_mitigate" = 0;
+    "vm.compaction_proactiveness" = 0;
   };
 
       # Sets the kernel parameters, equivalent to editing /etc/sysconfig/grub
