@@ -17,6 +17,16 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     discord
   ];
 
+  
+  programs.gamemode = {
+    enable = true;
+    settings = {
+      general = {
+        renice = 10;
+      };
+    };
+  };
+
   # Special apps (requires more than their package to work).
   programs.steam = {
     enable = true;
