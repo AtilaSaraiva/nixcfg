@@ -80,7 +80,7 @@
   time.timeZone = "America/Edmonton";
 
   services.amdgpu-fan = {
-    enable = true;
+    enable = false;
     settings ={
       speed_matrix = [
         [0 0]
