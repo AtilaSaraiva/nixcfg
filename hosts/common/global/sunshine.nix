@@ -1,10 +1,11 @@
 { pkgs, lib, ... }:
 
 let
-  # Resolution/refresh the headless output is switched to while streaming.
-  SUNSHINE_CLIENT_WIDTH = "3840";
-  SUNSHINE_CLIENT_HEIGHT = "2160";
-  SUNSHINE_CLIENT_FPS = "60.000";
+  # Fallbacks for the headless output, only used if sunshine somehow does not
+  # hand us the client's own numbers (see SUNSHINE_CLIENT_* below).
+  fallbackWidth = "3840";
+  fallbackHeight = "2160";
+  fallbackFps = "60";
 
   # The virtual output sway creates at startup (see the sway home-manager
   # config: `swaymsg create_output HEADLESS-1`).
@@ -24,8 +25,17 @@ let
   # Move the sway session onto the headless output at the client's resolution.
   # Every physical output is turned off so that HEADLESS-1 ends up being the
   # only wl_output sunshine can see -- that is how it picks what to capture.
+  #
+  # SUNSHINE_CLIENT_{WIDTH,HEIGHT,FPS} are exported by sunshine itself and hold
+  # whatever the connecting moonlight client asked for, so the headless output
+  # follows the client instead of being pinned to one resolution: 4K from the
+  # TV, 1280x800 from the deck, without needing a separate app entry for each.
   streamStart = pkgs.writeShellScript "sunshine-stream-start" ''
     set -eu
+
+    width="''${SUNSHINE_CLIENT_WIDTH:-${fallbackWidth}}"
+    height="''${SUNSHINE_CLIENT_HEIGHT:-${fallbackHeight}}"
+    fps="''${SUNSHINE_CLIENT_FPS:-${fallbackFps}}"
 
     if ! ${swaymsg} -t get_outputs \
         | ${jq} -e --arg o "${headlessOutput}" 'any(.[]; .name == $o)' >/dev/null; then
@@ -35,7 +45,10 @@ let
     fi
 
     ${swaymsg} output ${headlessOutput} enable
-    ${swaymsg} output ${headlessOutput} mode ${SUNSHINE_CLIENT_WIDTH}x${SUNSHINE_CLIENT_HEIGHT}@${SUNSHINE_CLIENT_FPS}Hz
+    # A mode sway refuses would otherwise abort the prep-cmd and kill the whole
+    # stream, so fall back rather than fail.
+    ${swaymsg} output ${headlessOutput} mode "''${width}x''${height}@''${fps}Hz" \
+      || ${swaymsg} output ${headlessOutput} mode "${fallbackWidth}x${fallbackHeight}@${fallbackFps}Hz"
     ${swaymsg} output ${headlessOutput} pos 0 0
 
     ${swaymsg} -t get_outputs \
