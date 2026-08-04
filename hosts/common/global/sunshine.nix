@@ -1,49 +1,139 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
+  # Resolution/refresh the headless output is switched to while streaming.
   SUNSHINE_CLIENT_WIDTH = "3840";
   SUNSHINE_CLIENT_HEIGHT = "2160";
   SUNSHINE_CLIENT_FPS = "60.000";
+
+  # The virtual output sway creates at startup (see the sway home-manager
+  # config: `swaymsg create_output HEADLESS-1`).
+  headlessOutput = "HEADLESS-1";
+
+  # The sunshine user service runs with PATH cleared (the NixOS module forces it
+  # to null so the tray menu works), so everything below has to be absolute.
+  swaymsg = "${pkgs.sway-unwrapped}/bin/swaymsg";
+  jq = "${pkgs.jq}/bin/jq";
+  sleep = "${pkgs.coreutils}/bin/sleep";
+  rm = "${pkgs.coreutils}/bin/rm";
+
+  # Which physical outputs were on before the stream started, so `undo` can put
+  # the desktop back the way it was.
+  stateFile = "\${XDG_RUNTIME_DIR:-/tmp}/sunshine-saved-outputs";
+
+  # Move the sway session onto the headless output at the client's resolution.
+  # Every physical output is turned off so that HEADLESS-1 ends up being the
+  # only wl_output sunshine can see -- that is how it picks what to capture.
+  streamStart = pkgs.writeShellScript "sunshine-stream-start" ''
+    set -eu
+
+    if ! ${swaymsg} -t get_outputs \
+        | ${jq} -e --arg o "${headlessOutput}" 'any(.[]; .name == $o)' >/dev/null; then
+      ${swaymsg} create_output ${headlessOutput}
+      # create_output is asynchronous, give sway a moment to advertise it.
+      ${sleep} 1
+    fi
+
+    ${swaymsg} output ${headlessOutput} enable
+    ${swaymsg} output ${headlessOutput} mode ${SUNSHINE_CLIENT_WIDTH}x${SUNSHINE_CLIENT_HEIGHT}@${SUNSHINE_CLIENT_FPS}Hz
+    ${swaymsg} output ${headlessOutput} pos 0 0
+
+    ${swaymsg} -t get_outputs \
+      | ${jq} -r --arg o "${headlessOutput}" '.[] | select(.active and .name != $o) | .name' \
+      > "${stateFile}"
+
+    while read -r output; do
+      ${swaymsg} output "$output" disable
+    done < "${stateFile}"
+
+    # Cosmetic, and not worth failing the whole stream over.
+    ${swaymsg} focus output ${headlessOutput} || true
+  '';
+
+  # Put the physical outputs back and drop the headless one. Sway re-applies the
+  # matching `output` config block when an output is re-enabled, so the modes
+  # from home-manager come back on their own.
+  streamStop = pkgs.writeShellScript "sunshine-stream-stop" ''
+    set -eu
+
+    if [ -s "${stateFile}" ]; then
+      while read -r output; do
+        ${swaymsg} output "$output" enable
+      done < "${stateFile}"
+      ${rm} -f "${stateFile}"
+    fi
+
+    ${swaymsg} output ${headlessOutput} disable
+  '';
+
+  # `steam://open/gamepadui` only does anything when Steam is already running;
+  # a cold start needs the -gamepadui flag instead.
+  steamBigPicture = pkgs.writeShellScript "sunshine-steam-bigpicture" ''
+    set -eu
+
+    steam=/run/current-system/sw/bin/steam
+
+    if ${pkgs.procps}/bin/pgrep -x steam >/dev/null 2>&1; then
+      exec "$steam" steam://open/gamepadui
+    else
+      exec "$steam" -gamepadui
+    fi
+  '';
 in
 {
   services.sunshine = {
     enable = true;
     autoStart = true;
     capSysAdmin = true;
-    openFirewall = false;
+    # Moonlight talks to 47989/47990 and friends; without this the only way in
+    # is over tailscale0 (which network.nix already trusts).
+    openFirewall = true;
 
     settings = {
       sunshine_name = "nixos";
-      port = 47990;
+      # Base port. Everything else is an offset from it, so leaving it at the
+      # default is what lets Moonlight find the host without manual setup.
+      # (The web UI lands on 47990 = port + 1.)
+      port = 47989;
       capture = "wlr";
+
+      # Applied around every app below that sets exclude-global-prep-cmd=false.
+      global_prep_cmd = builtins.toJSON [
+        {
+          do = "${streamStart}";
+          undo = "${streamStop}";
+        }
+      ];
     };
 
     applications = {
       env = {
-        # PATH = "$(PATH):$(HOME)/.local/bin";
+        # The systemd user service runs with no PATH (the module clears it), and
+        # the steam wrapper needs one.
+        PATH = "/run/current-system/sw/bin:/run/wrappers/bin:$(PATH)";
       };
       apps = [
+        {
+          name = "Steam Big Picture";
+          cmd = "${steamBigPicture}";
+          exclude-global-prep-cmd = "false";
+          auto-detach = "true";
+        }
         {
           name = "0ad";
           cmd = "/run/current-system/sw/bin/0ad";
           exclude-global-prep-cmd = "false";
           auto-detach = "true";
         }
-        {
-          name = "Steam";
-          do = ''
-            /run/current-system/sw/bin/sh -c "/home/atila/.nix-profile/bin/swaymsg output HEADLESS-1 enable; /home/atila/.nix-profile/bin/swaymsg output HEADLESS-1 mode ${SUNSHINE_CLIENT_WIDTH}x${SUNSHINE_CLIENT_HEIGHT}@${SUNSHINE_CLIENT_FPS}Hz" && /home/atila/.nix-profile/bin/swaymsg output DP-2 disable
-          '';
-          cmd = ''
-            /run/current-system/sw/bin/steam steam://open/gamepadui
-          '';
-          undo = ''
-            /home/atila/.nix-profile/bin/swaymsg output HEADLESS-1 disable && /home/atila/.nix-profile/bin/swaymsg output DP-2 enable
-          '';
-          exclude-global-prep-cmd = "false";
-          auto-detach = "true";
-        }
       ];
     };
   };
+
+  # Sunshine creates virtual gamepads/keyboard/mouse through /dev/uinput; without
+  # these groups the stream connects but no input reaches the host.
+  users.users.atila.extraGroups = [ "input" "uinput" ];
+
+  # Moonlight's host auto-discovery is mDNS, and printing.nix closes avahi's
+  # port. Open it so clients find the machine instead of needing a manual IP.
+  services.avahi.openFirewall = lib.mkForce true;
 }
