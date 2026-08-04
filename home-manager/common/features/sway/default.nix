@@ -675,7 +675,7 @@ in
             "Escape" = "mode default";
           };
 
-          defaultMaxFPS = 50;
+          defaultMaxFPS = 60;
         in
         lib.mkOptionDefault {
           "apps" = withLeaveOptions {
