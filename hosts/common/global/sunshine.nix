@@ -17,6 +17,13 @@ let
   jq = "${pkgs.jq}/bin/jq";
   sleep = "${pkgs.coreutils}/bin/sleep";
   rm = "${pkgs.coreutils}/bin/rm";
+  pgrep = "${pkgs.procps}/bin/pgrep";
+  pkill = "${pkgs.procps}/bin/pkill";
+
+  # Kept in sync by hand with `lock` in the sway home-manager config
+  # (home-manager/common/features/sway/default.nix); the flags only change what
+  # the lock screen looks like, so a drift here is cosmetic.
+  lockCmd = "${pkgs.swaylock-effects}/bin/swaylock --clock --indicator --fade-in 0.2 --screenshots --effect-vignette 0.5:0.5 --effect-blur 7x5";
 
   # Which physical outputs were on before the stream started, so `undo` can put
   # the desktop back the way it was.
@@ -32,6 +39,23 @@ let
   # TV, 1280x800 from the deck, without needing a separate app entry for each.
   streamStart = pkgs.writeShellScript "sunshine-stream-start" ''
     set -eu
+
+    # swaylock's surface covers every output, so a locked session streams as
+    # nothing but the lock screen. SIGUSR1 is swaylock's unlock signal: it
+    # releases the ext-session-lock properly and then exits. Do NOT use a plain
+    # kill here -- a lock client that dies without releasing the lock leaves
+    # the compositor obliged to stay locked, which is sway's solid red screen
+    # that nothing can dismiss. `|| true` because an already unlocked session
+    # has nothing to signal and `set -e` would abort the prep-cmd (which
+    # sunshine treats as a failed launch and tears the stream down).
+    ${pkill} -USR1 -x swaylock || true
+
+    # The compositor only drops the session lock once swaylock is actually
+    # gone; capturing before that still grabs the lock surface.
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+      ${pgrep} -x swaylock >/dev/null 2>&1 || break
+      ${sleep} 0.2
+    done
 
     width="''${SUNSHINE_CLIENT_WIDTH:-${fallbackWidth}}"
     height="''${SUNSHINE_CLIENT_HEIGHT:-${fallbackHeight}}"
@@ -77,6 +101,13 @@ let
     fi
 
     ${swaymsg} output ${headlessOutput} disable
+
+    # Lock again now that the physical outputs are back, so ending a stream
+    # never leaves the desktop sitting there unlocked. -f daemonizes once the
+    # lock surface is up; without it sunshine's undo would block until someone
+    # typed the password. Already-locked (or a swaylock that refuses to start)
+    # must not fail the undo, hence `|| true`.
+    ${lockCmd} -f || true
   '';
 
   # `steam://open/gamepadui` only does anything when Steam is already running;
