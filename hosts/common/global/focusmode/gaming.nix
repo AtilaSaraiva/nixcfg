@@ -7,6 +7,7 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     winetricks
     mangohud
     zeroad
+    luanti
     stable.lutris
     stable.rpcs3
     wine-wayland
