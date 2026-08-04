@@ -92,6 +92,16 @@ let
       exec "$steam" -gamepadui
     fi
   '';
+
+  # Heroic is a per-user flatpak, so it has to go through `flatpak run`.
+  # --console is heroic's own big-picture view (the /console route, gamepad
+  # navigable); --fullscreen keeps it from opening as a floating window.
+  heroicConsole = pkgs.writeShellScript "sunshine-heroic-console" ''
+    set -eu
+
+    exec /run/current-system/sw/bin/flatpak run \
+      com.heroicgameslauncher.hgl --console --fullscreen
+  '';
 in
 {
   services.sunshine = {
@@ -129,6 +139,12 @@ in
         {
           name = "Steam Big Picture";
           cmd = "${steamBigPicture}";
+          exclude-global-prep-cmd = "false";
+          auto-detach = "true";
+        }
+        {
+          name = "Heroic Games Launcher";
+          cmd = "${heroicConsole}";
           exclude-global-prep-cmd = "false";
           auto-detach = "true";
         }
