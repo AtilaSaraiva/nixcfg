@@ -11,20 +11,4 @@
   services.avahi.nssmdns4 = true;
   # for a WiFi printer
   services.avahi.openFirewall = false;
-  hardware.printers = {
-    ensurePrinters = [
-      {
-        name = "BrotherDCPL2550DW";
-        location = "Home";
-        deviceUri = "ipp://10.0.0.132:631/ipp";
-        model = "everywhere";
-        ppdOptions = {
-          PageSize = "Letter";
-          Duplex = "DuplexNoTumble";
-          PrintQuality="4";
-          PwgRasterDocumentType="SGray_8";
-        };
-      }
-    ];
-  };
 }
