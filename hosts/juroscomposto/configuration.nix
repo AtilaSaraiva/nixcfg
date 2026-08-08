@@ -153,7 +153,7 @@
 
 
   hardware.amdgpu.overdrive = {
-    enable = true;
+    enable = false;
   };
 
   services.lact.enable = true;
