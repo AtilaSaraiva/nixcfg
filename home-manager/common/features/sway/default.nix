@@ -488,7 +488,7 @@ in
 
         keybindings = lib.mkOptionDefault {
           "${mod}+Ctrl+c" = "exec ${term} --class todolist ${todo}/bin/todo";
-          "${mod}+ccedilla" = "exec ${toggleFreesync}/bin/toggleFreesync";
+          "${mod}+Shift+y" = "exec ${toggleFreesync}/bin/toggleFreesync";
           "${mod}+Shift+o" = "exec ${bookmarkadd}/bin/bookmarkadd";
           "${mod}+Delete" = "exec kill4game";
           "${mod}+Insert" = "exec aftergameopen";
