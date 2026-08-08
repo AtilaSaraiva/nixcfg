@@ -156,7 +156,7 @@
     enable = false;
   };
 
-  services.lact.enable = true;
+  services.lact.enable = false;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "21.05";
