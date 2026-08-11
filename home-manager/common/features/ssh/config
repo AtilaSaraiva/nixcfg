@@ -24,29 +24,21 @@ Host cosmos
     HostName cosmos
     User atila
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
 
 Host cos
     HostName cosmos
     User atila
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
     ProxyCommand ssh betinha -W %h:%p
 
 Host sml
     HostName saigml
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
     ProxyCommand ssh betinha -W %h:%p
 
 Host nrus
     HostName neurus
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
     ProxyCommand ssh betinha -W %h:%p
 
 Host igris
@@ -144,8 +136,11 @@ Host saigml
     HostName saig-ml.physics.ualberta.ca
     user atila
     PreferredAuthentications publickey
-    ForwardX11 yes
-    ForwardX11Trusted yes
+
+Host clauml
+    HostName saig-ml.physics.ualberta.ca
+    user atila1
+    PreferredAuthentications publickey
 
 Host neurus
     HostName neurus.physics.ualberta.ca
