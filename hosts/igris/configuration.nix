@@ -64,6 +64,11 @@
     "vm.dirty_background_ratio" = 1;
   };
 
+  gaming = {
+    enable = true;
+    hardwareConfiguration = ./hardware-configuration.nix;
+  };
+
   # to prevent random freezes
   boot.kernelParams = [ "idle=nomwait" ];
 
