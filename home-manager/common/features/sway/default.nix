@@ -436,7 +436,7 @@ in
           };
           "PanaScope Pixio PX277P Unknown" = {
             adaptive_sync = "off";
-            mode = "2560x1440@164.999Hz";
+            mode = "2560x1440@144.000Hz";
           };
           "XXX PRO Unknown" = {
             mode = "3840x2160@60.000Hz";
