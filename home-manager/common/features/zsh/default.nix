@@ -15,10 +15,10 @@
       n = "nvim . +'Telescope find_files'";
       note = "nvim +'ObsidianNew'";
       noteo = "nvim +'ObsidianQuickSwitch'";
-      sl = "${pkgs.exa}/bin/exa";
-      ls = "${pkgs.exa}/bin/exa";
-      l = "${pkgs.exa}/bin/exa -l";
-      la = "${pkgs.exa}/bin/exa -la";
+      sl = "${pkgs.eza}/bin/eza";
+      ls = "${pkgs.eza}/bin/eza";
+      l = "${pkgs.eza}/bin/eza -l";
+      la = "${pkgs.eza}/bin/eza -la";
       ip = "ip --color=auto";
       ma = "mani run";
       cleanBranches = "git branch --merged | grep -v \* | xargs git branch -D";
