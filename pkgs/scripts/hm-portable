@@ -72,6 +72,8 @@ Environment:
   HM_PORTABLE_ROOT   Default pack/install directory
   NIXCFG             Path to this nixcfg repo (pack source for static files)
   HOME               Install target home (default: current user home)
+  JULIA_DEPOT_PATH   If set, julia config/environments install into its first
+                     entry (cluster scratch depot) instead of ~/.julia
 EOF
 }
 
@@ -299,12 +301,77 @@ portable_rewrite() {
 }
 
 # Record a managed link in the manifest (path relative to $HOME, target relative to $ROOT).
-# Manifest format (TSV):  home_relpath<TAB>store_relpath
+# Manifest format (TSV):
+#   kind<TAB>dest_spec<TAB>store_relpath
+# kind:
+#   home  – dest_spec is path relative to $HOME
+#   abs   – dest_spec is an absolute path (resolved at pack time; rare)
+#   julia – dest_spec is path relative to the julia depot root
+#           (JULIA_DEPOT_PATH first entry, else $HOME/.julia)
 MANIFEST_REL="manifest.tsv"
 
 manifest_add() {
-  local home_rel="$1" store_rel="$2"
-  printf '%s\t%s\n' "$home_rel" "$store_rel" >>"$ROOT/$MANIFEST_REL"
+  # backward-compat: manifest_add <home_rel> <store_rel>  => kind=home
+  local kind="home" dest_spec store_rel
+  if [[ $# -eq 2 ]]; then
+    dest_spec="$1"; store_rel="$2"
+  else
+    kind="$1"; dest_spec="$2"; store_rel="$3"
+  fi
+  printf '%s\t%s\t%s\n' "$kind" "$dest_spec" "$store_rel" >>"$ROOT/$MANIFEST_REL"
+}
+
+# Resolve install destination for one manifest row.
+# Prints absolute target path. Uses JULIA_DEPOT_PATH at install time.
+resolve_target() {
+  local kind="$1" dest_spec="$2"
+  case "$kind" in
+    home)
+      printf '%s\n' "$HOME_DIR/$dest_spec"
+      ;;
+    abs)
+      printf '%s\n' "$dest_spec"
+      ;;
+    julia)
+      local depot
+      depot="$(julia_depot_root)"
+      printf '%s\n' "$depot/$dest_spec"
+      ;;
+    *)
+      die "unknown manifest kind: $kind"
+      ;;
+  esac
+}
+
+# First entry of JULIA_DEPOT_PATH, else $HOME/.julia.
+# JULIA_DEPOT_PATH is a colon-separated list (Julia convention).
+julia_depot_root() {
+  local raw="${JULIA_DEPOT_PATH:-}"
+  if [[ -n "$raw" ]]; then
+    # take first non-empty component; expand leading ~
+    local first="${raw%%:*}"
+    first="${first/#\~/$HOME_DIR}"
+    if [[ "$first" != /* ]]; then
+      first="$HOME_DIR/$first"
+    fi
+    printf '%s\n' "$first"
+  else
+    printf '%s\n' "$HOME_DIR/.julia"
+  fi
+}
+
+# Read a manifest line into kind/dest/store, accepting old 2-column format.
+# Sets: _m_kind _m_dest _m_store
+parse_manifest_line() {
+  local line="$1"
+  local c1 c2 c3
+  IFS=$'\t' read -r c1 c2 c3 <<<"$line"
+  if [[ -n "${c3:-}" ]]; then
+    _m_kind="$c1"; _m_dest="$c2"; _m_store="$c3"
+  else
+    # legacy: home_rel<TAB>store_rel
+    _m_kind="home"; _m_dest="$c1"; _m_store="$c2"
+  fi
 }
 
 # ── pack: zsh ───────────────────────────────────────────────────────────────
@@ -454,13 +521,17 @@ if [ -n "${__HM_SESS_VARS_SOURCED:-}" ]; then return; fi
 export __HM_SESS_VARS_SOURCED=1
 export EDITOR="${EDITOR:-nvim}"
 export FZF_TMUX="${FZF_TMUX:-1}"
-# Keep julia user bin on PATH if present
-if [ -d "$HOME/.julia/bin" ]; then
+# Keep julia user bin on PATH if present (respect JULIA_DEPOT_PATH)
+_julia_depot="${JULIA_DEPOT_PATH%%:*}"
+_julia_depot="${_julia_depot:-$HOME/.julia}"
+_julia_depot="${_julia_depot/#\~/$HOME}"
+if [ -d "$_julia_depot/bin" ]; then
   case ":$PATH:" in
-    *":$HOME/.julia/bin:"*) ;;
-    *) export PATH="$HOME/.julia/bin${PATH:+:$PATH}" ;;
+    *":$_julia_depot/bin:"*) ;;
+    *) export PATH="$_julia_depot/bin${PATH:+:$PATH}" ;;
   esac
 fi
+unset _julia_depot
 SV
 
   # bookmarks (zshmarks) — rewrite $HOME already literal in file
@@ -545,15 +616,17 @@ pack_julia() {
   local feat="$SRC/home-manager/common/features/julia"
   [[ -d "$feat" ]] || die "missing $feat"
   info "packing julia from $feat"
-  mkdir -p "$ROOT/files/.julia/config"
-  cp -a "$feat/startup.jl" "$ROOT/files/.julia/config/startup.jl"
+  # Stored under files/julia/ (not files/.julia/) — install maps these into
+  # $JULIA_DEPOT_PATH (first entry) or ~/.julia at install time.
+  mkdir -p "$ROOT/files/julia/config"
+  cp -a "$feat/startup.jl" "$ROOT/files/julia/config/startup.jl"
   if [[ -d "$feat/environments" ]]; then
-    rm -rf "$ROOT/files/.julia/environments"
-    cp -a "$feat/environments" "$ROOT/files/.julia/environments"
+    rm -rf "$ROOT/files/julia/environments"
+    cp -a "$feat/environments" "$ROOT/files/julia/environments"
   fi
-  manifest_add ".julia/config/startup.jl" "files/.julia/config/startup.jl"
-  if [[ -d "$ROOT/files/.julia/environments" ]]; then
-    manifest_add ".julia/environments" "files/.julia/environments"
+  manifest_add julia "config/startup.jl" "files/julia/config/startup.jl"
+  if [[ -d "$ROOT/files/julia/environments" ]]; then
+    manifest_add julia "environments" "files/julia/environments"
   fi
 }
 
@@ -589,16 +662,41 @@ HM_PORTABLE_MODULES=$MODULES
 HM_PORTABLE_SRC=$SRC
 META
 
-  # install helper: small wrapper that sets HM_PORTABLE_ROOT then execs us
+  # Self-contained launcher + script copy. Must dereference nix-store
+  # symlinks (when installed via home.packages, BASH_SOURCE is a symlink
+  # into /nix/store) so rsync of the pack stays usable offline.
   cat >"$ROOT/hm-portable" <<'WRAP'
 #!/usr/bin/env bash
 HERE="$(cd "$(dirname "$0")" && pwd)"
 export HM_PORTABLE_ROOT="$HERE"
 exec bash "$HERE/.hm-portable-bin" "$@"
 WRAP
-  # copy ourselves into the pack so install works offline
-  cp -a "${BASH_SOURCE[0]}" "$ROOT/.hm-portable-bin"
+  local self src_real
+  self="${BASH_SOURCE[0]}"
+  src_real="$(readlink -f "$self" 2>/dev/null || true)"
+  if [[ -z "$src_real" || ! -f "$src_real" ]]; then
+    src_real="$self"
+  fi
+  # cp --dereference (GNU) / fall back to cat so we never embed a dangling link
+  if cp --dereference -a "$src_real" "$ROOT/.hm-portable-bin" 2>/dev/null; then
+    :
+  else
+    cat "$src_real" >"$ROOT/.hm-portable-bin"
+  fi
+  # belt-and-suspenders: if we still somehow got a symlink, replace with content
+  if [[ -L "$ROOT/.hm-portable-bin" ]]; then
+    local tmp_bin
+    tmp_bin="$(mktemp)"
+    cat "$ROOT/.hm-portable-bin" >"$tmp_bin"
+    mv -f "$tmp_bin" "$ROOT/.hm-portable-bin"
+  fi
   chmod +x "$ROOT/hm-portable" "$ROOT/.hm-portable-bin"
+  if [[ -L "$ROOT/hm-portable" || -L "$ROOT/.hm-portable-bin" ]]; then
+    die "internal: pack launcher is still a symlink; would break under rsync"
+  fi
+  if ! head -1 "$ROOT/.hm-portable-bin" | grep -q '^#!'; then
+    die "internal: .hm-portable-bin missing shebang (copy failed)"
+  fi
 
   # sort/uniq manifest
   if [[ -f "$ROOT/$MANIFEST_REL" ]]; then
@@ -653,7 +751,10 @@ backup_if_needed() {
 
 cmd_install() {
   require_root_packed
+  local julia_depot
+  julia_depot="$(julia_depot_root)"
   info "install from $ROOT → $HOME_DIR"
+  info "julia depot: $julia_depot${JULIA_DEPOT_PATH:+ (from JULIA_DEPOT_PATH)}"
   info "dry-run=$DRY_RUN"
 
   # Refresh the relocatable root marker to THIS pack's absolute path
@@ -669,34 +770,36 @@ cmd_install() {
     : >"$state_file"
   fi
 
-  local home_rel store_rel
-  while IFS=$'\t' read -r home_rel store_rel; do
-    [[ -z "$home_rel" ]] && continue
-    local target="$HOME_DIR/$home_rel"
-    local source="$ROOT/$store_rel"
+  local line _m_kind _m_dest _m_store
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ -z "$line" ]] && continue
+    parse_manifest_line "$line"
+    local target source
+    target="$(resolve_target "$_m_kind" "$_m_dest")"
+    source="$ROOT/$_m_store"
     [[ -e "$source" || -L "$source" ]] || {
       info "  skip missing source: $source"
       continue
     }
 
-    info "  link $home_rel → $store_rel"
+    info "  link [${_m_kind}] $_m_dest → $_m_store"
+    info "        $target"
     if [[ $DRY_RUN -eq 1 ]]; then
       continue
     fi
 
     mkdir -p "$(dirname "$target")"
     backup_if_needed "$target"
-    # directory targets: symlink the dir itself
     ln -sfn "$source" "$target"
-    printf '%s\t%s\n' "$home_rel" "$store_rel" >>"$state_file"
+    # state stores absolute target so uninstall works even if JULIA_DEPOT_PATH changes
+    printf '%s\t%s\t%s\n' "$_m_kind" "$target" "$_m_store" >>"$state_file"
   done <"$ROOT/$MANIFEST_REL"
 
-  # Export hint
   if [[ $DRY_RUN -eq 0 ]]; then
-    # ensure state records the root
     printf '%s\n' "$ROOT" >"$HOME_DIR/.local/state/hm-portable/root"
+    printf '%s\n' "$julia_depot" >"$HOME_DIR/.local/state/hm-portable/julia-depot"
     info "installed. Open a new zsh session (ZDOTDIR=~/.config/zsh)."
-    info "uninstall with: HM_PORTABLE_ROOT=$ROOT $ROOT/hm-portable uninstall"
+    info "uninstall with: $ROOT/hm-portable uninstall"
   fi
 }
 
@@ -705,6 +808,7 @@ cmd_uninstall() {
   local state_file="$HOME_DIR/$STATE_FILE_REL"
   local list_file=""
   local recorded_root=""
+  local from_state=0
 
   if [[ -f "$HOME_DIR/.local/state/hm-portable/root" ]]; then
     recorded_root="$(cat "$HOME_DIR/.local/state/hm-portable/root")"
@@ -718,6 +822,7 @@ cmd_uninstall() {
 
   if [[ -f "$state_file" ]]; then
     list_file="$state_file"
+    from_state=1
   elif [[ -f "$ROOT/$MANIFEST_REL" ]]; then
     list_file="$ROOT/$MANIFEST_REL"
   else
@@ -726,33 +831,38 @@ cmd_uninstall() {
 
   info "uninstall using $list_file (root=$ROOT, dry-run=$DRY_RUN)"
 
-  local home_rel store_rel
-  while IFS=$'\t' read -r home_rel store_rel; do
-    [[ -z "$home_rel" ]] && continue
-    local target="$HOME_DIR/$home_rel"
+  local line _m_kind _m_dest _m_store target
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ -z "$line" ]] && continue
+    parse_manifest_line "$line"
+    if [[ $from_state -eq 1 ]]; then
+      # state stores absolute target in column 2
+      target="$_m_dest"
+    else
+      target="$(resolve_target "$_m_kind" "$_m_dest")"
+    fi
+
     if [[ ! -e "$target" && ! -L "$target" ]]; then
-      info "  absent: $home_rel"
+      info "  absent: $target"
       continue
     fi
     if [[ -L "$target" ]]; then
       local cur
       cur="$(readlink "$target")"
-      # only remove if it points into our root (safety)
-      if [[ "$cur" == "$ROOT"/* ]] || [[ "$cur" == "$recorded_root"/* ]]; then
-        info "  remove link $home_rel"
+      if [[ "$cur" == "$ROOT"/* ]] || [[ -n "$recorded_root" && "$cur" == "$recorded_root"/* ]]; then
+        info "  remove link $target"
         if [[ $DRY_RUN -eq 0 ]]; then
           rm -f "$target"
         fi
       else
-        info "  skip (not ours): $home_rel → $cur"
+        info "  skip (not ours): $target → $cur"
         continue
       fi
     else
-      info "  skip (not a symlink): $home_rel"
+      info "  skip (not a symlink): $target"
       continue
     fi
 
-    # restore backup if present
     local bak="${target}.pre-hm-portable"
     if [[ -e "$bak" || -L "$bak" ]]; then
       info "  restore $bak"
@@ -765,6 +875,7 @@ cmd_uninstall() {
   if [[ $DRY_RUN -eq 0 ]]; then
     rm -f "$state_file"
     rm -f "$HOME_DIR/.local/state/hm-portable/root"
+    rm -f "$HOME_DIR/.local/state/hm-portable/julia-depot"
     rmdir "$HOME_DIR/.local/state/hm-portable" 2>/dev/null || true
   fi
   info "uninstall done"
@@ -776,22 +887,32 @@ cmd_status() {
     info "pack at $ROOT"
     cat "$ROOT/meta.env" >&2
     info "manifest entries: $(wc -l <"$ROOT/$MANIFEST_REL" 2>/dev/null || echo 0)"
+    if [[ -L "$ROOT/.hm-portable-bin" || -L "$ROOT/hm-portable" ]]; then
+      info "WARN: pack launcher is a symlink (rsync will break it). Re-pack."
+    else
+      info "launcher: plain files (rsync-safe)"
+    fi
   else
     info "no pack at $ROOT"
   fi
 
+  info "julia depot would be: $(julia_depot_root)${JULIA_DEPOT_PATH:+ (JULIA_DEPOT_PATH)}"
+
   local state_file="$HOME_DIR/$STATE_FILE_REL"
   if [[ -f "$state_file" ]]; then
     info "installed links ($(wc -l <"$state_file")):"
-    local home_rel store_rel
-    while IFS=$'\t' read -r home_rel store_rel; do
-      local target="$HOME_DIR/$home_rel"
+    local line _m_kind _m_dest _m_store
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      [[ -z "$line" ]] && continue
+      parse_manifest_line "$line"
+      # state: kind, absolute target, store_rel
+      local target="$_m_dest"
       if [[ -L "$target" ]]; then
-        printf '  OK  %s → %s\n' "$home_rel" "$(readlink "$target")" >&2
+        printf '  OK  %s → %s\n' "$target" "$(readlink "$target")" >&2
       elif [[ -e "$target" ]]; then
-        printf '  !!  %s exists but is not a symlink\n' "$home_rel" >&2
+        printf '  !!  %s exists but is not a symlink\n' "$target" >&2
       else
-        printf '  --  %s missing\n' "$home_rel" >&2
+        printf '  --  %s missing\n' "$target" >&2
       fi
     done <"$state_file"
   else
