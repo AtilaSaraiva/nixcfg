@@ -8,20 +8,25 @@
 # Store-path strategy
 # -------------------
 # Generated zsh files embed absolute /nix/store/... paths. On a cluster those
-# do not exist. We handle them in three ways:
+# do not exist. We handle them in four ways:
 #
 #   1. VENDOR  – pure shell assets (oh-my-zsh, zsh-autosuggestions, plugins)
 #                are copied into $ROOT/store/<name>/ and paths rewritten to
 #                that location (via a $HM_PORTABLE_ROOT placeholder).
 #   2. PATHIFY – real binaries (/nix/store/.../bin/fzf etc.) are rewritten to
-#                bare command names so the cluster PATH is used.
-#   3. DROP    – nix-only hooks (any-nix-shell, glibc locale archives,
+#                bare command names so the cluster PATH is used first.
+#   3. STATIC  – for pathified commands, also try pkgsStatic (musl) via nix
+#                and ship fully-static binaries into $ROOT/store/bin/. That
+#                dir is APPENDED to PATH so cluster tools win when present;
+#                the static copy is only a fallback. Dynamic glibc bins are
+#                never shipped.
+#   4. DROP    – nix-only hooks (any-nix-shell, glibc locale archives,
 #                hm-session-vars store refs) are stripped or replaced with a
 #                portable stub.
 #
 # Usage
 # -----
-#   hm-portable pack    [-o DIR] [-s SRC] [--modules LIST]
+#   hm-portable pack    [-o DIR] [-s SRC] [--modules LIST] [--bins auto|none|LIST]
 #   hm-portable install [-r DIR] [--dry-run]
 #   hm-portable uninstall [-r DIR] [--dry-run]
 #   hm-portable status  [-r DIR]
@@ -30,10 +35,11 @@
 #   pack output : ./hm-portable-store  (or $HM_PORTABLE_ROOT)
 #   install root: ./hm-portable-store  (or $HM_PORTABLE_ROOT)
 #   source tree : auto-detect nixcfg (script location or $NIXCFG)
+#   bins        : auto (pathified cmds → pkgsStatic musl fallbacks)
 
 set -euo pipefail
 
-VERSION="0.1.0"
+VERSION="0.2.0"
 
 die()  { printf 'hm-portable: %s\n' "$*" >&2; exit 1; }
 info() { printf 'hm-portable: %s\n' "$*" >&2; }
@@ -43,6 +49,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 ROOT="${HM_PORTABLE_ROOT:-}"
 SRC=""
 MODULES="zsh,nvim,tmux,julia"
+BINS_MODE="auto"   # auto | none | comma-list
 DRY_RUN=0
 HOME_DIR="${HOME}"
 
@@ -50,12 +57,35 @@ HOME_DIR="${HOME}"
 # Handled specially in pack_* functions; this list is only for --modules filter.
 ALL_MODULES=(zsh nvim tmux julia)
 
+# Commands we refuse to static-pack (GUI/wayland/nix-only or useless on cluster).
+BINS_SKIP_RE='^(wl-copy|wl-paste|wlvncc|any-nix-shell|nix|nix-shell|nixGL)$'
+
+# cmd → pkgsStatic attr (default: attr == cmd). Multi-bin pkgs list extras.
+declare -A STATIC_ATTR=(
+  [exa]=eza
+  [eza]=eza
+  [fzf]=fzf
+  [7z]=p7zip
+  [7za]=p7zip
+  [7zr]=p7zip
+  [rg]=ripgrep
+  [bat]=bat
+  [fd]=fd
+  [jq]=jq
+  [tmux]=tmux
+  [nvim]=neovim
+  [tr]=coreutils
+  [base64]=coreutils
+  [cksum]=coreutils
+)
+
 usage() {
   cat <<'EOF'
 hm-portable — portable home-manager config packer
 
 Usage:
   hm-portable pack      [-o DIR] [-s NIXCFG] [--modules zsh,nvim,tmux,julia]
+                        [--bins auto|none|eza,fzf,...]
   hm-portable install   [-r DIR] [--dry-run]
   hm-portable uninstall [-r DIR] [--dry-run]
   hm-portable status    [-r DIR]
@@ -67,6 +97,16 @@ Commands:
   install    Symlink packed files into $HOME (backs up collisions to *.pre-hm-portable).
   uninstall  Remove only the symlinks this tool created (tracked in manifest).
   status     Show what is packed and what is currently linked.
+
+Bins (pack --bins):
+  auto   (default) For every pathified /nix/store/.../bin/CMD, try
+         pkgsStatic musl build and ship only fully-static binaries into
+         store/bin/. At runtime store/bin is APPENDED to PATH so a cluster
+         module/binary always wins; packed static is fallback only.
+  none   Do not build or ship any binaries.
+  LIST   Comma-separated command names to try (e.g. eza,fzf,7z).
+
+  Dynamic glibc executables are never copied into the pack.
 
 Environment:
   HM_PORTABLE_ROOT   Default pack/install directory
@@ -90,6 +130,10 @@ while [[ $# -gt 0 ]]; do
       SRC="${2:?missing value for $1}"; shift 2 ;;
     --modules)
       MODULES="${2:?missing value for $1}"; shift 2 ;;
+    --bins)
+      BINS_MODE="${2:?missing value for $1}"; shift 2 ;;
+    --no-bins|--no-static-bins)
+      BINS_MODE="none"; shift ;;
     --dry-run)
       DRY_RUN=1; shift ;;
     -h|--help)
@@ -485,6 +529,14 @@ if [[ -f ${HM_PORTABLE_ROOT:-}/files/hm-session-vars.sh ]]; then
   # shellcheck disable=SC1091
   . "${HM_PORTABLE_ROOT}/files/hm-session-vars.sh"
 fi
+# Static musl fallbacks (pack store/bin). APPENDED so cluster PATH wins.
+if [[ -d ${HM_PORTABLE_ROOT:-}/store/bin ]]; then
+  case ":$PATH:" in
+    *":${HM_PORTABLE_ROOT}/store/bin:"*) ;;
+    *) PATH="${PATH:+$PATH:}${HM_PORTABLE_ROOT}/store/bin" ;;
+  esac
+  export PATH
+fi
 # --- end hm-portable preamble ---
 PRE
 )"
@@ -630,6 +682,280 @@ pack_julia() {
   fi
 }
 
+# ── pack: static musl bins (fallback only) ──────────────────────────────────
+# True if path is an ELF binary (not a shell script).
+is_elf() {
+  local bin="$1"
+  [[ -e "$bin" ]] || return 1
+  # resolve one symlink level for the magic check
+  local real="$bin"
+  if [[ -L "$bin" ]]; then
+    real="$(readlink -f "$bin" 2>/dev/null || true)"
+    [[ -n "$real" ]] || return 1
+  fi
+  [[ -f "$real" ]] || return 1
+  local magic
+  magic="$(head -c 4 "$real" 2>/dev/null | od -An -tx1 | tr -d ' \n')"
+  [[ "$magic" == "7f454c46" ]]
+}
+
+# True if ELF has no PT_INTERP (fully static). Rejects dynamic glibc/musl
+# and non-ELF (scripts would fool `ldd`).
+is_fully_static() {
+  local bin="$1"
+  is_elf "$bin" || return 1
+  local real="$bin"
+  if [[ -L "$bin" ]]; then
+    real="$(readlink -f "$bin" 2>/dev/null || true)"
+    [[ -n "$real" ]] || return 1
+  fi
+  if have readelf; then
+    ! readelf -l "$real" 2>/dev/null | grep -q 'Requesting program interpreter'
+    return $?
+  fi
+  if have ldd; then
+    local out
+    out="$(ldd "$real" 2>&1 || true)"
+    # glibc ldd: "statically linked"; musl/go often: "not a dynamic executable"
+    printf '%s' "$out" | grep -qiE 'statically linked|not a dynamic executable'
+    return $?
+  fi
+  return 1
+}
+
+# Map a bare command name → pkgsStatic attribute (empty if unknown/skipped).
+static_attr_for() {
+  local cmd="$1"
+  if [[ "$cmd" =~ $BINS_SKIP_RE ]]; then
+    printf '\n'
+    return
+  fi
+  if [[ -n "${STATIC_ATTR[$cmd]+x}" ]]; then
+    printf '%s\n' "${STATIC_ATTR[$cmd]}"
+    return
+  fi
+  # default: try attr == cmd (pkgsStatic.foo)
+  printf '%s\n' "$cmd"
+}
+
+# Collect bare command names that pathify will leave in rewritten configs.
+discover_pathified_cmds() {
+  local -A seen=()
+  local f full cmd live
+  # Prefer live generation (still has /nix/store/.../bin/CMD).
+  local zsh_live="${HOME_DIR}/.config/zsh"
+  for f in .zshrc .zshenv .zprofile; do
+    live="$(readlink -f "$zsh_live/$f" 2>/dev/null || true)"
+    [[ -f "$live" ]] || continue
+    while IFS= read -r full; do
+      [[ -z "$full" ]] && continue
+      cmd="$(bin_name_of "$full")"
+      [[ -n "$cmd" ]] || continue
+      seen["$cmd"]=1
+    done < <(grep -oE '/nix/store/[^[:space:]"'\'')]+' "$live" 2>/dev/null | sort -u || true)
+  done
+  # Aliases already bare in rewritten config (e.g. ls=exa).
+  if [[ -f "$ROOT/files/.config/zsh/.zshrc" ]]; then
+    for cmd in exa eza fzf rg bat fd jq tmux nvim; do
+      if grep -qE "(^|[^[:alnum:]_/-])${cmd}([^[:alnum:]_-]|$)" \
+          "$ROOT/files/.config/zsh/.zshrc" 2>/dev/null; then
+        seen["$cmd"]=1
+      fi
+    done
+  fi
+
+  local k
+  for k in "${!seen[@]}"; do
+    printf '%s\n' "$k"
+  done | sort -u
+}
+
+# nix flake ref for pkgsStatic builds (prefer the nixcfg flake's nixpkgs).
+static_nixpkgs_expr() {
+  # Returns a nix expression that evaluates to `pkgs` for the current system.
+  local system
+  system="$(uname -m)-linux"
+  case "$(uname -m)" in
+    x86_64|aarch64|i686) ;;
+    arm64) system="aarch64-linux" ;;
+    *) system="x86_64-linux" ;;
+  esac
+  if [[ -n "${SRC:-}" && -f "$SRC/flake.nix" ]]; then
+    cat <<NIX
+let
+  flake = builtins.getFlake "path:$SRC";
+  pkgs = import flake.inputs.nixpkgs { system = "$system"; };
+in pkgs
+NIX
+  else
+    cat <<NIX
+let
+  pkgs = import <nixpkgs> { system = "$system"; };
+in pkgs
+NIX
+  fi
+}
+
+# Build pkgsStatic.<attr> and copy fully-static bins into $ROOT/store/bin.
+# Returns 0 if at least one binary for the requested cmd was installed.
+build_static_attr() {
+  local attr="$1"
+  local want_cmd="${2:-}"   # optional: only keep this command name (+ known aliases)
+  local pkgs_expr out log bin_dir b base keep
+
+  pkgs_expr="$(static_nixpkgs_expr)"
+  log="$(mktemp)"
+  info "  pkgsStatic.$attr (musl) …"
+  if ! out="$(nix build --impure --no-link --print-out-paths --expr \
+      "let pkgs = ($pkgs_expr); in if pkgs.pkgsStatic ? $attr then pkgs.pkgsStatic.$attr else abort \"pkgsStatic.$attr missing\"" \
+      2>"$log")"; then
+    info "    skip $attr: build failed / missing"
+    sed -n '1,8p' "$log" | sed 's/^/      /' >&2 || true
+    rm -f "$log"
+    return 1
+  fi
+  rm -f "$log"
+
+  # nix may print multiple outputs (man, bin, …); pick the one with bin/
+  bin_dir=""
+  local o
+  for o in $out; do
+    if [[ -d "$o/bin" ]]; then
+      bin_dir="$o/bin"
+      break
+    fi
+  done
+  [[ -n "$bin_dir" ]] || {
+    info "    skip $attr: no bin/ in outputs"
+    return 1
+  }
+
+  mkdir -p "$ROOT/store/bin"
+  local copied=0
+  for b in "$bin_dir"/*; do
+    [[ -e "$b" ]] || continue
+    base="$(basename "$b")"
+    # If a specific cmd was requested, keep it and known siblings only.
+    if [[ -n "$want_cmd" ]]; then
+      keep=0
+      case "$want_cmd" in
+        exa|eza)
+          [[ "$base" == "exa" || "$base" == "eza" ]] && keep=1
+          ;;
+        7z|7za|7zr)
+          [[ "$base" == "7z" || "$base" == "7za" || "$base" == "7zr" ]] && keep=1
+          ;;
+        *)
+          [[ "$base" == "$want_cmd" ]] && keep=1
+          ;;
+      esac
+      [[ $keep -eq 1 ]] || continue
+    fi
+
+    # Scripts (fzf-share etc.) often embed /nix/store paths — never ship them.
+    if ! is_elf "$b"; then
+      info "    skip $base: not an ELF binary"
+      continue
+    fi
+    if ! is_fully_static "$b"; then
+      info "    skip $base: not fully static (refusing dynamic)"
+      continue
+    fi
+
+    # Materialize symlinks (exa -> eza) as real files so rsync is safe.
+    local src_file="$b"
+    if [[ -L "$b" ]]; then
+      src_file="$(readlink -f "$b" 2>/dev/null || true)"
+      [[ -n "$src_file" && -f "$src_file" ]] || {
+        info "    skip $base: dangling symlink"
+        continue
+      }
+    fi
+    cp -aL "$src_file" "$ROOT/store/bin/$base"
+    chmod u+w "$ROOT/store/bin/$base" 2>/dev/null || true
+    chmod +x "$ROOT/store/bin/$base"
+    # Final guard: refuse if copy somehow stayed a symlink or gained INTERP
+    if [[ -L "$ROOT/store/bin/$base" ]] || ! is_fully_static "$ROOT/store/bin/$base"; then
+      rm -f "$ROOT/store/bin/$base"
+      info "    skip $base: post-copy static check failed"
+      continue
+    fi
+    info "    + store/bin/$base (static)"
+    copied=1
+  done
+  [[ $copied -eq 1 ]]
+}
+
+pack_static_bins() {
+  if [[ "$BINS_MODE" == "none" ]]; then
+    info "static bins: disabled (--bins none)"
+    return 0
+  fi
+  if ! have nix; then
+    info "static bins: nix not available; skipping musl builds"
+    return 0
+  fi
+
+  info "packing static musl fallbacks (cluster PATH wins at runtime)"
+
+  local -a cmds=()
+  if [[ "$BINS_MODE" == "auto" ]]; then
+    mapfile -t cmds < <(discover_pathified_cmds)
+  else
+    IFS=',' read -r -a cmds <<<"$BINS_MODE"
+  fi
+
+  if [[ ${#cmds[@]} -eq 0 ]]; then
+    info "  no candidate commands"
+    return 0
+  fi
+
+  local -A tried=()   # attr → 1 once attempted
+  local cmd attr
+  local ok=0 fail=0 skip=0
+  : >"$ROOT/store/bins.manifest"
+
+  for cmd in "${cmds[@]}"; do
+    cmd="${cmd// /}"
+    [[ -n "$cmd" ]] || continue
+    attr="$(static_attr_for "$cmd")"
+    if [[ -z "$attr" ]]; then
+      info "  skip $cmd (blacklisted)"
+      skip=$((skip + 1))
+      continue
+    fi
+    # already have a static bin for this cmd?
+    if [[ -x "$ROOT/store/bin/$cmd" ]]; then
+      info "  $cmd: already packed"
+      continue
+    fi
+    if [[ -n "${tried[$attr]+x}" ]]; then
+      # attr already built; maybe the bin name differs
+      if [[ -x "$ROOT/store/bin/$cmd" ]]; then
+        continue
+      fi
+      info "  $cmd: attr $attr already tried, no bin"
+      fail=$((fail + 1))
+      continue
+    fi
+    tried["$attr"]=1
+    if build_static_attr "$attr" "$cmd"; then
+      ok=$((ok + 1))
+      printf '%s\t%s\n' "$cmd" "$attr" >>"$ROOT/store/bins.manifest"
+    else
+      fail=$((fail + 1))
+    fi
+  done
+
+  if [[ -d "$ROOT/store/bin" ]]; then
+    local n
+    n="$(find "$ROOT/store/bin" -type f | wc -l)"
+    info "static bins: $n file(s) in store/bin (ok_attrs=$ok fail=$fail skip=$skip)"
+  else
+    info "static bins: none produced (ok_attrs=$ok fail=$fail skip=$skip)"
+  fi
+}
+
 # ── pack driver ─────────────────────────────────────────────────────────────
 cmd_pack() {
   SRC="$(detect_src)"
@@ -637,6 +963,7 @@ cmd_pack() {
   info "source : $SRC"
   info "output : $ROOT"
   info "modules: $MODULES"
+  info "bins   : $BINS_MODE"
 
   # Wipe previous pack. Nix-vendored trees may still be read-only if an older
   # pack run forgot chmod; force-writable first.
@@ -652,7 +979,14 @@ cmd_pack() {
   module_enabled tmux  && pack_tmux
   module_enabled julia && pack_julia
 
+  # After configs are rewritten (pathify), build static musl fallbacks.
+  pack_static_bins
+
   # meta
+  local bins_list=""
+  if [[ -d "$ROOT/store/bin" ]]; then
+    bins_list="$(find "$ROOT/store/bin" -type f -printf '%f ' 2>/dev/null || true)"
+  fi
   cat >"$ROOT/meta.env" <<META
 HM_PORTABLE_VERSION=$VERSION
 HM_PORTABLE_PACKED_AT=$(date -Iseconds)
@@ -660,6 +994,8 @@ HM_PORTABLE_PACKED_HOST=$(hostname 2>/dev/null || echo unknown)
 HM_PORTABLE_PACKED_USER=${USER:-unknown}
 HM_PORTABLE_MODULES=$MODULES
 HM_PORTABLE_SRC=$SRC
+HM_PORTABLE_BINS_MODE=$BINS_MODE
+HM_PORTABLE_STATIC_BINS=$bins_list
 META
 
   # Self-contained launcher + script copy. Must dereference nix-store
@@ -897,6 +1233,20 @@ cmd_status() {
   fi
 
   info "julia depot would be: $(julia_depot_root)${JULIA_DEPOT_PATH:+ (JULIA_DEPOT_PATH)}"
+  if [[ -d "$ROOT/store/bin" ]]; then
+    info "static fallbacks in store/bin (appended to PATH):"
+    local b
+    for b in "$ROOT/store/bin"/*; do
+      [[ -f "$b" ]] || continue
+      if is_fully_static "$b"; then
+        printf '  OK  %s (static)\n' "$(basename "$b")" >&2
+      else
+        printf '  !!  %s NOT static\n' "$(basename "$b")" >&2
+      fi
+    done
+  else
+    info "no static fallbacks packed"
+  fi
 
   local state_file="$HOME_DIR/$STATE_FILE_REL"
   if [[ -f "$state_file" ]]; then
