@@ -1,0 +1,810 @@
+#!/usr/bin/env bash
+# hm-portable — export a home-manager-like config pack for non-Nix machines.
+#
+# Packs zsh / nvim / tmux / julia into a self-contained directory that acts
+# like a mini nix store, then symlinks targets into $HOME (install) or
+# removes those links (uninstall).
+#
+# Store-path strategy
+# -------------------
+# Generated zsh files embed absolute /nix/store/... paths. On a cluster those
+# do not exist. We handle them in three ways:
+#
+#   1. VENDOR  – pure shell assets (oh-my-zsh, zsh-autosuggestions, plugins)
+#                are copied into $ROOT/store/<name>/ and paths rewritten to
+#                that location (via a $HM_PORTABLE_ROOT placeholder).
+#   2. PATHIFY – real binaries (/nix/store/.../bin/fzf etc.) are rewritten to
+#                bare command names so the cluster PATH is used.
+#   3. DROP    – nix-only hooks (any-nix-shell, glibc locale archives,
+#                hm-session-vars store refs) are stripped or replaced with a
+#                portable stub.
+#
+# Usage
+# -----
+#   hm-portable pack    [-o DIR] [-s SRC] [--modules LIST]
+#   hm-portable install [-r DIR] [--dry-run]
+#   hm-portable uninstall [-r DIR] [--dry-run]
+#   hm-portable status  [-r DIR]
+#
+# Defaults
+#   pack output : ./hm-portable-store  (or $HM_PORTABLE_ROOT)
+#   install root: ./hm-portable-store  (or $HM_PORTABLE_ROOT)
+#   source tree : auto-detect nixcfg (script location or $NIXCFG)
+
+set -euo pipefail
+
+VERSION="0.1.0"
+
+die()  { printf 'hm-portable: %s\n' "$*" >&2; exit 1; }
+info() { printf 'hm-portable: %s\n' "$*" >&2; }
+have() { command -v "$1" >/dev/null 2>&1; }
+
+# ── defaults ────────────────────────────────────────────────────────────────
+ROOT="${HM_PORTABLE_ROOT:-}"
+SRC=""
+MODULES="zsh,nvim,tmux,julia"
+DRY_RUN=0
+HOME_DIR="${HOME}"
+
+# Modules → (source-relative path under nixcfg, home-relative install targets)
+# Handled specially in pack_* functions; this list is only for --modules filter.
+ALL_MODULES=(zsh nvim tmux julia)
+
+usage() {
+  cat <<'EOF'
+hm-portable — portable home-manager config packer
+
+Usage:
+  hm-portable pack      [-o DIR] [-s NIXCFG] [--modules zsh,nvim,tmux,julia]
+  hm-portable install   [-r DIR] [--dry-run]
+  hm-portable uninstall [-r DIR] [--dry-run]
+  hm-portable status    [-r DIR]
+  hm-portable help
+
+Commands:
+  pack       Build the portable store from the live HM generation + nixcfg sources.
+             Must be run on a machine where home-manager is applied.
+  install    Symlink packed files into $HOME (backs up collisions to *.pre-hm-portable).
+  uninstall  Remove only the symlinks this tool created (tracked in manifest).
+  status     Show what is packed and what is currently linked.
+
+Environment:
+  HM_PORTABLE_ROOT   Default pack/install directory
+  NIXCFG             Path to this nixcfg repo (pack source for static files)
+  HOME               Install target home (default: current user home)
+EOF
+}
+
+# ── arg parsing ─────────────────────────────────────────────────────────────
+CMD="${1:-}"
+[[ -n "$CMD" ]] || { usage; exit 1; }
+shift || true
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -o|--out|-r|--root)
+      ROOT="${2:?missing value for $1}"; shift 2 ;;
+    -s|--src)
+      SRC="${2:?missing value for $1}"; shift 2 ;;
+    --modules)
+      MODULES="${2:?missing value for $1}"; shift 2 ;;
+    --dry-run)
+      DRY_RUN=1; shift ;;
+    -h|--help)
+      usage; exit 0 ;;
+    *)
+      die "unknown option: $1" ;;
+  esac
+done
+
+ROOT="${ROOT:-${HM_PORTABLE_ROOT:-$PWD/hm-portable-store}}"
+# Resolve to absolute once we know it (pack will mkdir)
+abs_path() {
+  local p="$1"
+  if [[ "$p" = /* ]]; then printf '%s\n' "$p"
+  else printf '%s\n' "$(pwd)/$p"
+  fi
+}
+
+# ── source tree discovery ───────────────────────────────────────────────────
+detect_src() {
+  if [[ -n "$SRC" ]]; then
+    [[ -d "$SRC/home-manager/common/features" ]] \
+      || die "source '$SRC' does not look like nixcfg (missing home-manager/common/features)"
+    printf '%s\n' "$(cd "$SRC" && pwd)"
+    return
+  fi
+  if [[ -n "${NIXCFG:-}" && -d "$NIXCFG/home-manager/common/features" ]]; then
+    printf '%s\n' "$(cd "$NIXCFG" && pwd)"
+    return
+  fi
+  # script lives at nixcfg/pkgs/scripts/hm-portable
+  local here
+  here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [[ -d "$here/../../home-manager/common/features" ]]; then
+    printf '%s\n' "$(cd "$here/../.." && pwd)"
+    return
+  fi
+  die "cannot find nixcfg source; pass -s /path/to/nixcfg or set NIXCFG"
+}
+
+module_enabled() {
+  [[ ",$MODULES," == *",$1,"* ]]
+}
+
+# ── helpers ─────────────────────────────────────────────────────────────────
+# Copy a directory tree, dereferencing symlinks (nix store links → real files).
+# Nix store objects are mode 444/555; chmod -R u+w so the pack is deletable.
+cp_deref() {
+  local src="$1" dst="$2"
+  mkdir -p "$(dirname "$dst")"
+  rm -rf "$dst"
+  if have rsync; then
+    mkdir -p "$dst"
+    rsync -aL "$src"/ "$dst"/
+  else
+    cp -aL "$src" "$dst"
+  fi
+  chmod -R u+w "$dst" 2>/dev/null || true
+}
+
+# Write a portable text file, replacing a list of sed expressions.
+# Usage: rewrite_file IN OUT expr expr ...
+rewrite_file() {
+  local inn="$1" out="$2"
+  shift 2
+  local content
+  content="$(cat "$inn")"
+  local expr
+  for expr in "$@"; do
+    content="$(printf '%s' "$content" | sed -E "$expr")"
+  done
+  printf '%s\n' "$content" >"$out"
+}
+
+# Extract unique /nix/store/<hash>-<name> prefixes from a file.
+store_roots_in() {
+  grep -oE '/nix/store/[a-z0-9]{32}-[^/"'"'"' )]+' "$1" 2>/dev/null \
+    | sed -E 's|/nix/store/[a-z0-9]{32}-||' \
+    | sort -u || true
+}
+
+# Map a store path root name → rewrite policy.
+# prints: vendor:<shortname>  | pathify  | drop  | keep
+classify_store_name() {
+  local name="$1"
+  case "$name" in
+    oh-my-zsh*|zsh-autosuggestions*)
+      printf 'vendor\n' ;;
+    hm-session-vars.sh*|glibc-locales*|any-nix-shell*)
+      printf 'drop\n' ;;
+    zsh-[0-9]*)
+      # HELPDIR etc. — drop absolute HELPDIR, keep nothing vendorable
+      printf 'drop\n' ;;
+    *)
+      # binaries: fzf, coreutils, p7zip, wl-clipboard, wlvncc, ...
+      printf 'pathify\n' ;;
+  esac
+}
+
+# From a full /nix/store/HASH-name/.../bin/CMD path, extract CMD.
+# If not a /bin/ path, return empty.
+bin_name_of() {
+  local p="$1"
+  if [[ "$p" =~ /bin/([^/]+)$ ]]; then
+    printf '%s\n' "${BASH_REMATCH[1]}"
+  else
+    printf '\n'
+  fi
+}
+
+# Build sed rewrite rules for a file given the portable root placeholder.
+# Vendor map file format:  /nix/store/HASH-name<TAB>shortname
+# shellcheck disable=SC2207
+build_rewrites() {
+  local file="$1"
+  local vendor_map="$2"   # path to map file
+  local -a rules=()
+
+  # 1. pathify every /nix/store/.../bin/CMD → CMD
+  #    Use a perl-less sed: replace known full paths one by one.
+  local full
+  while IFS= read -r full; do
+    [[ -z "$full" ]] && continue
+    local cmd
+    cmd="$(bin_name_of "$full")"
+    if [[ -n "$cmd" ]]; then
+      # escape for sed
+      local esc
+      esc="$(printf '%s' "$full" | sed -e 's/[\/&.|^$*[ ]/\\&/g')"
+      rules+=("s|${esc}|${cmd}|g")
+    fi
+  done < <(grep -oE '/nix/store/[^[:space:]"'\'')+]+' "$file" 2>/dev/null | sort -u || true)
+
+  # 2. vendor roots → ${HM_PORTABLE_ROOT}/store/<short>
+  if [[ -f "$vendor_map" ]]; then
+    while IFS=$'\t' read -r store_root short; do
+      [[ -z "$store_root" ]] && continue
+      local esc
+      esc="$(printf '%s' "$store_root" | sed -e 's/[\/&.|^$*[ ]/\\&/g')"
+      rules+=("s|${esc}|__HM_PORTABLE_ROOT__/store/${short}|g")
+    done <"$vendor_map"
+  fi
+
+  # 3. drop leftover hm-session-vars sourcing lines / any-nix-shell lines later
+  # 4. rewrite hardcoded current $HOME to $HOME literal stays as path — replace
+  #    absolute home with $HOME for portability across usernames.
+  if [[ -n "${HOME_DIR:-}" ]]; then
+    local hesc
+    hesc="$(printf '%s' "$HOME_DIR" | sed -e 's/[\/&.|^$*[ ]/\\&/g')"
+    rules+=("s|${hesc}|\$HOME|g")
+  fi
+
+  printf '%s\n' "${rules[@]}"
+}
+
+# Apply rewrite rules + post-processing drops to produce portable text.
+portable_rewrite() {
+  local inn="$1" out="$2" vendor_map="$3"
+  local tmp
+  tmp="$(mktemp)"
+  cp "$inn" "$tmp"
+
+  local rule
+  while IFS= read -r rule; do
+    [[ -z "$rule" ]] && continue
+    sed -i -E "$rule" "$tmp"
+  done < <(build_rewrites "$inn" "$vendor_map")
+
+  # Drop nix-only lines that pathify/vendor could not salvage cleanly.
+  # - any-nix-shell invocation
+  # - sourcing hm-session-vars from store (we inject our own)
+  # - HELPDIR="/nix/store/..." (or leftover)
+  # - empty leftover store refs lines that became useless
+  sed -i -E \
+    -e '/any-nix-shell/d' \
+    -e '/hm-session-vars\.sh/d' \
+    -e '/^HELPDIR=/d' \
+    -e '/\/nix\/store\//d' \
+    -e 's|LD_LIBRARY_PATH=/run/opengl-driver/lib/[[:space:]]*||g' \
+    -e 's|LD_LIBRARY_PATH=/run/opengl-driver/lib/||g' \
+    "$tmp"
+
+  # Guard NIX_PROFILES fpath loop (unset on non-Nix hosts).
+  # HM emits:
+  #   for profile in ${(z)NIX_PROFILES}; do
+  #     fpath+=(...)
+  #   done
+  if grep -qF 'for profile in ${(z)NIX_PROFILES}; do' "$tmp"; then
+    sed -i \
+      -e 's|for profile in ${(z)NIX_PROFILES}; do|if [[ -n ${NIX_PROFILES:-} ]]; then\nfor profile in ${(z)NIX_PROFILES}; do|' \
+      "$tmp"
+    # Insert `fi` after the first bare `done` that follows the NIX_PROFILES for-loop.
+    awk '
+      /for profile in \$\{\(z\)NIX_PROFILES\}/ { in_nix_loop=1 }
+      { print }
+      in_nix_loop && /^done$/ {
+        print "fi"
+        in_nix_loop=0
+      }
+    ' "$tmp" >"${tmp}.awk" && mv "${tmp}.awk" "$tmp"
+  fi
+
+  # Expand placeholder to a runtime lookup so the pack is relocatable:
+  # replace __HM_PORTABLE_ROOT__ with ${HM_PORTABLE_ROOT} shell expansion.
+  sed -i -e 's|__HM_PORTABLE_ROOT__|${HM_PORTABLE_ROOT}|g' "$tmp"
+
+  mkdir -p "$(dirname "$out")"
+  mv "$tmp" "$out"
+}
+
+# Record a managed link in the manifest (path relative to $HOME, target relative to $ROOT).
+# Manifest format (TSV):  home_relpath<TAB>store_relpath
+MANIFEST_REL="manifest.tsv"
+
+manifest_add() {
+  local home_rel="$1" store_rel="$2"
+  printf '%s\t%s\n' "$home_rel" "$store_rel" >>"$ROOT/$MANIFEST_REL"
+}
+
+# ── pack: zsh ───────────────────────────────────────────────────────────────
+pack_zsh() {
+  local feat="$SRC/home-manager/common/features/zsh"
+  info "packing zsh"
+
+  local zsh_live="${HOME_DIR}/.config/zsh"
+  [[ -d "$zsh_live" ]] || die "no live zsh config at $zsh_live (is home-manager applied?)"
+
+  local vendor_map
+  vendor_map="$(mktemp)"
+
+  # Vendor oh-my-zsh from the live ZSH= assignment in .zshenv
+  local zshenv_live
+  zshenv_live="$(readlink -f "$zsh_live/.zshenv" 2>/dev/null || true)"
+  [[ -f "$zshenv_live" ]] || die "cannot resolve $zsh_live/.zshenv"
+
+  local omz_store
+  omz_store="$(grep -oE '/nix/store/[a-z0-9]{32}-oh-my-zsh[^/"'"'"'; ]*' "$zshenv_live" | head -1 || true)"
+  if [[ -n "$omz_store" && -d "$omz_store" ]]; then
+    info "  vendor oh-my-zsh from $omz_store"
+    cp_deref "$omz_store" "$ROOT/store/oh-my-zsh"
+    # map both the share/oh-my-zsh path and the store root
+    local omz_share
+    omz_share="$(find "$omz_store" -type d -name oh-my-zsh | head -1)"
+    if [[ -n "$omz_share" ]]; then
+      # After cp_deref of the store root, share/oh-my-zsh lives under store/oh-my-zsh/
+      local rel_inside="${omz_share#"$omz_store"/}"
+      printf '%s\t%s\n' "$omz_share" "oh-my-zsh/${rel_inside}" >>"$vendor_map"
+    fi
+    printf '%s\t%s\n' "$omz_store" "oh-my-zsh" >>"$vendor_map"
+  else
+    info "  warn: oh-my-zsh store path not found; ZSH= will be cleared"
+  fi
+
+  # Vendor zsh-autosuggestions referenced from .zshrc
+  local zshrc_live
+  zshrc_live="$(readlink -f "$zsh_live/.zshrc" 2>/dev/null || true)"
+  [[ -f "$zshrc_live" ]] || die "cannot resolve $zsh_live/.zshrc"
+
+  local autosug
+  autosug="$(grep -oE '/nix/store/[a-z0-9]{32}-zsh-autosuggestions[^/"'"'"'; ]*' "$zshrc_live" | head -1 || true)"
+  if [[ -n "$autosug" && -d "$autosug" ]]; then
+    info "  vendor zsh-autosuggestions from $autosug"
+    cp_deref "$autosug" "$ROOT/store/zsh-autosuggestions"
+    # map the file path used in source .../zsh-autosuggestions.zsh
+    local autosug_file
+    autosug_file="$(find "$autosug" -name 'zsh-autosuggestions.zsh' | head -1)"
+    if [[ -n "$autosug_file" ]]; then
+      local parent
+      parent="$(dirname "$(dirname "$autosug_file")")"  # .../share
+      # map store root
+      printf '%s\t%s\n' "$autosug" "zsh-autosuggestions" >>"$vendor_map"
+    else
+      printf '%s\t%s\n' "$autosug" "zsh-autosuggestions" >>"$vendor_map"
+    fi
+  fi
+
+  # Vendor plugins already linked under ~/.config/zsh/plugins
+  mkdir -p "$ROOT/files/.config/zsh/plugins"
+  if [[ -d "$zsh_live/plugins" ]]; then
+    local plug
+    for plug in "$zsh_live/plugins"/*; do
+      [[ -e "$plug" ]] || continue
+      local name
+      name="$(basename "$plug")"
+      info "  vendor plugin $name"
+      cp_deref "$plug" "$ROOT/files/.config/zsh/plugins/$name"
+    done
+  fi
+
+  # Rewrite live zsh files into the pack
+  mkdir -p "$ROOT/files/.config/zsh"
+  for f in .zshrc .zshenv .zprofile; do
+    local live
+    live="$(readlink -f "$zsh_live/$f" 2>/dev/null || true)"
+    if [[ -f "$live" ]]; then
+      info "  rewrite $f"
+      portable_rewrite "$live" "$ROOT/files/.config/zsh/$f" "$vendor_map"
+    fi
+  done
+
+  # Inject portable preamble into .zshenv:
+  #   - set HM_PORTABLE_ROOT if unset (relative discovery)
+  #   - set ZSH to vendored oh-my-zsh
+  #   - source portable session vars
+  local preamble
+  preamble="$(cat <<'PRE'
+# --- hm-portable preamble (generated) ---
+if [[ -z ${HM_PORTABLE_ROOT:-} ]]; then
+  # Prefer the directory this pack was installed from (set by install shim),
+  # else walk up from ZDOTDIR.
+  if [[ -n ${ZDOTDIR:-} && -f ${ZDOTDIR}/.hm-portable-root ]]; then
+    HM_PORTABLE_ROOT="$(cat "${ZDOTDIR}/.hm-portable-root")"
+  fi
+fi
+export HM_PORTABLE_ROOT
+if [[ -d ${HM_PORTABLE_ROOT:-}/store/oh-my-zsh ]]; then
+  # find share/oh-my-zsh inside the vendored tree
+  for _cand in \
+      "${HM_PORTABLE_ROOT}/store/oh-my-zsh/share/oh-my-zsh" \
+      "${HM_PORTABLE_ROOT}/store/oh-my-zsh"; do
+    if [[ -f ${_cand}/oh-my-zsh.sh ]]; then ZSH="${_cand}"; break; fi
+  done
+  unset _cand
+fi
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh"
+mkdir -p "$ZSH_CACHE_DIR"
+if [[ -f ${HM_PORTABLE_ROOT:-}/files/hm-session-vars.sh ]]; then
+  # shellcheck disable=SC1091
+  . "${HM_PORTABLE_ROOT}/files/hm-session-vars.sh"
+fi
+# --- end hm-portable preamble ---
+PRE
+)"
+
+  # Prepend preamble; strip any leftover ZSH=/nix... assignments that survived
+  local env_out="$ROOT/files/.config/zsh/.zshenv"
+  local body
+  body="$(cat "$env_out")"
+  body="$(printf '%s\n' "$body" | sed -E '/^ZSH=/d;/^ZSH_CACHE_DIR=/d')"
+  printf '%s\n%s\n' "$preamble" "$body" >"$env_out"
+
+  # Fix autosuggestions source path inside .zshrc if vendor placeholder missed the file path
+  if [[ -d "$ROOT/store/zsh-autosuggestions" ]]; then
+    local as_file
+    as_file="$(find "$ROOT/store/zsh-autosuggestions" -name 'zsh-autosuggestions.zsh' | head -1)"
+    if [[ -n "$as_file" ]]; then
+      local as_rel="${as_file#"$ROOT"/}"
+      # If .zshrc still has a bare 'source' of autosuggestions gone missing, inject
+      if ! grep -q 'zsh-autosuggestions.zsh' "$ROOT/files/.config/zsh/.zshrc"; then
+        info "  inject zsh-autosuggestions source"
+        sed -i "1i source \"\${HM_PORTABLE_ROOT}/${as_rel}\"" "$ROOT/files/.config/zsh/.zshrc"
+      else
+        # rewrite any remaining non-portable source line
+        sed -i -E "s|source[[:space:]]+[^[:space:]]*zsh-autosuggestions\\.zsh|source \"\${HM_PORTABLE_ROOT}/${as_rel}\"|g" \
+          "$ROOT/files/.config/zsh/.zshrc"
+      fi
+    fi
+  fi
+
+  # Portable session vars (subset of hm-session-vars, no nix store refs)
+  cat >"$ROOT/files/hm-session-vars.sh" <<'SV'
+# hm-portable session vars (portable subset)
+if [ -n "${__HM_SESS_VARS_SOURCED:-}" ]; then return; fi
+export __HM_SESS_VARS_SOURCED=1
+export EDITOR="${EDITOR:-nvim}"
+export FZF_TMUX="${FZF_TMUX:-1}"
+# Keep julia user bin on PATH if present
+if [ -d "$HOME/.julia/bin" ]; then
+  case ":$PATH:" in
+    *":$HOME/.julia/bin:"*) ;;
+    *) export PATH="$HOME/.julia/bin${PATH:+:$PATH}" ;;
+  esac
+fi
+SV
+
+  # bookmarks (zshmarks) — rewrite $HOME already literal in file
+  if [[ -e "${HOME_DIR}/.bookmarks" ]]; then
+    local bm
+    bm="$(readlink -f "${HOME_DIR}/.bookmarks" 2>/dev/null || echo "${HOME_DIR}/.bookmarks")"
+    if [[ -f "$bm" ]]; then
+      cp "$bm" "$ROOT/files/.bookmarks"
+      # keep $HOME as-is (file already uses $HOME/...)
+      manifest_add ".bookmarks" "files/.bookmarks"
+    fi
+  elif [[ -f "$feat/zshmarks.nix" ]]; then
+    : # generated only after HM switch; skip if absent
+  fi
+
+  # marker used by preamble to find the pack root after install
+  printf '%s\n' "$ROOT" >"$ROOT/files/.config/zsh/.hm-portable-root"
+
+  manifest_add ".config/zsh/.zshrc"  "files/.config/zsh/.zshrc"
+  manifest_add ".config/zsh/.zshenv" "files/.config/zsh/.zshenv"
+  manifest_add ".config/zsh/.zprofile" "files/.config/zsh/.zprofile"
+  manifest_add ".config/zsh/.hm-portable-root" "files/.config/zsh/.hm-portable-root"
+
+  # plugins dir entries
+  if [[ -d "$ROOT/files/.config/zsh/plugins" ]]; then
+    local p
+    for p in "$ROOT/files/.config/zsh/plugins"/*; do
+      [[ -e "$p" ]] || continue
+      local bn
+      bn="$(basename "$p")"
+      manifest_add ".config/zsh/plugins/$bn" "files/.config/zsh/plugins/$bn"
+    done
+  fi
+
+  # Ensure ZDOTDIR is set for non-HM shells: install a $HOME/.zshenv shim if
+  # the user doesn't already use ~/.config/zsh via system config.
+  cat >"$ROOT/files/home.zshenv" <<'SHIM'
+# hm-portable: point zsh at XDG config
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+[[ -f $ZDOTDIR/.zshenv ]] && . "$ZDOTDIR/.zshenv"
+SHIM
+  manifest_add ".zshenv" "files/home.zshenv"
+
+  rm -f "$vendor_map"
+}
+
+# ── pack: nvim / tmux / julia (static from nixcfg) ──────────────────────────
+pack_nvim() {
+  local feat="$SRC/home-manager/common/features/nvim"
+  [[ -d "$feat" ]] || die "missing $feat"
+  info "packing nvim from $feat"
+
+  mkdir -p "$ROOT/files/.config/nvim"
+  # init.lua
+  cp -a "$feat/init.lua" "$ROOT/files/.config/nvim/init.lua"
+  # directories
+  for d in lua after LuaSnips; do
+    if [[ -d "$feat/$d" ]]; then
+      rm -rf "$ROOT/files/.config/nvim/$d"
+      cp -a "$feat/$d" "$ROOT/files/.config/nvim/$d"
+    fi
+  done
+
+  manifest_add ".config/nvim/init.lua" "files/.config/nvim/init.lua"
+  for d in lua after LuaSnips; do
+    [[ -d "$ROOT/files/.config/nvim/$d" ]] || continue
+    # link the directory as a whole (like HM recursive)
+    manifest_add ".config/nvim/$d" "files/.config/nvim/$d"
+  done
+}
+
+pack_tmux() {
+  local feat="$SRC/home-manager/common/features/tmux"
+  [[ -d "$feat" ]] || die "missing $feat"
+  info "packing tmux from $feat"
+  mkdir -p "$ROOT/files"
+  cp -a "$feat/tmux.conf" "$ROOT/files/.tmux.conf"
+  manifest_add ".tmux.conf" "files/.tmux.conf"
+}
+
+pack_julia() {
+  local feat="$SRC/home-manager/common/features/julia"
+  [[ -d "$feat" ]] || die "missing $feat"
+  info "packing julia from $feat"
+  mkdir -p "$ROOT/files/.julia/config"
+  cp -a "$feat/startup.jl" "$ROOT/files/.julia/config/startup.jl"
+  if [[ -d "$feat/environments" ]]; then
+    rm -rf "$ROOT/files/.julia/environments"
+    cp -a "$feat/environments" "$ROOT/files/.julia/environments"
+  fi
+  manifest_add ".julia/config/startup.jl" "files/.julia/config/startup.jl"
+  if [[ -d "$ROOT/files/.julia/environments" ]]; then
+    manifest_add ".julia/environments" "files/.julia/environments"
+  fi
+}
+
+# ── pack driver ─────────────────────────────────────────────────────────────
+cmd_pack() {
+  SRC="$(detect_src)"
+  ROOT="$(abs_path "$ROOT")"
+  info "source : $SRC"
+  info "output : $ROOT"
+  info "modules: $MODULES"
+
+  # Wipe previous pack. Nix-vendored trees may still be read-only if an older
+  # pack run forgot chmod; force-writable first.
+  if [[ -d "$ROOT" ]]; then
+    chmod -R u+w "$ROOT" 2>/dev/null || true
+    rm -rf "$ROOT"
+  fi
+  mkdir -p "$ROOT/store" "$ROOT/files"
+  : >"$ROOT/$MANIFEST_REL"
+
+  module_enabled zsh   && pack_zsh
+  module_enabled nvim  && pack_nvim
+  module_enabled tmux  && pack_tmux
+  module_enabled julia && pack_julia
+
+  # meta
+  cat >"$ROOT/meta.env" <<META
+HM_PORTABLE_VERSION=$VERSION
+HM_PORTABLE_PACKED_AT=$(date -Iseconds)
+HM_PORTABLE_PACKED_HOST=$(hostname 2>/dev/null || echo unknown)
+HM_PORTABLE_PACKED_USER=${USER:-unknown}
+HM_PORTABLE_MODULES=$MODULES
+HM_PORTABLE_SRC=$SRC
+META
+
+  # install helper: small wrapper that sets HM_PORTABLE_ROOT then execs us
+  cat >"$ROOT/hm-portable" <<'WRAP'
+#!/usr/bin/env bash
+HERE="$(cd "$(dirname "$0")" && pwd)"
+export HM_PORTABLE_ROOT="$HERE"
+exec bash "$HERE/.hm-portable-bin" "$@"
+WRAP
+  # copy ourselves into the pack so install works offline
+  cp -a "${BASH_SOURCE[0]}" "$ROOT/.hm-portable-bin"
+  chmod +x "$ROOT/hm-portable" "$ROOT/.hm-portable-bin"
+
+  # sort/uniq manifest
+  if [[ -f "$ROOT/$MANIFEST_REL" ]]; then
+    sort -u -o "$ROOT/$MANIFEST_REL" "$ROOT/$MANIFEST_REL"
+  fi
+
+  # update .hm-portable-root marker to absolute pack path (rewritten again on install)
+  if [[ -f "$ROOT/files/.config/zsh/.hm-portable-root" ]]; then
+    printf '%s\n' "$ROOT" >"$ROOT/files/.config/zsh/.hm-portable-root"
+  fi
+
+  info "packed OK → $ROOT"
+  info "copy this directory to the cluster, then:  $ROOT/hm-portable install"
+  info "manifest entries: $(wc -l <"$ROOT/$MANIFEST_REL")"
+}
+
+# ── install / uninstall ─────────────────────────────────────────────────────
+require_root_packed() {
+  ROOT="$(abs_path "$ROOT")"
+  [[ -f "$ROOT/$MANIFEST_REL" ]] || die "no pack at $ROOT (missing $MANIFEST_REL). Run 'pack' first."
+  [[ -f "$ROOT/meta.env" ]] || die "no pack at $ROOT (missing meta.env)"
+}
+
+# State file tracks what we linked, so uninstall is precise.
+STATE_FILE_REL=".local/state/hm-portable/state.tsv"
+
+backup_if_needed() {
+  local target="$1"
+  if [[ -e "$target" || -L "$target" ]]; then
+    # already our link?
+    if [[ -L "$target" ]]; then
+      local cur
+      cur="$(readlink "$target")"
+      if [[ "$cur" == "$ROOT"/* ]]; then
+        return 0  # ours, will overwrite
+      fi
+    fi
+    local bak="${target}.pre-hm-portable"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      info "  dry-run: backup $target → $bak"
+    else
+      if [[ -e "$bak" || -L "$bak" ]]; then
+        info "  backup exists, leaving: $bak"
+        rm -rf "$target"
+      else
+        info "  backup $target → $bak"
+        mv "$target" "$bak"
+      fi
+    fi
+  fi
+}
+
+cmd_install() {
+  require_root_packed
+  info "install from $ROOT → $HOME_DIR"
+  info "dry-run=$DRY_RUN"
+
+  # Refresh the relocatable root marker to THIS pack's absolute path
+  if [[ -f "$ROOT/files/.config/zsh/.hm-portable-root" ]]; then
+    if [[ $DRY_RUN -eq 0 ]]; then
+      printf '%s\n' "$ROOT" >"$ROOT/files/.config/zsh/.hm-portable-root"
+    fi
+  fi
+
+  local state_file="$HOME_DIR/$STATE_FILE_REL"
+  if [[ $DRY_RUN -eq 0 ]]; then
+    mkdir -p "$(dirname "$state_file")"
+    : >"$state_file"
+  fi
+
+  local home_rel store_rel
+  while IFS=$'\t' read -r home_rel store_rel; do
+    [[ -z "$home_rel" ]] && continue
+    local target="$HOME_DIR/$home_rel"
+    local source="$ROOT/$store_rel"
+    [[ -e "$source" || -L "$source" ]] || {
+      info "  skip missing source: $source"
+      continue
+    }
+
+    info "  link $home_rel → $store_rel"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      continue
+    fi
+
+    mkdir -p "$(dirname "$target")"
+    backup_if_needed "$target"
+    # directory targets: symlink the dir itself
+    ln -sfn "$source" "$target"
+    printf '%s\t%s\n' "$home_rel" "$store_rel" >>"$state_file"
+  done <"$ROOT/$MANIFEST_REL"
+
+  # Export hint
+  if [[ $DRY_RUN -eq 0 ]]; then
+    # ensure state records the root
+    printf '%s\n' "$ROOT" >"$HOME_DIR/.local/state/hm-portable/root"
+    info "installed. Open a new zsh session (ZDOTDIR=~/.config/zsh)."
+    info "uninstall with: HM_PORTABLE_ROOT=$ROOT $ROOT/hm-portable uninstall"
+  fi
+}
+
+cmd_uninstall() {
+  # Prefer state file (what install actually did); fall back to manifest.
+  local state_file="$HOME_DIR/$STATE_FILE_REL"
+  local list_file=""
+  local recorded_root=""
+
+  if [[ -f "$HOME_DIR/.local/state/hm-portable/root" ]]; then
+    recorded_root="$(cat "$HOME_DIR/.local/state/hm-portable/root")"
+  fi
+  if [[ -z "$ROOT" || "$ROOT" == "$PWD/hm-portable-store" ]]; then
+    if [[ -n "$recorded_root" ]]; then
+      ROOT="$recorded_root"
+    fi
+  fi
+  ROOT="$(abs_path "${ROOT:-$PWD/hm-portable-store}")"
+
+  if [[ -f "$state_file" ]]; then
+    list_file="$state_file"
+  elif [[ -f "$ROOT/$MANIFEST_REL" ]]; then
+    list_file="$ROOT/$MANIFEST_REL"
+  else
+    die "nothing to uninstall (no state at $state_file and no pack at $ROOT)"
+  fi
+
+  info "uninstall using $list_file (root=$ROOT, dry-run=$DRY_RUN)"
+
+  local home_rel store_rel
+  while IFS=$'\t' read -r home_rel store_rel; do
+    [[ -z "$home_rel" ]] && continue
+    local target="$HOME_DIR/$home_rel"
+    if [[ ! -e "$target" && ! -L "$target" ]]; then
+      info "  absent: $home_rel"
+      continue
+    fi
+    if [[ -L "$target" ]]; then
+      local cur
+      cur="$(readlink "$target")"
+      # only remove if it points into our root (safety)
+      if [[ "$cur" == "$ROOT"/* ]] || [[ "$cur" == "$recorded_root"/* ]]; then
+        info "  remove link $home_rel"
+        if [[ $DRY_RUN -eq 0 ]]; then
+          rm -f "$target"
+        fi
+      else
+        info "  skip (not ours): $home_rel → $cur"
+        continue
+      fi
+    else
+      info "  skip (not a symlink): $home_rel"
+      continue
+    fi
+
+    # restore backup if present
+    local bak="${target}.pre-hm-portable"
+    if [[ -e "$bak" || -L "$bak" ]]; then
+      info "  restore $bak"
+      if [[ $DRY_RUN -eq 0 ]]; then
+        mv "$bak" "$target"
+      fi
+    fi
+  done <"$list_file"
+
+  if [[ $DRY_RUN -eq 0 ]]; then
+    rm -f "$state_file"
+    rm -f "$HOME_DIR/.local/state/hm-portable/root"
+    rmdir "$HOME_DIR/.local/state/hm-portable" 2>/dev/null || true
+  fi
+  info "uninstall done"
+}
+
+cmd_status() {
+  ROOT="$(abs_path "$ROOT")"
+  if [[ -f "$ROOT/meta.env" ]]; then
+    info "pack at $ROOT"
+    cat "$ROOT/meta.env" >&2
+    info "manifest entries: $(wc -l <"$ROOT/$MANIFEST_REL" 2>/dev/null || echo 0)"
+  else
+    info "no pack at $ROOT"
+  fi
+
+  local state_file="$HOME_DIR/$STATE_FILE_REL"
+  if [[ -f "$state_file" ]]; then
+    info "installed links ($(wc -l <"$state_file")):"
+    local home_rel store_rel
+    while IFS=$'\t' read -r home_rel store_rel; do
+      local target="$HOME_DIR/$home_rel"
+      if [[ -L "$target" ]]; then
+        printf '  OK  %s → %s\n' "$home_rel" "$(readlink "$target")" >&2
+      elif [[ -e "$target" ]]; then
+        printf '  !!  %s exists but is not a symlink\n' "$home_rel" >&2
+      else
+        printf '  --  %s missing\n' "$home_rel" >&2
+      fi
+    done <"$state_file"
+  else
+    info "not installed in $HOME_DIR"
+  fi
+}
+
+# ── main ────────────────────────────────────────────────────────────────────
+case "$CMD" in
+  pack)      cmd_pack ;;
+  install)   cmd_install ;;
+  uninstall) cmd_uninstall ;;
+  status)    cmd_status ;;
+  help|-h|--help) usage ;;
+  *) die "unknown command: $CMD (try: pack|install|uninstall|status)" ;;
+esac

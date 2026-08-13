@@ -77,6 +77,7 @@ pkgs: rec {
   };
   sway-display-swap = pkgs.callPackage ./scripts { scriptName = "sway-display-swap.sh"; };
   toggleFreesync = pkgs.callPackage ./scripts { scriptName = "toggleFreesync"; };
+  hm-portable = pkgs.callPackage ./scripts { scriptName = "hm-portable"; };
 
   #aftergameopen = pkgs.callPackage ./scripts { scriptName = "aftergameopen"; };
   #animatedWallpaper = pkgs.callPackage ./scripts { scriptName = "animatedWallpaper"; };

@@ -31,5 +31,6 @@
     replaceSymlinks
     snippetPicker
     balance
+    hm-portable
   ];
 }
