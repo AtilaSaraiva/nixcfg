@@ -76,11 +76,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786873894,
-        "narHash": "sha256-3VeH8oFaCtq3vCryfPLBzPSLDPADsN44dftG+Dve6uY=",
+        "lastModified": 1787037916,
+        "narHash": "sha256-dYu/4horSlL5/7cW2jhG5x2gKwL6HfqVWCSJhflyqW4=",
         "ref": "refs/heads/main",
-        "rev": "e2647d0c2a6add1bbc7e5f6aa7e0771970407714",
-        "revCount": 42,
+        "rev": "3817ed6f86b46198fd6465b719deb06150e6dce5",
+        "revCount": 43,
         "type": "git",
         "url": "https://codeberg.org/hunKing/gog2steam.git"
       },
