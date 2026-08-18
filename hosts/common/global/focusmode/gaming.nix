@@ -16,6 +16,9 @@ lib.mkIf (!config.focusMode && config.gaming.enable) {
     gamemode
     ludusavi
     discord
+
+    gog2steam
+    lgogdownloader
   ];
 
   

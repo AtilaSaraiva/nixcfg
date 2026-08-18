@@ -23,6 +23,9 @@
 
     steamcmd-servers.url = "github:AtilaSaraiva/steamcmd-servers";
 
+    gog2steam.url = "git+https://codeberg.org/hunKing/gog2steam.git";
+    gog2steam.inputs.nixpkgs.follows = "nixpkgs";
+
     nixgl.url = "github:bb010g/nixGL";
     nixgl.inputs.nixpkgs.follows = "nixpkgs";
   };

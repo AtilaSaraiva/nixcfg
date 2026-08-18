@@ -10,6 +10,7 @@
       outputs.overlays.stable-packages
 
       # You can also add overlays exported from other flakes:
+      inputs.gog2steam.overlays.default
       # neovim-nightly-overlay.overlays.default
 
       # Or define it inline, for example:
