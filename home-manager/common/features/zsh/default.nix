@@ -15,10 +15,10 @@
       n = "nvim . +'Telescope find_files'";
       note = "nvim +'ObsidianNew'";
       noteo = "nvim +'ObsidianQuickSwitch'";
-      sl = "exa";
-      ls = "exa";
-      l = "exa -l";
-      la = "exa -la";
+      sl = "${pkgs.eza}/bin/eza";
+      ls = "${pkgs.eza}/bin/eza";
+      l = "${pkgs.eza}/bin/eza -l";
+      la = "${pkgs.eza}/bin/eza -la";
       ip = "ip --color=auto";
       ma = "mani run";
       cleanBranches = "git branch --merged | grep -v \* | xargs git branch -D";
@@ -38,7 +38,7 @@
       gca = "git commit --amend";
       glog = "git log";
       calc = "octave";
-      icat = "kitten icat";
+      icat = "${pkgs.kitty}/bin/kitten icat";
       yp = "pwd | ${pkgs.coreutils}/bin/tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy";
       claude = "nix run github:sadjow/claude-code-nix";
       compress = "${pkgs.p7zip}/bin/7z -mx9 a";
