@@ -212,6 +212,26 @@ in
       # sfdoc is the one script whose shebang SConstruct bakes in from
       # sys.executable, i.e. the interpreter SCons happens to run under.
       sed -i "1s|^#!.*|#!${py.interpreter}|" $out/bin/sfdoc
+
+      # The Julia API ccalls the C library by bare name in 33 places, which
+      # only resolves if the caller has already put $out/lib on
+      # LD_LIBRARY_PATH.  Bake the store path in instead, so `using m8r` works
+      # from any julia with no environment set up at all.
+      sed -i "s|\"libdrsf\"|\"$out/lib/libdrsf.so\"|g" $out/lib/m8r.jl
+
+      # It also falls back to RSFROOT=nothing when the variable is unset, and
+      # then generates no program wrappers at all.  Fall back to the store path
+      # instead; an explicit RSFROOT still wins, for anyone with two installs.
+      substituteInPlace $out/lib/m8r.jl \
+        --replace-fail "    RSFROOT = nothing" "    RSFROOT = \"$out\""
+
+      # env.sh is generated at build time and picks up two things from the
+      # sandbox that are wrong or unhelpful on a real machine:
+      #   RSFSRC pointed at the nix build directory, which does not exist;
+      #   DATAPATH was set unconditionally, clobbering a per-project value.
+      sed -i -e '/^# Path for Madagascar source directory$/,+1d' \
+             -e 's|^export DATAPATH=\(.*\)$|if [ -z "$DATAPATH" ]; then export DATAPATH=\1; fi|' \
+        $out/share/madagascar/etc/env.sh
     '';
 
     # Most of $out/bin is C, but the RSF Python package (rsf.*) backs sfdoc,
