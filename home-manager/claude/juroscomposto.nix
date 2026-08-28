@@ -19,6 +19,7 @@
     # You can also split up your configuration and import pieces of it here:
     ../common/features/nvim
     ../common/features/julia
+    ../common/features/madagascar
     ../common/features/jupyter
     ../common/features/ssh
     ../common/features/git

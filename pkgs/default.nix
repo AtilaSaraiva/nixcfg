@@ -4,6 +4,7 @@ pkgs: rec {
   # example = pkgs.callPackage ./example { };
   amdgpu-fan = pkgs.callPackage ./amdgpu-fan { };
   i3empty = pkgs.callPackage ./i3empty { };
+  madagascar = pkgs.callPackage ./madagascar { };
   nixosbuild = pkgs.callPackage ./nixosbuild { };
   vl = pkgs.callPackage ./scripts { scriptName = "vl"; };
   vg = pkgs.callPackage ./scripts { scriptName = "vg"; };
