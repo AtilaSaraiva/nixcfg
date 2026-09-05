@@ -157,4 +157,6 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 
   services.fwupd.enable = true;
+
+  security.tpm2.enable = false;
 }
