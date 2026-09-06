@@ -138,7 +138,14 @@
   };
 
   systemd.coredump.enable = true;
+  # systemd.tpm2.enable=false only drops tpm2.target from the unit set; it does
+  # not stop systemd-tpm2-generator, which still pulls tpm2.target (and with it
+  # dev-tpm0.device / dev-tpmrm0.device) into sysinit.target whenever the
+  # firmware advertises a TPM2 that the kernel never exposes -> ~90s boot stall.
+  # systemd.tpm2_wait=0 tells the generator not to insert that wait.
+  # See systemd-tpm2-generator(8).
   systemd.tpm2.enable = false;
+  boot.kernelParams = [ "systemd.tpm2_wait=0" ];
 
   environment.systemPackages = with pkgs; [
     xdg-utils
