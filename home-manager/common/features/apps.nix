@@ -19,7 +19,6 @@
     gimp
     kopia
     openconnect
-    firefox
     klavaro
     hakuneko
     scrcpy

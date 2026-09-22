@@ -17,6 +17,8 @@
       "com.github.tchx84.Flatseal"
       "md.obsidian.Obsidian"
       "us.zoom.Zoom"
+      "org.mozilla.firefox"
+      "org.mozilla.thunderbird"
     ];
 
     uninstallUnmanaged = true;
