@@ -29,6 +29,11 @@
         desc: Seismic inversion framework
         tags: [ julia, seismic, annex ]
 
+      thesis:
+        path: myPhdThesis
+        url: git@github.com:AtilaSaraiva/myPhdThesis.git
+        tags: [ thesis ]
+
       seqcomp:
         path: julia/SequentialZfpCompression.jl
         url: git@github.com:AtilaSaraiva/SequentialZfpCompression.jl.git
