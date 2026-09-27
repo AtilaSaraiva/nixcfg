@@ -675,21 +675,22 @@ in
           };
 
           defaultMaxFPS = 60;
+          firefoxCommand = "flatpak run org.mozilla.firefox";
         in
         lib.mkOptionDefault {
           "apps" = withLeaveOptions {
             "m" = "exec ${pkgs.spotify}/bin/spotify; [instance=\"spotify\"] scratchpad show; mode default";
             # Temporarily removing bitwarden because electron is insecure
             # "c" = "exec ${pkgs.bitwarden-desktop}/bin/bitwarden; mode default";
-            "z" = "exec ${pkgs.firefox}/bin/firefox \"https://web.whatsapp.com/\"; mode default";
+            "z" = "exec ${firefoxCommand} \"https://web.whatsapp.com/\"; mode default";
             "s" = "exec VKD3D_FRAME_RATE=${builtins.toString defaultMaxFPS} DXVK_FRAME_RATE=${builtins.toString defaultMaxFPS} MESA_VK_WSI_PRESENT_MODE=immediate steam -steamos3 -pipewire; mode default";
             "period" = "exec ${bigsteam}/bin/bigsteam ${TV}";
             "d" = "exec env -u WAYLAND_DISPLAY lutris; mode default";
             "y" = "exec \"QT_QPA_PLATFORM=xcb yuzu\"; mode default";
             "e" = "exec element-desktop; mode default";
             "b" = "exec ${pkgs.blanket}/bin/blanket; mode default";
-            "f" = "exec ${pkgs.firefox}/bin/firefox; mode default";
-            "g" = "exec ${pkgs.firefox}/bin/firefox -private-window; mode default";
+            "f" = "exec ${firefoxCommand}; mode default";
+            "g" = "exec ${firefoxCommand} -private-window; mode default";
             "j" = "exec ${pkgs.inkscape}/bin/inkscape; mode default";
             "p" = "exec ${pkgs.pavucontrol}/bin/pavucontrol; mode default";
             "h" = "exec ${term} -e htop; mode default";
