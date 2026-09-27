@@ -54,9 +54,10 @@
 
   displays = [
     {
-      name = "DP-2";
+      name = "DP-1";
       position = "0,0";
-      mode = "2560x1440@164.999Hz";
+      adaptive_sync = "off";
+      mode = "2560x1440@144.000Hz";
     }
     {
       name = "HDMI-A-1";

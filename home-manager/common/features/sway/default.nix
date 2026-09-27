@@ -429,7 +429,6 @@ in
 
         output = {
           "*" = {
-            max_render_time = "2";
             # In 60Hz display, "adaptive_sync" makes electron apps laggy
             adaptive_sync = "off";
 
@@ -706,7 +705,7 @@ in
           };
         };
       };
-      extraOptions = [ "-Dnoscanout" ];
+      extraOptions = [ ];
       extraSessionCommands = ''
         export MOZ_ENABLE_WAYLAND=1
       '';
