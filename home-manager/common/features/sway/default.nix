@@ -649,7 +649,7 @@ in
             # left_handed = "enabled";
           };
           "2:10:TPPS/2_IBM_TrackPoint" = {
-            pointer_accel = "-0.3"; # set mouse sensitivity
+            pointer_accel = "0.8"; # set mouse sensitivity
           };
           "type:touchpad" = {
             tap = "enabled";
