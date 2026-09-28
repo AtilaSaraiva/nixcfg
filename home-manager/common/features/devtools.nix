@@ -13,7 +13,7 @@
   ];
 
   home.file."${config.folders.projects}/mani.yaml".text = ''
-    sync_remotes: true
+    sync_remotes: false
     sync_gitignore: true
 
     projects:
@@ -25,6 +25,14 @@
 
         remotes:
           lab: git@gitlab.com:AtilaSaraiva/SeismicImagingTools.jl.git
+          claude: clau:Files/SeismicImagingTools.jl
+          claude1: clau:Files/simg1
+          jc: jc:Files/Codigos/projects/julia/SeismicImagingTools.jl
+          betinha: betinha:Files/Codigos/projects/julia/SeismicImagingTools.jl
+          tri: tri:/scratch/saraivaq/SeismicImagingTools.jl
+          rorq: rorq:/scratch/saraivaq/SeismicImagingTools.jl
+          fir: rorq:/scratch/saraivaq/SeismicImagingTools.jl
+          saigml: saigml:projects/julia/SeismicImagingTools.jl
 
         desc: Seismic inversion framework
         tags: [ julia, seismic, annex ]
