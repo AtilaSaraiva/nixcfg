@@ -9,6 +9,13 @@
     nixd
     markdown-oxide
     lsof
+
+    # nvim-treesitter's `main` branch builds grammars at install time rather
+    # than shipping them, shelling out to the tree-sitter CLI and a C compiler.
+    # Without these, :TSUpdate compiles nothing and highlighting falls back to
+    # the parsers bundled with Neovim itself.
+    tree-sitter
+    gcc
   ];
 
   xdg.configFile = {
