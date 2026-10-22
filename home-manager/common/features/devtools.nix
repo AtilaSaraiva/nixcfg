@@ -43,8 +43,10 @@
         tags: [ thesis ]
 
       french:
-        path: frenchLearning
+        path: learningFrench
         url: git@github.com:AtilaSaraiva/learningFrench.git
+        remotes:
+          claude: clau:Files/learningFrench
         tags: [ french language ]
 
       seqcomp:
