@@ -42,6 +42,11 @@
         url: git@github.com:AtilaSaraiva/myPhdThesis.git
         tags: [ thesis ]
 
+      french:
+        path: frenchLearning
+        url: git@github.com:AtilaSaraiva/learningFrench.git
+        tags: [ french language ]
+
       seqcomp:
         path: julia/SequentialZfpCompression.jl
         url: git@github.com:AtilaSaraiva/SequentialZfpCompression.jl.git
