@@ -20,7 +20,6 @@
     kopia
     openconnect
     klavaro
-    hakuneko
     scrcpy
     wayvnc
     wlvncc
@@ -30,4 +29,9 @@
   ];
 
   programs.spotify-player.enable = true;
+
+  # firefox esr, used in Zotero is sheets, so I am just using this temp approach
+  nixpkgs.config.permittedInsecurePackages = [
+    "firefox-esr-140-bin-unwrapped-140.17.0esr"
+  ];
 }

@@ -8,7 +8,6 @@
   home.packages = with pkgs; [
     lf
     trash-cli
-    fasd
     chafa
     archivemount
     fzf
