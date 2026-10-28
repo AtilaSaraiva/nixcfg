@@ -15,6 +15,26 @@ Host jc
     User atila
     PreferredAuthentications publickey
 
+Host igris
+    HostName igris
+    User atila
+    PreferredAuthentications publickey
+
+Host betinha
+    HostName betinha
+    User atila
+    PreferredAuthentications publickey
+
+Host pit
+    HostName pitchulinha
+    User atila
+    PreferredAuthentications publickey
+
+Host deck
+    HostName steamdeck
+    User deck
+    PreferredAuthentications publickey
+
 Host clau
     HostName juroscomposto
     User claude
@@ -41,20 +61,6 @@ Host nrus
     PreferredAuthentications publickey
     ProxyCommand ssh betinha -W %h:%p
 
-Host igris
-    HostName igris
-    User atila
-    PreferredAuthentications publickey
-
-Host betinha
-    HostName betinha
-    User atila
-    PreferredAuthentications publickey
-
-Host deck
-    HostName steamdeck
-    User deck
-    PreferredAuthentications publickey
 
 Host hijitus
     HostName hijitus.physics.ualberta.ca
