@@ -90,6 +90,13 @@
           ./hosts/betinha/configuration.nix
         ];
       };
+      pitchulinha = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          # > Our main nixos configuration file <
+          ./hosts/pitchulinha/configuration.nix
+        ];
+      };
     };
 
     # Standalone home-manager configuration entrypoint
@@ -118,6 +125,14 @@
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/atila/betinha.nix
+        ];
+      };
+      "atila@pitchulinha" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@pitchulinha";};
+        modules = [
+          # > Our main home-manager configuration file <
+          ./home-manager/atila/pitchulinha.nix
         ];
       };
       "atila@hijitus" = home-manager.lib.homeManagerConfiguration {
