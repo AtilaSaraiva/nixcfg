@@ -28,8 +28,6 @@
     ../common/global/bluetooth.nix
     ../common/global/defaults.nix
     ../common/global/nix.nix
-    ../common/global/noisetorch.nix
-    ../common/global/syncthing.nix
     ../common/global/network.nix
     ../common/global/sound.nix
     ../common/global/virtualization
