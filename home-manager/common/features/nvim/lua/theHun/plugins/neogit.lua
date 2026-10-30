@@ -4,13 +4,9 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",         -- required
 
-    -- optional. Pinned: codediff v2.67.2 replaced SessionConfig's `mode` field
-    -- with a `panel` descriptor, and Neogit's integration still emits the old
-    -- schema. Without `panel`, the explorer config no longer matches the
-    -- placeholder branch, falls through to open_diff_panes, and crashes on a
-    -- nil `session_config.original`. Unpin once Neogit's
-    -- integrations/codediff.lua is updated for the 4.x SessionConfig.
-    { "esmuellert/codediff.nvim", tag = "v2.67.1" },
+    -- optional. Neogit's codediff integration sends the `panel`/Path
+    -- SessionConfig, which requires codediff >= v2.67.2.
+    "esmuellert/codediff.nvim",
 
     "nvim-telescope/telescope.nvim", -- optional
   },
