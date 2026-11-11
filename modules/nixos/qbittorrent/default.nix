@@ -17,6 +17,8 @@ in
       '';
     };
 
+    package = mkPackageOption pkgs "qbittorrent-nox" { };
+
     dataDir = mkOption {
       type = types.path;
       default = "/var/lib/qbittorrent";
@@ -67,7 +69,7 @@ in
 
   config = mkIf cfg.enable {
 
-    environment.systemPackages = [ pkgs.qbittorrent-nox ];
+    environment.systemPackages = [ cfg.package ];
 
     # nixpkgs.overlays = [
     #   (final: prev: {
@@ -84,10 +86,10 @@ in
       after = [ "network.target" ];
       description = "qBittorrent Daemon";
       wantedBy = [ "multi-user.target" ];
-      path = [ pkgs.qbittorrent-nox ];
+      path = [ cfg.package ];
       serviceConfig = {
         ExecStart = ''
-          ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox
+          ${cfg.package}/bin/qbittorrent-nox
         '';
         # To prevent "Quit & shutdown daemon" from working; we want systemd to
         # manage it!

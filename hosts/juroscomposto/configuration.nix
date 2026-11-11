@@ -102,6 +102,7 @@
 
   services.qbittorrentDaemon = {
     enable = true;
+    package = pkgs.stable.qbittorrent-nox;
     user = "atila";
     port = 35910;
     openFirewall = false;
