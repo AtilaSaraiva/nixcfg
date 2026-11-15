@@ -4,6 +4,5 @@
   # List your module files here
   # my-module = import ./my-module.nix;
   amdgpu = import ./amdgpu;
-  qbittorrent-cli = import ./qbittorrent;
   updateInputs = import ./updateInputs;
 }
