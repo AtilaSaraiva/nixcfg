@@ -89,7 +89,7 @@ in
       path = [ cfg.package ];
       serviceConfig = {
         ExecStart = ''
-          ${cfg.package}/bin/qbittorrent-nox
+          ${cfg.package}/bin/qbittorrent-nox --webui-port=${toString cfg.port}
         '';
         # To prevent "Quit & shutdown daemon" from working; we want systemd to
         # manage it!
