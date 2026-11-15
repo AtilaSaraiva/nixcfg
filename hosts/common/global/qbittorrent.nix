@@ -73,8 +73,18 @@
         # The tag list itself lives here, so a tag created in the Web UI
         # disappears from the list on restart unless it is added below.
         Tags = lib.concatStringsSep ", " [
-          "aither" "ant" "bitp" "blu" "cross-seed" "fitgirl"
-          "ipt" "mouse" "nbl" "orpheus" "pixelcove" "toKeep"
+          "aither"
+          "ant"
+          "bitp"
+          "blu"
+          "cross-seed"
+          "fitgirl"
+          "ipt"
+          "mouse"
+          "nbl"
+          "orpheus"
+          "pixelcove"
+          "toKeep"
         ];
       };
 
@@ -90,32 +100,36 @@
           ResolvePeerHostNames = false;
         };
         Advanced.RecheckOnCompletion = false;
+
+        # 5.1.x reads the Web UI settings from [Preferences] as WebUI\...;
+        # the top-level [WebUI] section only exists from 5.3 on and 5.1.4
+        # ignores it (falling back to user "admin" and a temporary password).
+        # If the package moves to >= 5.3, its migration converts these.
+        WebUI = {
+          Enabled = true;
+          Address = "*";
+          Port = 35910;
+          Username = "atila";
+          # Password_PBKDF2 is injected from /secrets at start; see below.
+          LocalHostAuth = false;
+          AuthSubnetWhitelistEnabled = true;
+          BanDuration = 3600;
+          MaxAuthenticationFailCount = 5;
+          SessionTimeout = 3600;
+          CSRFProtection = true;
+          ClickjackingProtection = true;
+          HostHeaderValidation = true;
+          SecureCookie = true;
+          ServerDomains = "*";
+          UseUPnP = true;
+          HTTPS.Enabled = false;
+          ReverseProxySupportEnabled = false;
+          AlternativeUIEnabled = false;
+          RootFolder = "${profile}/webui/qbtmud";
+        };
       };
 
       RSS.Session.EnableProcessing = true;
-
-      WebUI = {
-        Enabled = true;
-        Address = "*";
-        Port = 35910;
-        Username = "atila";
-        # Password_PBKDF2 is injected from /secrets at start; see below.
-        LocalHostAuth = false;
-        AuthSubnetWhitelistEnabled = true;
-        BanDuration = 3600;
-        MaxAuthenticationFailCount = 5;
-        SessionTimeout = 3600;
-        CSRFProtection = true;
-        ClickjackingProtection = true;
-        HostHeaderValidation = true;
-        SecureCookie = true;
-        ServerDomains = "*";
-        UseUPnP = true;
-        HTTPS.Enabled = false;
-        ReverseProxySupportEnabled = false;
-        AlternativeUIEnabled = false;
-        RootFolder = "${profile}/webui/qbtmud";
-      };
     };
   };
 
@@ -126,17 +140,17 @@
     # The Web UI password hash stays out of the repo and the Nix store. The
     # file holds the full value, quotes included: "@ByteArray(salt:hash)".
     # systemd reads it as root and exposes it only to this service.
-    LoadCredential = [ "webui-password:/secrets/qbittorrent-webui-password.txt" ];
+    LoadCredential = ["webui-password:/secrets/qbittorrent-webui-password.txt"];
 
     # Runs after the module's step that installs the generated
-    # qBittorrent.conf, adding the password to its [WebUI] section.
+    # qBittorrent.conf, adding the password to its [Preferences] section.
     ExecStartPre = lib.mkAfter [
       (pkgs.writeShellScript "qbittorrent-inject-password" ''
         set -eu
         conf="${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf"
         hash="$(< "$CREDENTIALS_DIRECTORY/webui-password")"
         [ -n "$hash" ] || { echo "webui-password credential is empty" >&2; exit 1; }
-        ${pkgs.gnused}/bin/sed -i "/^\[WebUI\]$/a Password_PBKDF2=$hash" "$conf"
+        ${pkgs.gnused}/bin/sed -i "/^\[Preferences\]$/a WebUI\\\\Password_PBKDF2=$hash" "$conf"
       '')
     ];
   };
