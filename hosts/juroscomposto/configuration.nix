@@ -52,6 +52,7 @@
     ../common/global/komga.nix
     ../common/global/caddy.nix
     ../common/global/qui.nix
+    ../common/global/qbittorrent.nix
     ../common/global/tailscale.nix
     ../common/global/nix-serve.nix
     ../common/global/focusmode
@@ -97,38 +98,6 @@
       lower = "01:00";
       upper = "05:00";
     };
-  };
-
-  # Upstream module. Profile lives in /var/lib/qBittorrent/qBittorrent/{config,data}.
-  # serverConfig is left unset on purpose: setting it makes the service overwrite
-  # qBittorrent.conf on every start, discarding anything changed in the Web UI.
-  services.qbittorrent = {
-    enable = true;
-    package = pkgs.stable.qbittorrent-nox; # 5.3.x is rejected by a private tracker
-    # Same user as jellyfin/sonarr/bazarr/jackett, and the owner of /mnt/storage.
-    user = "atila";
-    group = "users";
-    webuiPort = 35910;
-  };
-
-  systemd.services.qbittorrent.serviceConfig = {
-    # Kept from the old module: files created stay group-writable.
-    UMask = "0002";
-    # ProtectHome hides /home, so pin the log and custom Web UI paths under the
-    # profile. Only these two keys are touched; the rest of the config stays
-    # editable from the Web UI (unlike serverConfig, which replaces the file).
-    ExecStartPre = let
-      profile = config.services.qbittorrent.profileDir;
-    in [
-      (pkgs.writeShellScript "qbittorrent-pin-paths" ''
-        conf="${profile}/qBittorrent/config/qBittorrent.conf"
-        [ -f "$conf" ] || exit 0
-        ${pkgs.gnused}/bin/sed -i \
-          -e 's|^FileLogger\\Path=.*|FileLogger\\Path=${profile}/qBittorrent/data/logs|' \
-          -e 's|^RootFolder=.*|RootFolder=${profile}/webui/qbtmud|' \
-          "$conf"
-      '')
-    ];
   };
 
   services.updateInputs = {
