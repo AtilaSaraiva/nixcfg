@@ -51,7 +51,7 @@
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  time.timeZone = "America/Bahia";
+  time.timeZone = "America/Edmonton";
 
   hardware.enableAllFirmware = lib.mkDefault true;
 
