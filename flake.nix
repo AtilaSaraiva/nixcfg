@@ -148,7 +148,7 @@
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@cosmos";};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/atila/hijitus.nix
+          ./home-manager/atila/cosmos.nix
         ];
       };
       "atila@saigml" = home-manager.lib.homeManagerConfiguration {
@@ -205,6 +205,14 @@
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/claude/betinha.nix
+        ];
+      };
+      "claude@cosmos" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@cosmos";};
+        modules = [
+          # > Our main home-manager configuration file <
+          ./home-manager/claude/hijitus.nix
         ];
       };
     };
