@@ -51,6 +51,12 @@ Host cos
     PreferredAuthentications publickey
     ProxyCommand ssh betinha -W %h:%p
 
+Host cos1
+    HostName cosmos
+    User atila1
+    PreferredAuthentications publickey
+    ProxyCommand ssh betinha -W %h:%p
+
 Host sml
     HostName saigml
     PreferredAuthentications publickey
