@@ -212,7 +212,7 @@
         extraSpecialArgs = {inherit inputs outputs;} // {machine = "atila@cosmos";};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/claude/hijitus.nix
+          ./home-manager/claude/cosmos.nix
         ];
       };
     };
