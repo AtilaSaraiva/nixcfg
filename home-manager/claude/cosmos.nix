@@ -39,8 +39,8 @@
   ];
 
   home = {
-    username = "claude";
-    homeDirectory = "/home/claude";
+    username = "atila1";
+    homeDirectory = "/home/atila1";
   };
 
   folders = {
