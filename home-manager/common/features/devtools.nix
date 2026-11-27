@@ -27,6 +27,8 @@
           lab: git@gitlab.com:AtilaSaraiva/SeismicImagingTools.jl.git
           claude: clau:Files/SeismicImagingTools.jl
           claude1: clau:Files/simg1
+          cos1: cos1:Files/projects/julia/SeismicImagingTools.jl
+          cos: cos:projects/julia/SeismicImagingTools.jl
           jc: jc:Files/Codigos/projects/julia/SeismicImagingTools.jl
           betinha: betinha:Files/Codigos/projects/julia/SeismicImagingTools.jl
           tri: tri:/scratch/saraivaq/SeismicImagingTools.jl
