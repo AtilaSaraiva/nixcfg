@@ -49,23 +49,23 @@ Host cos
     HostName cosmos
     User atila
     PreferredAuthentications publickey
-    ProxyCommand ssh betinha -W %h:%p
+    ProxyJump betinha
 
 Host cos1
     HostName cosmos
     User atila1
     PreferredAuthentications publickey
-    ProxyCommand ssh betinha -W %h:%p
+    ProxyJump betinha
 
 Host sml
     HostName saigml
     PreferredAuthentications publickey
-    ProxyCommand ssh betinha -W %h:%p
+    ProxyJump betinha
 
 Host nrus
     HostName neurus
     PreferredAuthentications publickey
-    ProxyCommand ssh betinha -W %h:%p
+    ProxyJump betinha
 
 
 Host hijitus
@@ -75,78 +75,70 @@ Host hijitus
     ForwardX11 yes
     ForwardX11Trusted yes
 
-Host cedar
-    HostName cedar.alliancecan.ca
-    User saraivaq
-
 Host tri
+    HostName tri-login05
+    User saraivaq
+    ProxyJump trillium-gateway
+
+Host fir
+    HostName login1
+    User saraivaq
+    ProxyJump fir-gateway
+
+Host narval
+    HostName narval3
+    User saraivaq
+    ProxyJump narval-gateway
+
+Host rorq
+    HostName rorqual5
+    User saraivaq
+    ProxyJump rorq-gateway
+
+Host nibi
+    HostName l5
+    User saraivaq
+    ProxyJump trillium-gateway
+
+Host trillium-gateway
     HostName trillium.alliancecan.ca
     ControlMaster auto
     ControlPath ~/.ssh/multi/%r@%h:%p
     ControlPersist no
     User saraivaq
 
-Host fir
+Host fir-gateway
     HostName fir.alliancecan.ca
     ControlMaster auto
     ControlPath ~/.ssh/multi/%r@%h:%p
     ControlPersist no
     User saraivaq
 
-Host nibi
+Host nibi-gateway
     HostName nibi.alliancecan.ca
     ControlMaster auto
     ControlPath ~/.ssh/multi/%r@%h:%p
     ControlPersist no
     User saraivaq
 
-Host tam
-    HostName tamia.alliancecan.ca
-    ControlMaster auto
-    ControlPath ~/.ssh/multi/%r@%h:%p
-    ControlPersist no
-    User saraivaq
-
-Host vulcan
-    HostName vulcan.alliancecan.ca
-    ControlMaster auto
-    ControlPath ~/.ssh/multi/%r@%h:%p
-    ControlPersist no
-    User saraivaq
-
-Host rorq
+Host rorq-gateway
     HostName rorqual.alliancecan.ca
     ControlMaster auto
     ControlPath ~/.ssh/multi/%r@%h:%p
     ControlPersist no
     User saraivaq
 
-Host kill
-    HostName killarney.alliancecan.ca
+Host narval-gateway
+    HostName narval.alliancecan.ca
     ControlMaster auto
     ControlPath ~/.ssh/multi/%r@%h:%p
     ControlPersist no
     User saraivaq
 
-Host mist
-    HostName mist.scinet.utoronto.ca
-    User saraivaq
-
-Host beluga
-    HostName beluga.alliancecan.ca
-    User saraivaq
-
-Host graham
-    HostName graham.alliancecan.ca
-    User saraivaq
-
-Host narval
-    HostName narval.alliancecan.ca
-    User saraivaq
-
-Host saigml
+Host saigml-gateway
     HostName saig-ml.physics.ualberta.ca
     user atila
+    PreferredAuthentications publickey
     PreferredAuthentications publickey
 
 Host clauml
