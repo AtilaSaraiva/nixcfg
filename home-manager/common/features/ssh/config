@@ -91,7 +91,7 @@ Host narval
     ProxyJump narval-gateway
 
 Host rorq
-    HostName rorqual5
+    HostName rorqual1
     User saraivaq
     ProxyJump rorq-gateway
 
